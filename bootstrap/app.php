@@ -43,6 +43,29 @@ $app->singleton(
 
 /*
 |--------------------------------------------------------------------------
+| Load Routes
+|--------------------------------------------------------------------------
+|
+| Next, we will load the routes for the application. This includes the web,
+| console, and any custom routes you need.
+|
+*/
+
+$app->booting(function () use ($app) {
+    $router = $app->make('router');
+
+    $router->group(['namespace' => 'App\Http\Controllers'], function ($router) {
+        require __DIR__.'/../routes/web.php';
+        require __DIR__.'/../routes/console.php';
+    });
+
+    $router->get('/up', function () {
+        return response()->json(['status' => 'ok']);
+    });
+});
+
+/*
+|--------------------------------------------------------------------------
 | Return The Application
 |--------------------------------------------------------------------------
 |
