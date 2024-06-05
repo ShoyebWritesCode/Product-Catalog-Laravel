@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('catagories', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->integer ('total');
+            $table->integer ('parent_id')->nullable()->change();
             $table->timestamps();
         });
     }
