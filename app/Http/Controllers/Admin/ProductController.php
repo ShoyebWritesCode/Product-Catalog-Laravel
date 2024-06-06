@@ -12,9 +12,10 @@ class ProductController extends Controller
 {
     public function index()
     {
-        // $categories = Catagory::whereNull('parent_id')->get();
-        // $subcategories = Catagory::whereNotNull('parent_id')->get();
-        return view('admin.product.home');
+        $products = Product::all();
+        $subcategories = Catagory::whereNotNull('parent_id')->get();
+        $parentcategories = Catagory::whereNull('parent_id')->get();
+        return view('admin.product.home',compact('products','subcategories','parentcategories'));
     }
 
     public function create()
