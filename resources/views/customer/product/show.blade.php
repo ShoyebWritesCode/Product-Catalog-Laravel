@@ -14,8 +14,24 @@
                                 <h1 class="text-2xl font-bold mb-2">{{ $product->name }}</h1>
                                 <p class="text-lg mb-2">{{ $product->description }}</p>
                                 <p class="text-lg text-red-600 mb-2">{{ $product->price }} BDT</p>
-                                <p class="text-sm text-green-600">{{ $product->subcatagory->name }}</p>
-                                <p class="text-sm text-green-600">{{ $product->subcatagory->parent->name }}</p>
+                                <div class="flex justify-center mt-2">
+                                    @if(isset($nameparentcategories[$product->id]))
+                                        @foreach($nameparentcategories[$product->id] as $subcategory)
+                                            <div class="border border-green-600 rounded-md px-2 mx-1">
+                                                <p class="text-sm text-green-600">{{ $subcategory }}</p>
+                                            </div>
+                                        @endforeach
+                                    @endif
+                                </div>
+                                <div class="flex justify-center mt-2">
+                                    @if(isset($namesubcategories[$product->id]))
+                                        @foreach($namesubcategories[$product->id] as $subcategory)
+                                            <div class="border border-green-600 rounded-md px-2 mx-1">
+                                                <p class="text-sm text-green-600">{{ $subcategory }}</p>
+                                            </div>
+                                        @endforeach
+                                    @endif
+                                </div>
                             </div>
                             <div class="ml-4 md:px-24 p-16 h-screen">
                                 <img src="{{ asset('images/' . $product->image) }}" alt="{{ $product->name }}" class="w-32 h-32 object-cover rounded-md">
@@ -27,4 +43,3 @@
         </div>
     </div>
 </x-app-layout>
-

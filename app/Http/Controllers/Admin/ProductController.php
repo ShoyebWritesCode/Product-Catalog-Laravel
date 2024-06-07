@@ -24,20 +24,27 @@ class ProductController extends Controller
         $products = Product::all();
         $subcategories = [];
         $namesubcategories = [];
+        $nameparentcategories = [];
     
-        // Retrieve all categories and index them by id for quick lookup
+  
         $categories = Catagory::all()->keyBy('id');
     
         foreach ($products as $product) {
             $subcategories[$product->id] = Mapping::where('product_id', $product->id)->pluck('catagory_id')->toArray();
     
-            // Create an array of subcategory names for each product
             $namesubcategories[$product->id] = array_map(function($catagory_id) use ($categories) {
                 return $categories[$catagory_id]->name ?? 'Unknown';
             }, $subcategories[$product->id]);
+
+            $nameparentcategories[$product->id] = array_unique(array_map(function($catagory_id) use ($categories) {
+                return $categories[$catagory_id]->parent->name ?? 'Unknown';
+            }, $subcategories[$product->id]));
+            
         }
+
+        
     
-        return view('admin.product.home', compact('products', 'namesubcategories'));
+        return view('admin.product.home', compact('products', 'namesubcategories', 'nameparentcategories'));
     }
     
 
@@ -90,7 +97,25 @@ class ProductController extends Controller
 
     public function show(Product $product)
     {
-    return view('admin.product.show', compact('product'));
+
+        $subcategories = [];
+        $namesubcategories = [];
+        $nameparentcategories = [];
+    
+  
+        $categories = Catagory::all()->keyBy('id');
+ 
+            $subcategories[$product->id] = Mapping::where('product_id', $product->id)->pluck('catagory_id')->toArray();
+    
+            $namesubcategories[$product->id] = array_map(function($catagory_id) use ($categories) {
+                return $categories[$catagory_id]->name ?? 'Unknown';
+            }, $subcategories[$product->id]);
+
+            $nameparentcategories[$product->id] = array_unique(array_map(function($catagory_id) use ($categories) {
+                return $categories[$catagory_id]->parent->name ?? 'Unknown';
+            }, $subcategories[$product->id]));
+            
+    return view('admin.product.show', compact('product', 'namesubcategories', 'nameparentcategories'));
 }
 
 

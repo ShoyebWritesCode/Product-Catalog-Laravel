@@ -32,6 +32,15 @@
                                 </h3>
                                 <p class="text-sm text-red-600">{{ $product->price }} BDT</p>
                                 <div class="flex justify-center mt-2">
+                                    @if(isset($nameparentcategories[$product->id]))
+                                        @foreach($nameparentcategories[$product->id] as $subcategory)
+                                            <div class="border border-green-600 rounded-md px-2 mx-1">
+                                                <p class="text-sm text-green-600">{{ $subcategory }}</p>
+                                            </div>
+                                        @endforeach
+                                    @endif
+                                </div>
+                                <div class="flex justify-center mt-2">
                                     @if(isset($namesubcategories[$product->id]))
                                         @foreach($namesubcategories[$product->id] as $subcategory)
                                             <div class="border border-green-600 rounded-md px-2 mx-1">
