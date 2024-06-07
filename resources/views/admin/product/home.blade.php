@@ -24,7 +24,9 @@
                         @foreach ($products as $product)
                         <div class="bg-white border border-gray-300 rounded-lg p-4 w-48 h-48 flex flex-col items-center">
                             <img src="{{ asset('images/' . $product->image) }}" alt="{{ $product->name }}" class="w-full h-32 object-cover rounded-md mb-2">
-                            <h3 class="text-lg font-semibold text-center">{{ $product->name }}</h3>
+                            <a href="{{ route('admin.product.show', $product->id) }}" class="text-lg font-semibold text-center text-blue-500 hover:text-blue-700">
+                                {{ $product->name }}
+                            </a>
                             <h3 class="text-sm text-center">
                                 {{ Str::limit($product->description, 100, '...') }}
                             </h3>
@@ -33,16 +35,15 @@
                                 <div class="border border-green-600 rounded-md px-2 ">
                                     <p class="text-sm text-green-600">{{ $product->subcatagory->name }}</p>
                                 </div>
-                                <div class="px-2 mr-2">
-                                </div>
+                                <div class="px-2 mr-2"></div>
                                 <div class="border border-green-600 rounded-md px-2 ">
                                     <p class="text-sm text-green-600">{{ $product->subcatagory->parent->name }}</p>
                                 </div>
                             </div>
                         </div>
-                        
                         @endforeach
                     </div>
+                    
                 </div>
             </div>
         </div>

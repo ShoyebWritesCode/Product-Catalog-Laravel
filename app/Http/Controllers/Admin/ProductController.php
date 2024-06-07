@@ -54,5 +54,11 @@ class ProductController extends Controller
         return redirect()->route('admin.product.home')->with('success', 'Product created successfully');
     } 
 
+    public function show(Product $product)
+    {
+        return view('admin.product.show', compact('product'));
+    }
+
+
 
 }
