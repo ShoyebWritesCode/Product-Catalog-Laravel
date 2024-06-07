@@ -10,13 +10,13 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
-                </hr>
+                    <hr>
                     @if (session('error'))
                         <div class="alert alert-danger" role="alert">
                             {{ session('error') }}
                         </div>
-                        @endif
-                    <form action="{{route('admin.product.save')}}" method="POST" enctype="multipart/form-data">
+                    @endif
+                    <form action="{{ route('admin.product.save') }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         <div class="mb-4">
                             <label for="name" class="block text-sm font-medium text-gray-700">Name:</label>
@@ -40,34 +40,29 @@
                             @enderror
                         </div>
                         <div class="mb-4">
-                            <label for="category" class="block text-sm font-medium text-gray-700">Category:</label>
-                            <select id="category" name="category" class="mt-1 p-2 w-full border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-indigo-200 focus:border-indigo-500">
-                                <option value="" name="category">Select Category</option>
+                            <label class="block text-sm font-medium text-gray-700">Category:</label>
+                            <div class="flex flex-wrap space-x-4 space-y-4">
                                 @foreach($categories as $category)
-                                    <option value="{{ $category->id }}">{{ $category->name }}</option>
+                                    <div class="flex flex-col">
+                                        <div class="flex items-center">
+                                            <input type="checkbox" id="category_{{ $category->id }}" name="parent_categories[]" value="{{ $category->id }}" class="mr-2 parent-category">
+                                            <label for="category_{{ $category->id }}" class="text-sm">{{ $category->name }}</label>
+                                            <div class="px-5 mr-5"></div>
+                                        </div>
+                                        <div class="ml-6 hidden subcategories" id="subcategories_{{ $category->id }}">
+                                            @foreach($subcategories as $subcategory)
+                                                @if($subcategory->parent_id == $category->id)
+                                                    <div class="flex items-center">
+                                                        <input type="checkbox" id="subcategory_{{ $subcategory->id }}" name="subcategories[]" value="{{ $subcategory->id }}" class="mr-2" data-parent="{{ $category->id }}">
+                                                        <label for="subcategory_{{ $subcategory->id }}" class="text-sm">{{ $subcategory->name }}</label>
+                                                    </div>
+                                                @endif
+                                            @endforeach
+                                        </div>
+                                    </div>
                                 @endforeach
-                            </select>
-                            @error('category')
-                                <span class="text-red-500">{{ $message }}</span>
-                            @enderror
+                            </div>
                         </div>
-                        <div class="mb-4">
-                            <input type="checkbox" id="subcat_checkbox">
-                            <label for="subcat_checkbox" class="ml-2 text-sm font-medium text-gray-700">SubCategory?</label>
-                        </div>
-                        <div id="subcat_field" class="mb-4" style="display: none;">
-                            <label for="subcategory_of" class="block text-sm font-medium text-gray-700">SubCategory of:</label>
-                            <select id="subcategory_of" name="subcategory_of" class="mt-1 p-2 w-full border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-indigo-200 focus:border-indigo-500">
-                                <option value="" name="subcategory_of">Select Category</option>
-                                @foreach($subcategories as $subcategory)
-                                    <option value="{{ $subcategory->id }}" data-parent="{{ $subcategory->parent_id }}">{{ $subcategory->name }}</option>
-                                @endforeach
-                            </select>
-                            @error('subcategory_of')
-                                <span class="text-red-500">{{ $message }}</span>
-                            @enderror
-                        </div>
-                        
                         <div class="mb-4">
                             <label for="image" class="block text-sm font-medium text-gray-700">Image:</label>
                             <input type="file" name="image" id="image" class="mt-1 p-2 w-full border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-indigo-200 focus:border-indigo-500">
@@ -85,42 +80,22 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            var checkbox = document.getElementById('subcat_checkbox');
-            var subcatField = document.getElementById('subcat_field');
-            checkbox.addEventListener('change', function () {
-                if (checkbox.checked) {
-                    subcatField.style.display = 'block';
-                } else {
-                    subcatField.style.display = 'none';
-                }
+            var parentCategories = document.querySelectorAll('.parent-category');
+            parentCategories.forEach(function(parentCategory) {
+                parentCategory.addEventListener('change', function () {
+                    var subcategoryDiv = document.getElementById('subcategories_' + this.value);
+                    if (this.checked) {
+                        subcategoryDiv.classList.remove('hidden');
+                    } else {
+                        subcategoryDiv.classList.add('hidden');
+                        var subcategories = subcategoryDiv.querySelectorAll('input[type="checkbox"]');
+                        subcategories.forEach(function(subcategory) {
+                            subcategory.checked = false;
+                        });
+                    }
+                });
             });
         });
-
-        document.addEventListener('DOMContentLoaded', function() {
-    const categorySelect = document.getElementById('category');
-    const subcategoryCheckbox = document.getElementById('subcat_checkbox');
-    const subcatField = document.getElementById('subcat_field');
-    const subcategorySelect = document.getElementById('subcategory_of');
-    const subcategoryOptions = Array.from(subcategorySelect.options);
-
-    subcategoryCheckbox.addEventListener('change', function() {
-        if (this.checked) {
-            subcatField.style.display = 'block';
-        } else {
-            subcatField.style.display = 'none';
-        }
-    });
-
-    categorySelect.addEventListener('change', function() {
-        const selectedCategoryId = this.value;
-        subcategorySelect.innerHTML = '<option value="" name="subcategory_of">Select Category</option>';
-        subcategoryOptions.forEach(option => {
-            if (option.dataset.parent == selectedCategoryId) {
-                subcategorySelect.appendChild(option);
-            }
-        });
-    });
-});
-
     </script>
 </x-app-layout>
+
