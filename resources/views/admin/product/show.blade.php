@@ -34,7 +34,7 @@
                                 </div>
                             </div>
                             <div class="ml-4 md:px-24 p-16 h-screen">
-                                <img src="{{ asset('images/' . $product->image) }}" alt="{{ $product->name }}" class="w-32 h-32 object-cover rounded-md">
+                                <img src="{{ asset('storage/images/' . $product->image) }}" alt="{{ $product->name }}" class="w-32 h-32 object-cover rounded-md">
                             </div>
                         </div>
                     {{-- </div> --}}

@@ -11,13 +11,6 @@ use Illuminate\Support\Facades\Log;
 
 class ProductController extends Controller
 {
-    // public function index()
-    // {
-    //     $products = Product::all();
-    //     $subcategories = Catagory::whereNotNull('parent_id')->get();
-    //     $parentcategories = Catagory::whereNull('parent_id')->get();
-    //     return view('admin.product.home',compact('products','subcategories','parentcategories'));
-    // }
 
     public function index()
     {
@@ -66,9 +59,10 @@ class ProductController extends Controller
         ]);
 
         if ($request->hasFile('image')) {
+            $destinationPath = config('utility.product_image_path');
             $image = $request->file('image');
             $imageName = time().'.'.$image->getClientOriginalExtension();
-            $image->move(public_path('images'), $imageName);
+            $image->storeAs($destinationPath, $imageName);
 
             $product = new Product();
             $product->name = $request->name;
