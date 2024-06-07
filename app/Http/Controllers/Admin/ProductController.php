@@ -4,19 +4,42 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Product;
 use App\Models\Catagory;
+use App\Models\Mapping;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
 class ProductController extends Controller
 {
+    // public function index()
+    // {
+    //     $products = Product::all();
+    //     $subcategories = Catagory::whereNotNull('parent_id')->get();
+    //     $parentcategories = Catagory::whereNull('parent_id')->get();
+    //     return view('admin.product.home',compact('products','subcategories','parentcategories'));
+    // }
+
     public function index()
     {
         $products = Product::all();
-        $subcategories = Catagory::whereNotNull('parent_id')->get();
-        $parentcategories = Catagory::whereNull('parent_id')->get();
-        return view('admin.product.home',compact('products','subcategories','parentcategories'));
+        $subcategories = [];
+        $namesubcategories = [];
+    
+        // Retrieve all categories and index them by id for quick lookup
+        $categories = Catagory::all()->keyBy('id');
+    
+        foreach ($products as $product) {
+            $subcategories[$product->id] = Mapping::where('product_id', $product->id)->pluck('catagory_id')->toArray();
+    
+            // Create an array of subcategory names for each product
+            $namesubcategories[$product->id] = array_map(function($catagory_id) use ($categories) {
+                return $categories[$catagory_id]->name ?? 'Unknown';
+            }, $subcategories[$product->id]);
+        }
+    
+        return view('admin.product.home', compact('products', 'namesubcategories'));
     }
+    
 
     public function create()
     {
@@ -40,25 +63,35 @@ class ProductController extends Controller
             $imageName = time().'.'.$image->getClientOriginalExtension();
             $image->move(public_path('images'), $imageName);
 
-        $product = new Product();
-        $product->name = $request->name;
-        $product->description = $request->description;
-        $product->price = $request->price;
-        $product->image = $imageName;
-        
-        $subcategory = Catagory::where('id', $request->subcategory_of)->first();
-        $product->catagory_id = $subcategory->id;
-        $product->save();
+            $product = new Product();
+            $product->name = $request->name;
+            $product->description = $request->description;
+            $product->price = $request->price;
+            $product->image = $imageName;
+            $product->save();
+
+            // Loop through subcategories and save mappings
+            if ($request->has('subcategories')) {
+                foreach ($request->subcategories as $subcategoryId) {
+                    $mapping = new Mapping();
+                    $mapping->product_id = $product->id;
+                    $mapping->catagory_id = $subcategoryId;
+                    $mapping->save();
+                }
+            }
+
+            session()->flash('success', 'Product created successfully');
+            return redirect()->route('admin.product.home')->with('success', 'Product created successfully');
+        } else {
+            session()->flash('error', 'Image upload failed');
+            return redirect()->route('admin.product.create')->with('error', 'Image upload failed');
         }
-        session()->flash('success', 'Product created successfully');
-        return redirect()->route('admin.product.home')->with('success', 'Product created successfully');
     } 
 
     public function show(Product $product)
     {
-    return view('products.show', compact('product'));
+    return view('admin.product.show', compact('product'));
 }
-
 
 
 }
