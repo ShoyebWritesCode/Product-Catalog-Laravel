@@ -8,6 +8,7 @@ use App\Models\Mapping;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use App\Models\Review;
 
 class ProductController extends Controller
 {
@@ -108,8 +109,10 @@ class ProductController extends Controller
             $nameparentcategories[$product->id] = array_unique(array_map(function($catagory_id) use ($categories) {
                 return $categories[$catagory_id]->parent->name ?? 'Unknown';
             }, $subcategories[$product->id]));
+
+            $reviews = Review::where('product_id', $product->id)->get();
             
-    return view('admin.product.show', compact('product', 'namesubcategories', 'nameparentcategories'));
+    return view('admin.product.show', compact('product', 'namesubcategories', 'nameparentcategories', 'reviews'));
 }
 
 

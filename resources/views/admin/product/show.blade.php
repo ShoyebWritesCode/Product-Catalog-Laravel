@@ -37,6 +37,21 @@
                                 <img src="{{ asset('storage/images/' . $product->image) }}" alt="{{ $product->name }}" class="w-32 h-32 object-cover rounded-md">
                             </div>
                         </div>
+
+                        <div class="mt-8">
+                            <h2 class="text-2xl font-bold mb-4">Reviews & Ratings</h2>
+    
+                            <div class="mb-6">
+                             <h3 class="text-xl font-semibold mb-2">Existing Reviews</h3>
+                             @foreach ($reviews as $review)
+                                <div class="bg-gray-100 p-4 rounded-lg mb-4">
+                                    <p class="text-lg font-semibold">{{ $review->user->name }}</p>
+                                    <p class="text-sm text-gray-600">{{ $review->comment }}</p>
+                                    <p class="text-sm">Rating: {{ $review->rating }}/5</p>
+                                    <p class="text-xs text-gray-500">Posted on: {{ $review->created_at->format('Y-m-d') }}</p>
+                                </div>
+                                @endforeach
+                            </div>
                     {{-- </div> --}}
                 </div>
             </div>
