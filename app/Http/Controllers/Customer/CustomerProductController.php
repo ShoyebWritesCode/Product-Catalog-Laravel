@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Customer;
 use App\Http\Controllers\Controller;
 use App\Models\Product;
+use App\Models\Review;
 use App\Models\Catagory;
 use App\Models\Mapping;
 use Illuminate\Http\Request;
@@ -57,8 +58,10 @@ class CustomerProductController extends Controller
             $nameparentcategories[$product->id] = array_unique(array_map(function($catagory_id) use ($categories) {
                 return $categories[$catagory_id]->parent->name ?? 'Unknown';
             }, $subcategories[$product->id]));
+
+            $reviews = Review::where('product_id', $product->id)->get();
             
-    return view('customer.product.show', compact('product', 'namesubcategories', 'nameparentcategories'));
+    return view('customer.product.show', compact('product', 'namesubcategories', 'nameparentcategories', 'reviews'));
 }
 
 }
