@@ -58,7 +58,7 @@ class CustomerProductController extends Controller
                 return $categories[$catagory_id]->parent->name ?? 'Unknown';
             }, $subcategories[$product->id]));
             
-    return view('admin.product.show', compact('product', 'namesubcategories', 'nameparentcategories'));
+    return view('customer.product.show', compact('product', 'namesubcategories', 'nameparentcategories'));
 }
 
 }
