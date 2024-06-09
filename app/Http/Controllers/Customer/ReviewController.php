@@ -24,4 +24,10 @@ class ReviewController extends Controller
 
         return redirect()->back()->with('success', 'Review submitted successfully');
     }
+
+    public function show(Product $product)
+    {
+        $reviews = Review::all();
+        return view('customer.product.show', compact('product', 'reviews'));
+    }
 }

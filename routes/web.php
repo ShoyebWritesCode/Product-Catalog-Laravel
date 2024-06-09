@@ -35,6 +35,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/products', [CustomerProductController::class, 'index'])->name('customer.product.home');
     Route::get('/products/{product}', [CustomerProductController::class, 'show'])->name('customer.product.show');
     Route::post('/products/{product}/reviews', [ReviewController::class, 'store'])->name('customer.product.reviews');
+    Route::get('/products/{product}', [ReviewController::class, 'show'])->name('customer.product.reviews');
 
 });
 

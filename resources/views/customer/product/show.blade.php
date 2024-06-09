@@ -37,28 +37,21 @@
                         </div>
                     </div>
 
-                    <!-- Review and Rating Section -->
                     <div class="mt-8">
                         <h2 class="text-2xl font-bold mb-4">Reviews & Ratings</h2>
 
-                        <!-- Existing Reviews -->
                         <div class="mb-6">
-                            <h3 class="text-xl font-semibold mb-2">Existing Reviews</h3>
+                         <h3 class="text-xl font-semibold mb-2">Existing Reviews</h3>
+                         @foreach ($reviews as $review)
                             <div class="bg-gray-100 p-4 rounded-lg mb-4">
-                                <p class="text-lg font-semibold">John Doe</p>
-                                <p class="text-sm text-gray-600">Great product! Highly recommend.</p>
-                                <p class="text-sm">Rating: 5/5</p>
-                                <p class="text-xs text-gray-500">Posted on: 2023-06-01</p>
+                                <p class="text-lg font-semibold">{{ $review->user->name }}</p>
+                                <p class="text-sm text-gray-600">{{ $review->comment }}</p>
+                                <p class="text-sm">Rating: {{ $review->rating }}/5</p>
+                                <p class="text-xs text-gray-500">Posted on: {{ $review->created_at->format('Y-m-d') }}</p>
                             </div>
-                            <div class="bg-gray-100 p-4 rounded-lg mb-4">
-                                <p class="text-lg font-semibold">Jane Smith</p>
-                                <p class="text-sm text-gray-600">Good value for the price.</p>
-                                <p class="text-sm">Rating: 4/5</p>
-                                <p class="text-xs text-gray-500">Posted on: 2023-06-05</p>
-                            </div>
+                            @endforeach
                         </div>
 
-                        <!-- Add Review -->
                         <div class="mb-6">
                             <h3 class="text-xl font-semibold mb-2">Add Your Review</h3>
                             <form action="{{ route('customer.product.reviews', $product->id) }}" method="POST">
