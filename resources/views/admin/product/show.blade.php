@@ -8,7 +8,6 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
-                    {{-- <div class="container mx-auto px-4"> --}}
                         <div class="bg-white border border-gray-300 rounded-lg p-4 flex">
                             <div class="flex-grow">
                                 <h1 class="text-2xl font-bold mb-2">{{ $product->name }}</h1>
@@ -39,21 +38,24 @@
                         </div>
 
                         <div class="mt-8">
+                            @if ($reviews->isNotEmpty())
                             <h2 class="text-2xl font-bold mb-4">Reviews & Ratings</h2>
     
                             <div class="mb-6">
-                             <h3 class="text-xl font-semibold mb-2">Existing Reviews</h3>
-                             @foreach ($reviews as $review)
-                                <div class="bg-gray-100 p-4 rounded-lg mb-4">
-                                    <p class="text-lg font-semibold">{{ $review->user->name }}</p>
-                                    <p class="text-sm text-gray-600">{{ $review->comment }}</p>
-                                    <p class="text-sm">Rating: {{ $review->rating }}/5</p>
-                                    <p class="text-xs text-gray-500">Posted on: {{ $review->created_at->format('Y-m-d') }}</p>
-                                </div>
-                                @endforeach
+                                    <h3 class="text-xl font-semibold mb-2">Existing Reviews</h3>
+                                    @foreach ($reviews as $review)
+                                        <div class="bg-gray-100 p-4 rounded-lg mb-4">
+                                            <p class="text-lg font-semibold">{{ $review->user->name }}</p>
+                                            <p class="text-sm text-gray-600">{{ $review->comment }}</p>
+                                            <p class="text-sm">Rating: {{ $review->rating }}/5</p>
+                                            <p class="text-xs text-gray-500">Posted on: {{ $review->created_at->format('Y-m-d') }}</p>
+                                        </div>
+                                    @endforeach
                             </div>
-                    {{-- </div> --}}
-                </div>
+                            @endif
+                            
+                        </div>
+                 </div>
             </div>
         </div>
     </div>

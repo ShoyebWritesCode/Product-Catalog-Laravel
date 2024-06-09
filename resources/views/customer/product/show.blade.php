@@ -38,6 +38,7 @@
                     </div>
 
                     <div class="mt-8">
+                        @if ($reviews->isNotEmpty())
                         <h2 class="text-2xl font-bold mb-4">Reviews & Ratings</h2>
 
                         <div class="mb-6">
@@ -51,6 +52,7 @@
                             </div>
                             @endforeach
                         </div>
+                        @endif
 
                         <div class="mb-6">
                             <h3 class="text-xl font-semibold mb-2">Add Your Review</h3>
