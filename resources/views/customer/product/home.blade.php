@@ -30,6 +30,9 @@
                                     {{ Str::limit($product->description, 100, '...') }}
                                 </h3>
                                 <p class="text-sm text-red-600">{{ $product->price }} BDT</p>
+                                <p class="text-sm text-yellow-600">
+                                    {{ isset($averageRatings[$product->id]) ? number_format($averageRatings[$product->id], 2) : 'No Ratings' }}
+                                </p>
                                 <div class="flex justify-center mt-2">
                                     @if(isset($nameparentcategories[$product->id]))
                                         @foreach($nameparentcategories[$product->id] as $subcategory)

@@ -30,12 +30,14 @@ class CustomerProductController extends Controller
             $nameparentcategories[$product->id] = array_unique(array_map(function($catagory_id) use ($categories) {
                 return $categories[$catagory_id]->parent->name ?? 'Unknown';
             }, $subcategories[$product->id]));
+
+            $averageRatings[$product->id] = Review::where('product_id', $product->id)->avg('rating');
             
         }
 
         
     
-        return view('customer.product.home', compact('products', 'namesubcategories', 'nameparentcategories'));
+        return view('customer.product.home', compact('products', 'namesubcategories', 'nameparentcategories', 'averageRatings'));
     }
     
 
