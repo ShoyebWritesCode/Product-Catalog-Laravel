@@ -6,6 +6,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Admin\CatagoryController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Customer\CustomerProductController;
+use App\Http\Controllers\Customer\ReviewController;
 
 /*
 |--------------------------------------------------------------------------
@@ -33,6 +34,7 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/products', [CustomerProductController::class, 'index'])->name('customer.product.home');
     Route::get('/products/{product}', [CustomerProductController::class, 'show'])->name('customer.product.show');
+    Route::post('/products/{product}/reviews', [ReviewController::class, 'store'])->name('customer.product.reviews');
 
 });
 
