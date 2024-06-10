@@ -1,6 +1,6 @@
 {
   "resources/css/app.css": {
-    "file": "assets/app-DnT6VWyq.css",
+    "file": "assets/app-RQmhYPhk.css",
     "src": "resources/css/app.css",
     "isEntry": true
   },
@@ -8,6 +8,18 @@
     "file": "assets/app-Bg1aHGgo.js",
     "name": "app",
     "src": "resources/js/app.js",
+    "isEntry": true
+  },
+  "resources/js/custom/catagory.js": {
+    "file": "assets/catagory-DWU34Ujk.js",
+    "name": "catagory",
+    "src": "resources/js/custom/catagory.js",
+    "isEntry": true
+  },
+  "resources/js/custom/product.js": {
+    "file": "assets/product-CBBKAeCQ.js",
+    "name": "product",
+    "src": "resources/js/custom/product.js",
     "isEntry": true
   }
 }
