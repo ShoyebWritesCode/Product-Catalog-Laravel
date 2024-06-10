@@ -45,7 +45,14 @@
                          <h3 class="text-xl font-semibold mb-2">Existing Reviews</h3>
                          @foreach ($reviews as $review)
                             <div class="bg-gray-100 p-4 rounded-lg mb-4">
-                                <p class="text-lg font-semibold">{{ $review->user->name }}</p>
+                                <p class="text-lg font-semibold">
+                                    @if ($review->user_id == null)
+                                        Anonymous
+                                    @else
+                                        {{ $review->user->name }}
+                                    @endif
+                                </p>
+                                
                                 <p class="text-sm text-gray-600">{{ $review->comment }}</p>
                                 <p class="text-sm">Rating: {{ $review->rating }}/5</p>
                                 <p class="text-xs text-gray-500">Posted on: {{ $review->created_at->format('Y-m-d') }}</p>
@@ -77,6 +84,10 @@
                                     @error('rating')
                                         <span class="text-red-500">{{ $message }}</span>
                                     @enderror
+                                </div>
+                                <div class="mb-4">
+                                    <input type="checkbox" name="anonymous" id="anonymous" class="mr-2">
+                                    <label for="anonymous" class="text-sm font-medium text-gray-700">Post as Anonymous</label>
                                 </div>
                                 <button type="submit" class="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-indigo-600 focus:outline-none focus:bg-indigo-600">Submit Review</button>
                             </form>

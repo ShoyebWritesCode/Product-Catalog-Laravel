@@ -19,7 +19,13 @@ class ReviewController extends Controller
         $review->rating = $request->rating;
         $review->comment = $request->comment;
         $review->product_id = $product->id;
-        $review->user_id = auth()->id();
+        if ($request->anonymous == 'on') {
+            $review->user_id = null;
+        } else {
+            $review->user_id = auth()->id();
+        }
+        
+        // $review->user_id = auth()->id();
         $review->save();
 
         return redirect()->back()->with('success', 'Review submitted successfully');
