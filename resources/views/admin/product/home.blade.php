@@ -1,5 +1,3 @@
-<link href="{{ asset('css/app.css') }}" rel="stylesheet">
-
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
@@ -22,32 +20,21 @@
                         </div>
                     @endif
 
-                    <table class="table-auto w-full">
-                        <thead>
-                            <tr>
-                                {{-- <th class="px-4 py-2">Image</th> --}}
-                                <th class="px-4 py-2">Name</th>
-                                {{-- <th class="px-4 py-2">Description</th> --}}
-                                <th class="px-4 py-2">Price</th>
-                                <th class="px-4 py-2">Ratings</th>
-                                {{-- <th class="px-4 py-2">Edit</th>
-                                <th class="px-4 py-2">Delete</th> --}}
-                                {{-- <th class="px-4 py-2">Categories</th> --}}
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($products as $product)
-                            <tr>
-                                {{-- <td class="px-4 py-2">
-                                    <img src="{{ asset('storage/images/' . $product->image) }}" alt="{{ $product->name }}" class="w-24 h-24 object-cover rounded-md">
-                                </td> --}}
-                                <td class="px-4 py-2">
-                                    <a href="{{ route('admin.product.show', $product->id) }}" class="text-blue-500 hover:text-blue-700">{{ $product->name }}</a>
-                                </td>
-                                {{-- <td class="px-4 py-2">{{ Str::limit($product->description, 50, '...') }}</td> --}}
-                                <td class="px-4 py-2">{{ $product->price }} BDT</td>
-                                <td class="px-4 py-2">{{ isset($averageRatings[$product->id]) ? number_format($averageRatings[$product->id], 2) : 'No Ratings' }}</td>
-                                {{-- <td class="px-4 py-2">
+                    <div class="flex flex-wrap gap-6">
+                        @foreach ($products as $product)
+                            <div class="bg-white border border-gray-300 rounded-lg p-4 w-48 h-48 flex flex-col items-center">
+                                <img src="{{ asset('storage/images/' . $product->image) }}" alt="{{ $product->name }}" class="w-full h-32 object-cover rounded-md mb-2">
+                                <a href="{{ route('admin.product.show', $product->id) }}" class="text-lg font-semibold text-center text-blue-500 hover:text-blue-700">
+                                    {{ $product->name }}
+                                </a>
+                                <h3 class="text-sm text-center">
+                                    {{ Str::limit($product->description, 100, '...') }}
+                                </h3>
+                                <p class="text-sm text-red-600">{{ $product->price }} BDT</p>
+                                <p class="text-sm text-yellow-600">
+                                    {{ isset($averageRatings[$product->id]) ? number_format($averageRatings[$product->id], 2) : 'No Ratings' }}
+                                </p>
+                                <div class="flex justify-center mt-2">
                                     @if(isset($nameparentcategories[$product->id]))
                                         @foreach($nameparentcategories[$product->id] as $subcategory)
                                             <div class="border border-green-600 rounded-md px-2 mx-1">
@@ -55,6 +42,8 @@
                                             </div>
                                         @endforeach
                                     @endif
+                                </div>
+                                <div class="flex justify-center mt-2">
                                     @if(isset($namesubcategories[$product->id]))
                                         @foreach($namesubcategories[$product->id] as $subcategory)
                                             <div class="border border-green-600 rounded-md px-2 mx-1">
@@ -62,18 +51,10 @@
                                             </div>
                                         @endforeach
                                     @endif
-                                </td> --}}
-                                {{-- <td class="px-4 py-2">
-              <i class="far fa-user"></i>
-                                </td>
-                                <td class="px-4 py-2">
-                                    <a href="{{ route('admin.product.show', $product->id) }}" class="text-blue-500 hover:text-blue-700">Delete</a>
-                                </td> --}}
-                            </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                    
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
                     
 
                     
