@@ -1,6 +1,6 @@
 {
   "resources/css/app.css": {
-    "file": "assets/app-DnT6VWyq.css",
+    "file": "assets/app-Cujcph8K.css",
     "src": "resources/css/app.css",
     "isEntry": true
   },
@@ -8,6 +8,17 @@
     "file": "assets/app-Bg1aHGgo.js",
     "name": "app",
     "src": "resources/js/app.js",
+    "isEntry": true
+  },
+  "resources/js/test.js": {
+    "file": "assets/test-BfhrJobM.js",
+    "name": "test",
+    "src": "resources/js/test.js",
+    "isEntry": true
+  },
+  "resources/scss/test.scss": {
+    "file": "assets/test-zDTuK3kO.css",
+    "src": "resources/scss/test.scss",
     "isEntry": true
   }
 }
