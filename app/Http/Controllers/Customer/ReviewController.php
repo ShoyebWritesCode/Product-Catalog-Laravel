@@ -27,7 +27,7 @@ class ReviewController extends Controller
         }
         
         $review->save();
-        Session::put('last_review_time', now());
+        Session::put("last_review_time_product_$product->id", now());
 
 
         return redirect()->back()->with('success', 'Review submitted successfully');

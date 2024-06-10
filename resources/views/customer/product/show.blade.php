@@ -63,9 +63,13 @@
                             @endforeach
                         </div>
                         @endif
+                        
+                        @php
+                            $lastReviewTime = Session::get("last_review_time_product_$product->id");
+                        @endphp
 
-                        @if (!Session::has('last_review_time') || now()->diffInMinutes(Session::get('last_review_time')) >= 60)
-                        <div class="mb-6">
+                        
+                            @if (!$lastReviewTime || now()->diffInMinutes($lastReviewTime) >= 1)
                             <h3 class="text-xl font-semibold mb-2">Add Your Review</h3>
                             <form action="{{ route('customer.product.reviews', $product->id) }}" method="POST">
                                 @csrf
