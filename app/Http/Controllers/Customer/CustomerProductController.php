@@ -62,8 +62,9 @@ class CustomerProductController extends Controller
             }, $subcategories[$product->id]));
 
             $reviews = Review::where('product_id', $product->id)->get();
+            $averageRatings[$product->id] = Review::where('product_id', $product->id)->avg('rating');
             
-    return view('customer.product.show', compact('product', 'namesubcategories', 'nameparentcategories', 'reviews'));
+    return view('customer.product.show', compact('product', 'namesubcategories', 'nameparentcategories', 'reviews', 'averageRatings'));
 }
 
 }

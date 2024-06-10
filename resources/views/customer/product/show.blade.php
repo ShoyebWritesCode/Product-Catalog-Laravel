@@ -13,6 +13,9 @@
                             <h1 class="text-2xl font-bold mb-2">{{ $product->name }}</h1>
                             <p class="text-lg mb-2">{{ $product->description }}</p>
                             <p class="text-lg text-red-600 mb-2">{{ $product->price }} BDT</p>
+                            <p class="text-sm text-yellow-600">
+                                Rating: {{ isset($averageRatings[$product->id]) ? number_format($averageRatings[$product->id], 2) : 'No Ratings' }}
+                            </p>
                             <div class="flex justify-center mt-2">
                                 @if(isset($nameparentcategories[$product->id]))
                                     @foreach($nameparentcategories[$product->id] as $subcategory)
@@ -61,6 +64,7 @@
                         </div>
                         @endif
 
+                        @if (!Session::has('last_review_time') || now()->diffInMinutes(Session::get('last_review_time')) >= 60)
                         <div class="mb-6">
                             <h3 class="text-xl font-semibold mb-2">Add Your Review</h3>
                             <form action="{{ route('customer.product.reviews', $product->id) }}" method="POST">
@@ -92,6 +96,9 @@
                                 <button type="submit" class="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-indigo-600 focus:outline-none focus:bg-indigo-600">Submit Review</button>
                             </form>
                         </div>
+                                @else
+                                    <p class="text-red-500">You can only submit a review once every hour.</p>
+                                @endif
                     </div>
                 </div>
             </div>

@@ -13,6 +13,9 @@
                                 <h1 class="text-2xl font-bold mb-2">{{ $product->name }}</h1>
                                 <p class="text-lg mb-2">{{ $product->description }}</p>
                                 <p class="text-lg text-red-600 mb-2">{{ $product->price }} BDT</p>
+                                <p class="text-sm text-yellow-600">
+                                   Rating:  {{ isset($averageRatings[$product->id]) ? number_format($averageRatings[$product->id], 2) : 'No Ratings' }}
+                                </p>
                                 <div class="flex justify-center mt-2">
                                     @if(isset($nameparentcategories[$product->id]))
                                         @foreach($nameparentcategories[$product->id] as $subcategory)
@@ -45,7 +48,13 @@
                                     <h3 class="text-xl font-semibold mb-2">Existing Reviews</h3>
                                     @foreach ($reviews as $review)
                                         <div class="bg-gray-100 p-4 rounded-lg mb-4">
-                                            <p class="text-lg font-semibold">{{ $review->user->name }}</p>
+                                            <p class="text-lg font-semibold">
+                                                @if ($review->user_id == null)
+                                                    Anonymous
+                                                @else
+                                                    {{ $review->user->name }}
+                                                @endif
+                                            </p>
                                             <p class="text-sm text-gray-600">{{ $review->comment }}</p>
                                             <p class="text-sm">Rating: {{ $review->rating }}/5</p>
                                             <p class="text-xs text-gray-500">Posted on: {{ $review->created_at->format('Y-m-d') }}</p>

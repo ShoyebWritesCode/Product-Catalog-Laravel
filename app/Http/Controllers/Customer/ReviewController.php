@@ -5,6 +5,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Product;
 use App\Models\Review;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
 
 class ReviewController extends Controller
 {
@@ -25,8 +26,9 @@ class ReviewController extends Controller
             $review->user_id = auth()->id();
         }
         
-        // $review->user_id = auth()->id();
         $review->save();
+        Session::put('last_review_time', now());
+
 
         return redirect()->back()->with('success', 'Review submitted successfully');
     }
