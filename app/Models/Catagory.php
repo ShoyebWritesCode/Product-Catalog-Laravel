@@ -10,4 +10,9 @@ class Catagory extends Model
     use HasFactory;
     protected $table = 'catagories';
     protected $fillable = ['name', 'parent_id'];
+
+    public function parent()
+    {
+        return $this->belongsTo(Catagory::class, 'parent_id');
+    }
 }
