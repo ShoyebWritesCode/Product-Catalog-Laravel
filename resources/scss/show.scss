@@ -1,0 +1,15 @@
+.swiper {
+    width: 600px;
+    height: 300px;
+}
+
+.swiper-slide {
+    background: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.swiper-slide:hover {
+    transform: scale(1.3);
+}

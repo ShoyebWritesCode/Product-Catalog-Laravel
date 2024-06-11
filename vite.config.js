@@ -9,6 +9,8 @@ export default defineConfig({
                 "resources/css/app.css",
                 "resources/js/app.js",
                 ...glob.sync("resources/js/custom/*.js"),
+                ...glob.sync("resources/css/custom/*.css"),
+                "resources/scss/show.scss",
             ],
             refresh: true,
         }),

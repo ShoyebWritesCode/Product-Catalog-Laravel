@@ -1,7 +1,12 @@
 {
   "resources/css/app.css": {
-    "file": "assets/app-RQmhYPhk.css",
+    "file": "assets/app-c4rQ2i-h.css",
     "src": "resources/css/app.css",
+    "isEntry": true
+  },
+  "resources/css/custom/show.css": {
+    "file": "assets/show-DGDWOUB1.css",
+    "src": "resources/scss/show.scss",
     "isEntry": true
   },
   "resources/js/app.js": {
@@ -20,6 +25,17 @@
     "file": "assets/product-CBBKAeCQ.js",
     "name": "product",
     "src": "resources/js/custom/product.js",
+    "isEntry": true
+  },
+  "resources/js/custom/show.js": {
+    "file": "assets/show-CFKMzmiy.js",
+    "name": "show",
+    "src": "resources/js/custom/show.js",
+    "isEntry": true
+  },
+  "resources/scss/show.scss": {
+    "file": "assets/show-DGDWOUB1.css",
+    "src": "resources/scss/show.scss",
     "isEntry": true
   }
 }
