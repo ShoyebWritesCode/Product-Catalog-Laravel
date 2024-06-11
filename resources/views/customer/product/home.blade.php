@@ -4,8 +4,12 @@
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
                 {{ __('List Products') }}
             </h2>
+            <a  href="{{ route('customer.order.home') }} class="text-gray-800 hover:text-gray-600">
+                <i class="fas fa-shopping-cart"></i>
+            </a>
         </div>
     </x-slot>
+    
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
