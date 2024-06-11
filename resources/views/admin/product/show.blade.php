@@ -36,9 +36,35 @@
                             </div>
                         </div>
                         <div class="ml-4 p-4">
-                            <img src="{{ asset('storage/images/' . $product->image) }}" alt="{{ $product->name }}" class="w-80 h-64 object-cover rounded-md">
+                            {{-- <img src="{{ asset('storage/images/' . $product->image) }}" alt="{{ $product->name }}" class="w-80 h-64 object-cover rounded-md"> --}}
+                            <!-- Slider main container -->
+                            <div class="swiper">
+                                <!-- Additional required wrapper -->
+                                <div class="swiper-wrapper">
+                                <!-- Slides -->
+                                <div class="swiper-slide">
+                                    <img src="{{ asset('storage/images/' . $product->image) }}" alt="{{ $product->name }}" class="object-cover rounded-md">
+                                </div>
+                                <div class="swiper-slide">
+                                    <img src="{{ asset('storage/images/' . $product->image1) }}" alt="{{ $product->name }}" class="object-cover rounded-md">
+                                </div>
+                                <div class="swiper-slide">
+                                    <img src="{{ asset('storage/images/' . $product->image2) }}" alt="{{ $product->name }}" class="object-cover rounded-md">
+                                </div>
+                                ...
+                                </div>
+                                <!-- If we need pagination -->
+                                <div class="swiper-pagination"></div>
+                            
+                                <!-- If we need navigation buttons -->
+                                <div class="swiper-button-prev"></div>
+                                <div class="swiper-button-next"></div>
+                            
+                                <!-- If we need scrollbar -->
+                                {{-- <div class="swiper-scrollbar"></div> --}}
+                            </div>
                         </div>
-                    </div>
+                     </div>
                     
 
                         <div class="mt-8">
@@ -65,9 +91,65 @@
                             @endif
                             
                         </div>
-                 </div>
+                    </div>
             </div>
         </div>
     </div>
+
+<!-- Swiper JS -->
+<script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+<style>
+    .swiper {
+  width: 600px;
+  height: 300px;
+}
+
+.swiper-slide {
+
+  background: #fff;
+  /* Center slide text vertically */
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  -webkit-align-items: center;
+  align-items: center;
+}
+
+.swiper-slide:hover {
+  transform: scale(1.3);
+}
+</style>
+
+<script>
+    const swiper = new Swiper('.swiper', {
+  // Optional parameters
+  direction: 'horizontal',
+  loop: true,
+
+  // If we need pagination
+  pagination: {
+    el: '.swiper-pagination',
+  },
+
+  // Navigation arrows
+  navigation: {
+    nextEl: '.swiper-button-next',
+    prevEl: '.swiper-button-prev',
+  },
+
+  // And if we need scrollbar
+  scrollbar: {
+    el: '.swiper-scrollbar',
+  },
+});
+    </script>
+    
 </x-app-layout>
 
