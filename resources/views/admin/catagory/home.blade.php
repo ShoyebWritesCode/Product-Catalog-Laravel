@@ -1,8 +1,18 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Catagory') }}
-        </h2>
+        <div class="flex justify-between items-center">
+            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+                {{ __('Category') }}
+            </h2>
+            <div class="flex-1 text-center">
+                <a href="{{ route('admin.dashboard') }}" class="text-blue-500 hover:text-blue-700 mx-4">
+                    {{ __('Dashboard') }}
+                </a>
+                <a href="{{ route('admin.product.home') }}" class="text-blue-500 hover:text-blue-700 mx-4">
+                    {{ __('Product') }}
+                </a>
+            </div>
+        </div>
     </x-slot>
 
     <div class="py-12">
