@@ -21,7 +21,7 @@
                 <div class="p-6 text-gray-900">
                     <div class="flex items-center justify-between mb-4">
                         <h1 class="text-2xl font-semibold">List Category</h1>
-                        <a href="{{ route('admin.catagory.create') }}" class="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-indigo-600 focus:outline-none focus:bg-indigo-600">Add a new Catagory</a>
+                        <a href="{{ route('admin.catagory.create') }}" class="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-indigo-600 focus:outline-none focus:bg-indigo-600">Add a new Category</a>
                     </div>
                     <hr class="mb-4">
                     @if (session('success'))
@@ -35,7 +35,7 @@
                             <thead>
                                 <tr class="bg-gray-200">
                                     <th class="py-2 px-4 border-b border-gray-300">Serial No.</th>
-                                    <th class="py-2 px-4 border-b border-gray-300">Catagory</th>
+                                    <th class="py-2 px-4 border-b border-gray-300">Category</th>
                                     <th class="py-2 px-4 border-b border-gray-300">Subcategories</th>
                                 </tr>
                             </thead>
@@ -46,7 +46,7 @@
                                         <td class="py-2 px-4 border-b border-gray-300">{{ $category->name }}</td>
                                         <td class="py-2 px-4 border-b border-gray-300">
                                             @foreach ($subcategories as $subcategory)
-                                                @if ($subcategory->parent_id == $index + 1)
+                                                @if ($subcategory->parent_id == $category->id)
                                                     {{ $subcategory->name }}<br>
                                                 @endif
                                             @endforeach

@@ -5,7 +5,7 @@
                 {{ __('Admin Dashboard') }}
             </h2>
             <div class="flex-1 text-center">
-                <a href="{{ route('admin.product.home') }}" class="text-green-500 hover:text-blue-700 mx-4">
+                <a href="{{ route('admin.product.home') }}" class="text-blue-500 hover:text-blue-700 mx-4">
                     {{ __('Product') }}
                 </a>
                 <a href="{{ route('admin.catagory.home') }}" class="text-blue-500 hover:text-blue-700 mx-4">
@@ -28,7 +28,11 @@
                         </thead>
                         <tbody class="bg-white divide-y divide-gray-200">
                             <tr>
-                                <td class="px-6 py-4 whitespace-nowrap">Total Users</td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <a href="{{ route('admin.users') }}" class="text-green-500 hover:text-blue-700 mx-4">
+                                        {{ __('Total Users') }}
+                                    </a>
+                                </td>
                                 <td class="px-6 py-4 whitespace-nowrap">{{ $totalUsers }}</td>
                             </tr>
                             <tr>

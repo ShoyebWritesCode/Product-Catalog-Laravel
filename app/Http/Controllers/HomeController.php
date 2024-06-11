@@ -19,4 +19,10 @@ class HomeController extends Controller
 
         return view('admin.dashboard', compact('totalUsers', 'totalCategories', 'totalReviews', 'totalProducts'));
     }
+
+    public function users()
+    {
+        $users = User::all();
+        return view('admin.users', compact('users'));
+    }
 }

@@ -40,6 +40,8 @@ Route::middleware('auth')->group(function () {
 
 Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/admin/dashboard', [HomeController::class, 'index'])->name('admin.dashboard');
+    Route::get('/admin/users', [HomeController::class, 'users'])->name('admin.users');
+
 
     Route::get('/admin/catagories', [CatagoryController::class, 'index'])->name('admin.catagory.home');
     Route::get('/admin/catagories/create', [CatagoryController::class, 'create'])->name('admin.catagory.create');
@@ -49,7 +51,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/admin/products/create', [ProductController::class, 'create'])->name('admin.product.create');
     Route::post('/admin/products/save', [ProductController::class, 'save'])->name('admin.product.save');
     Route::get('/admin/products/{product}', [ProductController::class, 'show'])->name('admin.product.show');
-
+    
 });	
 
 require __DIR__.'/auth.php';

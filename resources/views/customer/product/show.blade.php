@@ -1,8 +1,19 @@
 <x-app-layout>
+    @vite(['resources/scss/show.scss'])
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Show Product') }}
-        </h2>
+        <div class="flex justify-between items-center">
+            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+                <h1 class="text-2xl font-bold mb-2">{{ $product->name }}</h1>
+            </h2>
+            <div class="flex-1 text-center">
+                <a href="{{ route('customer.product.home') }}" class="text-blue-500 hover:text-blue-700 mx-4">
+                    {{ __('Product') }}
+                </a>
+                {{-- <a href="{{ route('admin.catagory.home') }}" class="text-blue-500 hover:text-blue-700 mx-4">
+                    {{ __('Catagory') }}
+                </a> --}}
+            </div>
+        </div>
     </x-slot>
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
@@ -35,12 +46,38 @@
                                 @endif
                             </div>
                         </div>
-                        <div class="ml-4 md:px-24 p-16 h-screen">
-                            <img src="{{ asset('storage/images/' . $product->image) }}" alt="{{ $product->name }}" class="w-32 h-32 object-cover rounded-md">
+                        <div class="ml-4 p-4">
+                            {{-- <img src="{{ asset('storage/images/' . $product->image) }}" alt="{{ $product->name }}" class="w-80 h-64 object-cover rounded-md"> --}}
+                            <!-- Slider main container -->
+                            <div class="swiper">
+                                <!-- Additional required wrapper -->
+                                <div class="swiper-wrapper">
+                                <!-- Slides -->
+                                <div class="swiper-slide">
+                                    <img src="{{ asset('storage/images/' . $product->image) }}" alt="{{ $product->name }}" class="object-cover rounded-md">
+                                </div>
+                                <div class="swiper-slide">
+                                    <img src="{{ asset('storage/images/' . $product->image1) }}" alt="{{ $product->name }}" class="object-cover rounded-md">
+                                </div>
+                                <div class="swiper-slide">
+                                    <img src="{{ asset('storage/images/' . $product->image2) }}" alt="{{ $product->name }}" class="object-cover rounded-md">
+                                </div>
+                                </div>
+                                <!-- If we need pagination -->
+                                <div class="swiper-pagination"></div>
+                            
+                                <!-- If we need navigation buttons -->
+                                <div class="swiper-button-prev"></div>
+                                <div class="swiper-button-next"></div>
+                            
+                                <!-- If we need scrollbar -->
+                                {{-- <div class="swiper-scrollbar"></div> --}}
+                            </div>
                         </div>
-                    </div>
+                     </div>
+                    
 
-                    <div class="mt-8">
+                     <div class="mt-8">
                         @if ($reviews->isNotEmpty())
                         <h2 class="text-2xl font-bold mb-4">Reviews & Ratings</h2>
 
@@ -104,9 +141,10 @@
                                     <p class="text-red-500">You can only submit a review once every hour.</p>
                                 @endif
                     </div>
-                </div>
+                    </div>
             </div>
         </div>
     </div>
+@vite(['resources/js/custom/show.js'])
 </x-app-layout>
 
