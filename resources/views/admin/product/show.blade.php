@@ -1,9 +1,19 @@
 <x-app-layout>
     @vite(['resources/scss/show.scss'])
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Show Product') }}
-        </h2>
+        <div class="flex justify-between items-center">
+            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+                <h1 class="text-2xl font-bold mb-2">{{ $product->name }}</h1>
+            </h2>
+            <div class="flex-1 text-center">
+                <a href="{{ route('admin.dashboard') }}" class="text-blue-500 hover:text-blue-700 mx-4">
+                    {{ __('Dashboard') }}
+                </a>
+                <a href="{{ route('admin.catagory.home') }}" class="text-blue-500 hover:text-blue-700 mx-4">
+                    {{ __('Catagory') }}
+                </a>
+            </div>
+        </div>
     </x-slot>
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
