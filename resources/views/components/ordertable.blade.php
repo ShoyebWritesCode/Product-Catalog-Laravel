@@ -8,15 +8,15 @@
     </thead>
     <tbody>
         @foreach($rows as $row)
-            <tr>
+            <tr id="row_{{ $row[0] }}">
                 @foreach($row as $index => $cell)
                     <td>
                         @if ($index === count($row) - 1) 
-                            <form method="POST" action="{{ route('admin.pendingorders.update', $row[0]) }}" style="display: inline;">
+                            <form id="updateForm_{{ $row[0] }}" class="update-form" data-order-id="{{ $row[0] }}" method="POST" action="{{ route('admin.pendingorders.update', $row[0]) }}" style="display: inline;">
                                 @csrf
                                 @method('POST')
-                                <button type="submit" class="btn btn-link">
-                                    <i class="fas fa-check-circle"></i>
+                                <button type="button" class="btn btn-link update-btn">
+                                    <i class="fas fa-check text-success fa-lg"></i>
                                 </button>
                             </form>
                         @else
@@ -28,4 +28,7 @@
         @endforeach
     </tbody>
 </table>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+@vite(['resources/js/custom/orderupdate.js'])
+
 
