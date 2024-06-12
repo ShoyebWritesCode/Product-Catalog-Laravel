@@ -9,12 +9,18 @@
                 <a href="{{ route('customer.product.home') }}" class="text-blue-500 hover:text-blue-700 mx-4">
                     {{ __('Product') }}
                 </a>
-                {{-- <a href="{{ route('admin.catagory.home') }}" class="text-blue-500 hover:text-blue-700 mx-4">
-                    {{ __('Catagory') }}
-                </a> --}}
             </div>
+            <a  href="{{ route('customer.order.home') }}" class="text-gray-800 hover:text-gray-600">
+                <i class="fas fa-shopping-cart"></i>
+            </a>
         </div>
     </x-slot>
+                        <hr class="mb-4">
+                        @if (session('success'))
+                            <div class="alert alert-success mb-4" role="alert">
+                                {{ session('success') }}
+                            </div>
+                        @endif
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
@@ -74,9 +80,20 @@
                                 {{-- <div class="swiper-scrollbar"></div> --}}
                             </div>
                         </div>
-                     </div>
-                    
 
+                       
+
+                     </div>
+
+                     <div class="flex justify-center mt-4">
+                        <form action="{{ route('customer.order.add', $product->id) }}" method="POST">
+                            @csrf
+                            <button type="submit" class="bg-red-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                                Add to Cart
+                            </button>
+                        </form>
+                    </div>
+                    
                      <div class="mt-8">
                         @if ($reviews->isNotEmpty())
                         <h2 class="text-2xl font-bold mb-4">Reviews & Ratings</h2>
