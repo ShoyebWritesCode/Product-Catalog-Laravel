@@ -5,8 +5,11 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Admin\CatagoryController;
 use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\Customer\CustomerProductController;
 use App\Http\Controllers\Customer\ReviewController;
+use App\Http\Controllers\Customer\OrderController;
+use App\Http\Middleware\Admin;
 
 /*
 |--------------------------------------------------------------------------
@@ -35,6 +38,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/products', [CustomerProductController::class, 'index'])->name('customer.product.home');
     Route::get('/products/{product}', [CustomerProductController::class, 'show'])->name('customer.product.show');
     Route::post('/products/{product}/reviews', [ReviewController::class, 'store'])->name('customer.product.reviews');
+    Route::get('/orders', [OrderController::class, 'index'])->name('customer.order.home');
+    Route::post('/orders/{product}', [OrderController::class, 'add'])->name('customer.order.add');
+    Route::post('/orders/checkout/{order}', [OrderController::class, 'checkout'])->name('customer.order.checkout');
 
 });
 
@@ -51,6 +57,15 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/admin/products/create', [ProductController::class, 'create'])->name('admin.product.create');
     Route::post('/admin/products/save', [ProductController::class, 'save'])->name('admin.product.save');
     Route::get('/admin/products/{product}', [ProductController::class, 'show'])->name('admin.product.show');
+    Route::get('admin/admin',[AdminController::class,'index'])->name('admin.admin');
+    Route::get('admin/admin/products',[AdminController::class,'products'])->name('admin.products');
+    Route::get('admin/admin/users',[AdminController::class,'users'])->name('admin.users');
+    Route::get('admin/admin/categories',[AdminController::class,'categories'])->name('admin.categories');
+    Route::get('admin/admin/reviews',[AdminController::class,'reviews'])->name('admin.reviews');
+    Route::get('admin/admin/pendingorders',[AdminController::class,'pendingorders'])->name('admin.pendingorders');
+    Route::post('admin/admin/pendingorders/{order}',[AdminController::class,'update'])->name('admin.pendingorders.update');
+    Route::get('admin/admin/completedorders',[AdminController::class,'completedorders'])->name('admin.completedorders');
+
     
 });	
 
