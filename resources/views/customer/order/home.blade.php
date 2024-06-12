@@ -9,6 +9,10 @@
                     {{ __('Product') }}
                 </a>
             </div>
+            <a href="{{ route('customer.order.home') }}" class="text-gray-800 hover:text-gray-600 relative">
+                <i class="fas fa-shopping-cart text-xl"></i>
+                <span class="bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center absolute top-0 right-0 -mt-1 -mr-1 text-xs">
+                    {{ $numberOfItems }}  </span> </a>
         </div>
     </x-slot>
 

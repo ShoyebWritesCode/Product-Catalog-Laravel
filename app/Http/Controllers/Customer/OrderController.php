@@ -7,6 +7,7 @@ use App\Models\Review;
 use App\Models\OrderItems;
 use App\Models\Order;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class OrderController extends Controller
 {
@@ -15,6 +16,7 @@ class OrderController extends Controller
         $user = auth()->user();
         $order = Order::where('user_id', $user->id)->where('status', 0)->first();
         $orderItems = collect();
+
     
         if ($order) {
             $orderItems = OrderItems::where('order_id', $order->id)->get();
@@ -26,6 +28,7 @@ class OrderController extends Controller
 
     public function add(Product $product)
     {
+        // $num = 0;
         $user = auth()->user();
         $order = Order::where('user_id', $user->id)->where('status', 0)->first();
         
@@ -45,8 +48,15 @@ class OrderController extends Controller
         $order->total += $product->price;
         $order->save();
 
-        session()->flash('success', 'Added to cart successfully');
-        return redirect()->back()->with('success', 'Added to Cart successfully');
+        // session()->flash('success', 'Added to cart successfully');
+        // return redirect()->back()->with('success', 'Added to Cart successfully');
+        // return response()->json(['success' => session('success')]);
+        $message = 'Added to cart successfully!';
+        // dd($average);
+        // Log::debug($num);
+        // die('came here');
+        return response()->json(['success' => true, 'message' => $message]);
+        // return view('customer.product.show', ['num' => $num]);
     }
 
     public function checkout()
@@ -56,7 +66,7 @@ class OrderController extends Controller
         $order->status = 1;
         $order->save();
         session()->flash('success', 'Order placed successfully');
-        return redirect()->route('customer.order.home')->with('success', 'Added to Cart successfully');
+        return redirect()->route('customer.order.home')->with('success', 'Order placed successfully');
     }
     
 }

@@ -10,17 +10,18 @@
                     {{ __('Product') }}
                 </a>
             </div>
-            <a  href="{{ route('customer.order.home') }}" class="text-gray-800 hover:text-gray-600">
-                <i class="fas fa-shopping-cart"></i>
+            <a href="{{ route('customer.order.home') }}" class="text-gray-800 hover:text-gray-600 relative">
+                <i class="fas fa-shopping-cart text-xl"></i> 
+                <span class="bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center absolute top-0 right-0 -mt-1 -mr-1 text-xs">
+                    {{$numberOfItems }}  </span> 
             </a>
+            
+            
         </div>
     </x-slot>
-                        <hr class="mb-4">
-                        @if (session('success'))
-                            <div class="alert alert-success mb-4" role="alert">
-                                {{ session('success') }}
-                            </div>
-                        @endif
+
+    <div id="successMessage" class="alert alert-success mb-4" role="alert" style="display: none;"></div>
+
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
@@ -85,14 +86,14 @@
 
                      </div>
 
-                     <div class="flex justify-center mt-4">
-                        <form action="{{ route('customer.order.add', $product->id) }}" method="POST">
+                    <div class="flex justify-center mt-4">
+                        <form id="addToCartForm" action="{{ route('customer.order.add', $product->id) }}" method="POST">
                             @csrf
                             <button type="submit" class="bg-red-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                                 Add to Cart
                             </button>
                         </form>
-                    </div>
+                     </div>
                     
                      <div class="mt-8">
                         @if ($reviews->isNotEmpty())
@@ -162,6 +163,7 @@
             </div>
         </div>
     </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 @vite(['resources/js/custom/show.js'])
 </x-app-layout>
 
