@@ -62,6 +62,9 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('admin/admin/users',[AdminController::class,'users'])->name('admin.users');
     Route::get('admin/admin/categories',[AdminController::class,'categories'])->name('admin.categories');
     Route::get('admin/admin/reviews',[AdminController::class,'reviews'])->name('admin.reviews');
+    Route::get('admin/admin/pendingorders',[AdminController::class,'pendingorders'])->name('admin.pendingorders');
+    Route::post('admin/admin/pendingorders/{order}',[AdminController::class,'update'])->name('admin.pendingorders.update');
+    Route::get('admin/admin/completedorders',[AdminController::class,'completedorders'])->name('admin.completedorders');
 
     
 });	

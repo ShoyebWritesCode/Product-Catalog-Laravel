@@ -40,6 +40,22 @@
             'link' => route("admin.reviews"),
             'link_text' => 'More info'
         ])
+         @include('components.index', [
+            'title' => 'Pending Orders',
+            'number' => $totalPendingOrders,
+            'icon' => 'fas fa-shopping-cart',
+            'color' => 'primary',
+            'link' => route("admin.pendingorders"),
+            'link_text' => 'More info'
+        ])
+         @include('components.index', [
+            'title' => 'Delivered Orders',
+            'number' => $totalCompletedOrders,
+            'icon' => 'fas fa-shopping-cart',
+            'color' => 'secondary',
+            'link' => route("admin.completedorders"),
+            'link_text' => 'More info'
+        ])
     </div>
 @stop
 
