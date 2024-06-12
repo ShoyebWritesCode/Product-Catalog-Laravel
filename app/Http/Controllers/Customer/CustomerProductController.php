@@ -16,6 +16,7 @@ class CustomerProductController extends Controller
         $subcategories = [];
         $namesubcategories = [];
         $nameparentcategories = [];
+        $averageRatings = [];
     
   
         $categories = Catagory::all()->keyBy('id');
@@ -47,6 +48,7 @@ class CustomerProductController extends Controller
         $subcategories = [];
         $namesubcategories = [];
         $nameparentcategories = [];
+        $averageRatings = [];
     
   
         $categories = Catagory::all()->keyBy('id');

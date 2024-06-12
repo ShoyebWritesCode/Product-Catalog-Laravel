@@ -41,18 +41,17 @@
                         </div>
                         <div class="mb-4">
                             <label class="block text-sm font-medium text-gray-700">Category:</label>
-                            <div class="flex flex-wrap space-x-4 space-y-4">
+                            <div class="flex space-x-4">
                                 @foreach($categories as $category)
-                                    <div class="flex flex-col">
+                                    <div class="flex flex-col mb-4">
                                         <div class="flex items-center">
                                             <input type="checkbox" id="category_{{ $category->id }}" name="parent_categories[]" value="{{ $category->id }}" class="mr-2 parent-category">
                                             <label for="category_{{ $category->id }}" class="text-sm">{{ $category->name }}</label>
-                                            <div class="px-5 mr-5"></div>
                                         </div>
-                                        <div class="ml-6 hidden subcategories" id="subcategories_{{ $category->id }}">
+                                        <div class="ml-6 hidden subcategories mt-2" id="subcategories_{{ $category->id }}">
                                             @foreach($subcategories as $subcategory)
                                                 @if($subcategory->parent_id == $category->id)
-                                                    <div class="flex items-center">
+                                                    <div class="flex items-center mb-2">
                                                         <input type="checkbox" id="subcategory_{{ $subcategory->id }}" name="subcategories[]" value="{{ $subcategory->id }}" class="mr-2" data-parent="{{ $category->id }}">
                                                         <label for="subcategory_{{ $subcategory->id }}" class="text-sm">{{ $subcategory->name }}</label>
                                                     </div>
@@ -63,13 +62,19 @@
                                 @endforeach
                             </div>
                         </div>
+                        
+                            
+                        </div>
                         <div class="mb-4">
-                            <label for="image" class="block text-sm font-medium text-gray-700">Image:</label>
+                            <label for="image" class="block text-sm font-medium text-gray-700">Images:</label>
                             <input type="file" name="image" id="image" class="mt-1 p-2 w-full border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-indigo-200 focus:border-indigo-500">
                             @error('image')
                                 <span class="text-red-500">{{ $message }}</span>
                             @enderror
+                            <input type="file" name="image1" id="image" class="mt-1 p-2 w-full border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-indigo-200 focus:border-indigo-500">
+                            <input type="file" name="image2" id="image" class="mt-1 p-2 w-full border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-indigo-200 focus:border-indigo-500">
                         </div>
+                        
                         
                         <button type="submit" class="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-indigo-600 focus:outline-none focus:bg-indigo-600">Add</button>
                     </form>
@@ -77,25 +82,6 @@
             </div>
         </div>
     </div>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            var parentCategories = document.querySelectorAll('.parent-category');
-            parentCategories.forEach(function(parentCategory) {
-                parentCategory.addEventListener('change', function () {
-                    var subcategoryDiv = document.getElementById('subcategories_' + this.value);
-                    if (this.checked) {
-                        subcategoryDiv.classList.remove('hidden');
-                    } else {
-                        subcategoryDiv.classList.add('hidden');
-                        var subcategories = subcategoryDiv.querySelectorAll('input[type="checkbox"]');
-                        subcategories.forEach(function(subcategory) {
-                            subcategory.checked = false;
-                        });
-                    }
-                });
-            });
-        });
-    </script>
+    @vite(['resources/js/custom/product.js'])
 </x-app-layout>
 

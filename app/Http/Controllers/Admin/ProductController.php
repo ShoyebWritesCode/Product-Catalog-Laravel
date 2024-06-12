@@ -19,6 +19,7 @@ class ProductController extends Controller
         $subcategories = [];
         $namesubcategories = [];
         $nameparentcategories = [];
+        $averageRatings = [];
     
   
         $categories = Catagory::all()->keyBy('id');
@@ -72,6 +73,23 @@ class ProductController extends Controller
             $product->description = $request->description;
             $product->price = $request->price;
             $product->image = $imageName;
+
+            if ($request->hasFile('image1')) {
+                $destinationPath = config('utility.product_image_path');
+                $image1 = $request->file('image1');
+                $imageName1 = time().'1.'.$image1->getClientOriginalExtension();
+                $image1->storeAs($destinationPath, $imageName1);
+                $product->image1 = $imageName1;
+            }	
+
+            if ($request->hasFile('image2')) {
+                $destinationPath = config('utility.product_image_path');
+                $image2 = $request->file('image2');
+                $imageName2 = time().'2.'.$image2->getClientOriginalExtension();
+                $image1->storeAs($destinationPath, $imageName2);
+                $product->image2 = $imageName2;
+            }
+
             $product->save();
 
             // Loop through subcategories and save mappings
@@ -98,6 +116,7 @@ class ProductController extends Controller
         $subcategories = [];
         $namesubcategories = [];
         $nameparentcategories = [];
+        $averageRatings = [];
     
   
         $categories = Catagory::all()->keyBy('id');

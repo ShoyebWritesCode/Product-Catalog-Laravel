@@ -1,0 +1,42 @@
+@import "variables";
+
+.table-container {
+    overflow-x: auto;
+}
+
+.custom-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: $table-margin-bottom;
+    font-size: $table-font-size;
+    border: 1px solid $table-border-color;
+
+    th,
+    td {
+        padding: $table-cell-padding;
+        border-bottom: 1px solid $table-border-color;
+    }
+
+    th {
+        background-color: $table-header-bg;
+        color: $table-header-color;
+        font-weight: bold;
+        text-align: left;
+    }
+
+    tbody tr:hover {
+        background-color: $table-row-hover-bg;
+    }
+
+    tbody tr:nth-child(odd) {
+        background-color: $table-striped-odd-color;
+    }
+
+    tbody tr:nth-child(even) {
+        background-color: $table-striped-even-color;
+    }
+
+    tbody tr:hover {
+        background-color: $table-hover-color;
+    }
+}

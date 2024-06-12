@@ -3,6 +3,11 @@
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
             {{ __('Profile') }}
         </h2>
+        @if ($user->usertype == 'admin')
+            <a href="{{ route('admin.dashboard') }}" class="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-indigo-600 focus:outline-none focus:bg-indigo-600">Back</a>
+        @else
+            <a href="{{ route('customer.product.home') }}" class="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-indigo-600 focus:outline-none focus:bg-indigo-600">Back</a>
+        @endif
     </x-slot>
 
     <div class="py-12">
