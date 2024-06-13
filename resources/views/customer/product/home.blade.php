@@ -1,14 +1,20 @@
 <x-app-layout>
+    @vite(['resources/scss/product.scss'])
     <x-slot name="header">
         <div class="flex justify-between items-center">
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
                 {{ __('List Products') }}
             </h2>
-            <a href="{{ route('customer.order.home') }}" class="text-gray-800 hover:text-gray-600 relative">
-                <i class="fas fa-shopping-cart text-xl"></i> 
+            <a href="#" id="cartLink" class="text-gray-800 hover:text-gray-600 relative">
+                <i class="fas fa-shopping-cart text-xl"></i>
                 <span class="bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center absolute top-0 right-0 -mt-1 -mr-1 text-xs">
-                    {{$numberOfItems }}  </span> 
-            </a>
+                  {{$numberOfItems }}
+                </span>
+              </a>
+              
+              <div id="orderPopup" class="max-h-96 hidden fixed inset-auto top-1/2 left-1/2 transform -translate-y-1/2 -translate-x-1/2 bg-gray-500 bg-opacity-50 overflow-auto z-50 p-4 rounded shadow-md">
+                <span class="close-btn absolute top-right p-2 text-xl cursor-pointer hover:text-red-500">&times;</span>
+                </div>
         </div>
     </x-slot>
     
@@ -72,3 +78,31 @@
         </div>
     </div>
 </x-app-layout>
+<script>
+    document.getElementById('cartLink').addEventListener('click', function(event) {
+      event.preventDefault();
+    
+      fetch('{{ route('customer.order.popup') }}')
+        .then(response => response.text())
+        .then(htmlContent => {
+          document.getElementById('orderPopup').innerHTML = htmlContent;
+        })
+        .catch(error => {
+          console.error('Error fetching content:', error);
+        });
+    
+      document.getElementById('orderPopup').classList.remove('hidden');
+    });
+    
+    document.addEventListener('click', function(event) {
+      if (event.target.id === 'orderPopup') {
+        document.getElementById('orderPopup').classList.add('hidden');
+      }
+    });
+
+    document.addEventListener('click', function(event) {
+    if (event.target.id === 'orderPopup') {
+        document.getElementById('orderPopup').classList.add('hidden');
+    }
+});
+    </script>

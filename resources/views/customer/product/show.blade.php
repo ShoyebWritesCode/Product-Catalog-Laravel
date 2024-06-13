@@ -166,4 +166,5 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 @vite(['resources/js/custom/show.js'])
 </x-app-layout>
+    
 

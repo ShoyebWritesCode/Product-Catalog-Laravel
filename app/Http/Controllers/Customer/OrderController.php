@@ -11,20 +11,49 @@ use Illuminate\Support\Facades\Log;
 
 class OrderController extends Controller
 {
-    public function index()
+    // public function index()
+    // {
+    //     $user = auth()->user();
+    //     $order = Order::where('user_id', $user->id)->where('status', 0)->first();
+    //     $orderItems = collect();
+
+    
+    //     if ($order) {
+    //         $orderItems = OrderItems::where('order_id', $order->id)->get();
+    //     }
+    
+    //     return view('customer.order.home', compact('order', 'orderItems'));
+    // }
+    
+
+    protected function getOrderData()
     {
         $user = auth()->user();
         $order = Order::where('user_id', $user->id)->where('status', 0)->first();
         $orderItems = collect();
 
-    
         if ($order) {
             $orderItems = OrderItems::where('order_id', $order->id)->get();
         }
-    
-        return view('customer.order.home', compact('order', 'orderItems'));
+
+        return compact('order', 'orderItems');
     }
-    
+
+    public function index()
+    {
+        $data = $this->getOrderData();
+
+        return view('customer.order.home', $data);
+    }
+
+    public function popup()
+    {
+        $data = $this->getOrderData();
+
+        return view('customer.order.popup', $data);
+    }
+
+
 
     public function add(Product $product)
     {
@@ -67,6 +96,19 @@ class OrderController extends Controller
         $order->save();
         session()->flash('success', 'Order placed successfully');
         return redirect()->route('customer.order.home')->with('success', 'Order placed successfully');
+    }
+
+    public function itemCount()
+    {
+        $user = auth()->user();
+        $numberOfItems = 0;
+
+        if ($user) {
+            $order = Order::where('user_id', $user->id)->where('status', 0)->first();
+            $numberOfItems = $order ? OrderItems::where('order_id', $order->id)->count() : 0;
+        }
+
+        return response()->json(['numberOfItems' => $numberOfItems]);
     }
     
 }

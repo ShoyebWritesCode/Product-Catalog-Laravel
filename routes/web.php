@@ -39,8 +39,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/products/{product}', [CustomerProductController::class, 'show'])->name('customer.product.show');
     Route::post('/products/{product}/reviews', [ReviewController::class, 'store'])->name('customer.product.reviews');
     Route::get('/orders', [OrderController::class, 'index'])->name('customer.order.home');
+    Route::get('/orderpopup',[OrderController::class, 'popup'])->name('customer.order.popup');
     Route::post('/orders/{product}', [OrderController::class, 'add'])->name('customer.order.add');
     Route::post('/orders/checkout/{order}', [OrderController::class, 'checkout'])->name('customer.order.checkout');
+    // Route::get('/order/cart', [OrderController::class, 'itemCount'])->name('customer.order.cart');
 
 });
 
