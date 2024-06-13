@@ -54,6 +54,18 @@ class OrderController extends Controller
         return view('customer.order.popup', $data);
     }
 
+    public function shipping()
+    {
+        $data = $this->getOrderData();
+        return view('customer.order.shipping', $data);
+    }
+
+    public function checkoutpage()
+    {
+        $data = $this->getOrderData();
+        return view('customer.order.checkout', $data);
+    }
+
 
 
     public function add(Product $product)
@@ -67,6 +79,9 @@ class OrderController extends Controller
             $order->user_id = $user->id;
             $order->total = 0;
             $order->status = 0;
+            $order->city = '';
+            $order->address = '';
+            $order->phone = '';
             $order->save();
         }
 
@@ -112,8 +127,13 @@ class OrderController extends Controller
         return response()->json(['numberOfItems' => $numberOfItems]);
     }
 
-    public function shipping()
+    public function shippingSave(Order $order, Request $request)
     {
-        return view('customer.order.shipping');
+        $order->city = $request->city;
+        $order->address = $request->address;
+        $order->phone = $request->phone;
+        $order->save();
+        session()->flash('success', 'Shipping details saved successfully');
+        return redirect()->route('customer.order.checkoutpage')->with('success', 'Shipping details saved successfully');
     }
 }
