@@ -39,7 +39,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/products/{product}', [CustomerProductController::class, 'show'])->name('customer.product.show');
     Route::post('/products/{product}/reviews', [ReviewController::class, 'store'])->name('customer.product.reviews');
     Route::get('/orders', [OrderController::class, 'index'])->name('customer.order.home');
-    Route::get('/orderpopup',[OrderController::class, 'popup'])->name('customer.order.popup');
+    Route::get('/orders/shipping', [OrderController::class, 'shipping'])->name('customer.order.shipping');
+    Route::get('/orderpopup', [OrderController::class, 'popup'])->name('customer.order.popup');
     Route::post('/orders/{product}', [OrderController::class, 'add'])->name('customer.order.add');
     Route::post('/orders/checkout/{order}', [OrderController::class, 'checkout'])->name('customer.order.checkout');
     // Route::get('/order/cart', [OrderController::class, 'itemCount'])->name('customer.order.cart');
@@ -59,18 +60,16 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/admin/products/create', [ProductController::class, 'create'])->name('admin.product.create');
     Route::post('/admin/products/save', [ProductController::class, 'save'])->name('admin.product.save');
     Route::get('/admin/products/{product}', [ProductController::class, 'show'])->name('admin.product.show');
-    Route::get('admin/admin',[AdminController::class,'index'])->name('admin.admin');
-    Route::get('admin/admin/products',[AdminController::class,'products'])->name('admin.products');
-    Route::get('admin/admin/users',[AdminController::class,'users'])->name('admin.users');
-    Route::get('admin/admin/categories',[AdminController::class,'categories'])->name('admin.categories');
-    Route::get('admin/admin/reviews',[AdminController::class,'reviews'])->name('admin.reviews');
-    Route::get('admin/admin/pendingorders',[AdminController::class,'pendingorders'])->name('admin.pendingorders');
-    Route::post('admin/admin/pendingorders/{order}',[AdminController::class,'update'])->name('admin.pendingorders.update');
-    Route::get('admin/admin/completedorders',[AdminController::class,'completedorders'])->name('admin.completedorders');
+    Route::get('admin/admin', [AdminController::class, 'index'])->name('admin.admin');
+    Route::get('admin/admin/products', [AdminController::class, 'products'])->name('admin.products');
+    Route::get('admin/admin/users', [AdminController::class, 'users'])->name('admin.users');
+    Route::get('admin/admin/categories', [AdminController::class, 'categories'])->name('admin.categories');
+    Route::get('admin/admin/reviews', [AdminController::class, 'reviews'])->name('admin.reviews');
+    Route::get('admin/admin/pendingorders', [AdminController::class, 'pendingorders'])->name('admin.pendingorders');
+    Route::post('admin/admin/pendingorders/{order}', [AdminController::class, 'update'])->name('admin.pendingorders.update');
+    Route::get('admin/admin/completedorders', [AdminController::class, 'completedorders'])->name('admin.completedorders');
+});
 
-    
-});	
-
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
 
 // Route::get('admin/dashboard', [HomeController::class, 'index'])->middleware(['auth', 'verified','admin'])->name('admin.dashboard');

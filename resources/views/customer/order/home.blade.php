@@ -51,12 +51,11 @@
                         </table>
                         <div class="mt-4 flex justify-between items-center">
                             <span class="text-lg font-bold">Total: {{ $order->total }} BDT</span>
-                            <form action="{{ route('customer.order.checkout', $order->id) }}" method="POST">
-                                @csrf
-                                <button type="submit" class="bg-red-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                            <a href="#" id="checkoutButton" class="no-underline text-gray-100">
+                                <button type="button" class="bg-red-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                                     Checkout
                                 </button>
-                            </form>
+                            </a>
                         </div>
                     </div>
                 @else
@@ -65,5 +64,40 @@
             </div>
         </div>
     </div>
+
+    <div id="orderPopup" class="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center hidden">
+        <div class="bg-white rounded-lg shadow-lg p-6 w-1/3">
+            <button id="closePopup" class="float-right text-gray-700">&times;</button>
+            <div id="popupContent"></div>
+        </div>
+    </div>
+
+
 </x-app-layout>
+
+<script>
+    document.getElementById('checkoutButton').addEventListener('click', function(event) {
+        event.preventDefault();
+
+        fetch('{{ route('customer.order.shipping') }}')
+            .then(response => response.text())
+            .then(htmlContent => {
+                document.getElementById('popupContent').innerHTML = htmlContent;
+                document.getElementById('orderPopup').classList.remove('hidden');
+            })
+            .catch(error => {
+                console.error('Error fetching content:', error);
+            });
+    });
+
+    document.getElementById('closePopup').addEventListener('click', function() {
+        document.getElementById('orderPopup').classList.add('hidden');
+    });
+
+    document.addEventListener('click', function(event) {
+        if (event.target.id === 'orderPopup') {
+            document.getElementById('orderPopup').classList.add('hidden');
+        }
+    });
+</script>
 

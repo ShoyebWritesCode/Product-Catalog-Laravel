@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Customer;
+
 use App\Http\Controllers\Controller;
 use App\Models\Product;
 use App\Models\Review;
@@ -17,14 +18,14 @@ class OrderController extends Controller
     //     $order = Order::where('user_id', $user->id)->where('status', 0)->first();
     //     $orderItems = collect();
 
-    
+
     //     if ($order) {
     //         $orderItems = OrderItems::where('order_id', $order->id)->get();
     //     }
-    
+
     //     return view('customer.order.home', compact('order', 'orderItems'));
     // }
-    
+
 
     protected function getOrderData()
     {
@@ -60,7 +61,7 @@ class OrderController extends Controller
         // $num = 0;
         $user = auth()->user();
         $order = Order::where('user_id', $user->id)->where('status', 0)->first();
-        
+
         if (!$order) {
             $order = new Order();
             $order->user_id = $user->id;
@@ -68,12 +69,12 @@ class OrderController extends Controller
             $order->status = 0;
             $order->save();
         }
-    
+
         $orderItem = new OrderItems();
         $orderItem->order_id = $order->id;
         $orderItem->product_id = $product->id;
         $orderItem->save();
-    
+
         $order->total += $product->price;
         $order->save();
 
@@ -110,5 +111,9 @@ class OrderController extends Controller
 
         return response()->json(['numberOfItems' => $numberOfItems]);
     }
-    
+
+    public function shipping()
+    {
+        return view('customer.order.shipping');
+    }
 }
