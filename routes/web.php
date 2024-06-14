@@ -45,6 +45,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/orders/{product}', [OrderController::class, 'add'])->name('customer.order.add');
     Route::get('/orders/checkout', [OrderController::class, 'checkoutpage'])->name('customer.order.checkoutpage');
     Route::post('/orders/checkout/{order}', [OrderController::class, 'checkout'])->name('customer.order.checkout');
+    Route::get('/history', [OrderController::class, 'history'])->name('customer.order.history');
     // Route::get('/order/cart', [OrderController::class, 'itemCount'])->name('customer.order.cart');
 
 });

@@ -136,4 +136,12 @@ class OrderController extends Controller
         session()->flash('success', 'Shipping details saved successfully');
         return redirect()->route('customer.order.checkoutpage')->with('success', 'Shipping details saved successfully');
     }
+
+    public function history()
+    {
+        $user = auth()->user();
+        $pendingorders = Order::where('user_id', $user->id)->where('status', 1)->get();
+        $completedorders = Order::where('user_id', $user->id)->where('status', 2)->get();
+        return view('customer.order.history', compact('pendingorders', 'completedorders'));
+    }
 }

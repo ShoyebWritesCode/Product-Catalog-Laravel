@@ -5,16 +5,26 @@
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
                 {{ __('List Products') }}
             </h2>
-            <a href="#" id="cartLink" class="text-gray-800 hover:text-gray-600 relative">
-                <i class="fas fa-shopping-cart text-xl"></i>
-                <span class="bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center absolute top-0 right-0 -mt-1 -mr-1 text-xs">
-                  {{$numberOfItems }}
-                </span>
-              </a>
-              
-              <div id="orderPopup" class="max-h-96 hidden fixed inset-auto top-1/2 left-1/2 transform -translate-y-1/2 -translate-x-1/2 bg-gray-500 bg-opacity-50 overflow-auto z-50 p-4 rounded shadow-md">
-                <span class="close-btn absolute top-right p-2 text-xl cursor-pointer hover:text-red-500">&times;</span>
-                </div>
+    
+            <div class="flex items-center space-x-4">
+
+                <a href="#" id="cartLink" class="text-gray-800 hover:text-gray-600 relative">
+                    <i class="fas fa-shopping-cart text-xl"></i>
+                    <span class="bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center absolute top-0 right-0 -mt-1 -mr-1 text-xs">
+                        {{ $numberOfItems }}
+                    </span>
+                </a>
+                <p></p>
+                <a href="{{ route('customer.order.history') }}" id="historyLink" class="text-gray-800 hover:text-gray-600 relative">
+                    <i class="fas fa-history text-xl"></i>
+                </a>
+    
+            </div>
+        </div>
+    
+        <!-- Popup Container -->
+        <div id="orderPopup" class="max-h-96 hidden fixed inset-auto top-1/2 left-1/2 transform -translate-y-1/2 -translate-x-1/2 bg-gray-500 bg-opacity-50 overflow-auto z-50 p-4 rounded shadow-md">
+            <span class="close-btn absolute top-right p-2 text-xl cursor-pointer hover:text-red-500">&times;</span>
         </div>
     </x-slot>
     
