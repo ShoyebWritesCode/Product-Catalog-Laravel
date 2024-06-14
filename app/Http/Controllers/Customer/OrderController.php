@@ -144,4 +144,11 @@ class OrderController extends Controller
         $completedorders = Order::where('user_id', $user->id)->where('status', 2)->get();
         return view('customer.order.history', compact('pendingorders', 'completedorders'));
     }
+
+    public function orderdetail(Order $order)
+    {
+        $orderItems = OrderItems::where('order_id', $order->id)->get();
+        $data = compact('order', 'orderItems');
+        return view('customer.order.orderdetail', $data);
+    }
 }

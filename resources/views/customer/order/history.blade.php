@@ -21,7 +21,6 @@
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
-                <!-- Pending Orders Section -->
                 <div class="mb-4">
                     <button class="w-full bg-gray-200 text-left p-4 font-bold" onclick="toggleSection('pendingOrders')">
                         Pending Orders
@@ -41,7 +40,9 @@
                                 <tbody>
                                     @foreach($pendingorders as $order)
                                         <tr>
-                                            <td class="border px-4 py-2 text-center">{{ $order->id }}</td>
+                                            <td class="border px-4 py-2 text-center">
+                                                <a href="{{route('customer.order.orderdetail',$order->id)}}">{{ $order->id }}</a>
+                                            </td>
                                             <td class="border px-4 py-2 text-center">{{ $order->total }} BDT</td>
                                             <td class="border px-4 py-2 text-center">{{ $order->created_at->format('d M Y') }}</td>
                                         </tr>
@@ -52,7 +53,6 @@
                     </div>
                 </div>
 
-                <!-- Completed Orders Section -->
                 <div>
                     <button class="w-full bg-gray-200 text-left p-4 font-bold" onclick="toggleSection('completedOrders')">
                         Completed Orders
@@ -72,7 +72,9 @@
                                 <tbody>
                                     @foreach($completedorders as $order)
                                         <tr>
-                                            <td class="border px-4 py-2 text-center">{{ $order->id }}</td>
+                                            <td class="border px-4 py-2 text-center">
+                                                <a href="{{route('customer.order.orderdetail',$order->id)}}">{{ $order->id }}</a>
+                                            </td>
                                             <td class="border px-4 py-2 text-center">{{ $order->total }} BDT</td>
                                             <td class="border px-4 py-2 text-center">{{ $order->created_at->format('d M Y') }}</td>
                                         </tr>
