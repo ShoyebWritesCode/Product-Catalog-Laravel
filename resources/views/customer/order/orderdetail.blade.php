@@ -12,16 +12,18 @@
             <a href="{{ route('customer.order.home') }}" class="text-gray-800 hover:text-gray-600 relative">
                 <i class="fas fa-shopping-cart text-xl"></i>
                 <span class="bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center absolute top-0 right-0 -mt-1 -mr-1 text-xs">
-                    {{ $numberOfItems }}  </span> </a>
+                    {{ $numberOfItems }}  
+                </span> 
+            </a>
         </div>
     </x-slot>
 
     <div class="py-12">
-        @session('success')
+        @if(session('success'))
             <div class="alert alert-success mb-4" role="alert">
                 {{ session('success') }}
             </div>
-        @endsession
+        @endif
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
                 @if($order)
@@ -51,12 +53,25 @@
                         </table>
                         <div class="mt-4 flex justify-between items-center">
                             <span class="text-lg font-bold">Total: {{ $order->total }} BDT</span>
-                            <a href="#" id="checkoutButton" class="no-underline text-gray-100">
-                                <button type="button" class="bg-red-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                                    Next
-                                </button>
-                            </a>
                         </div>
+                    </div>
+                    <div class="bg-white border border-gray-300 rounded-lg p-4 mb-4">
+                        <h3 class="text-xl font-bold mb-4">Address Details</h3>
+                            <div class="mb-4">
+                                <div class="mt-4 flex justify-between items-center">
+                                    <span class="text-lg font-bold">City: {{ $order->city }}</span>
+                                </div>
+                            </div>
+                            <div class="mb-4">
+                                <div class="mt-4 flex justify-between items-center">
+                                    <span class="text-lg font-bold">Address: {{ $order->address }}</span>
+                                </div>
+                            </div>
+                            <div class="mb-4">
+                                <div class="mt-4 flex justify-between items-center">
+                                    <span class="text-lg font-bold">Phone No. {{ $order->phone }}</span>
+                                </div>
+                            </div>
                     </div>
                 @else
                     <p class="text-center text-gray-600">You have no open orders.</p>
@@ -64,40 +79,4 @@
             </div>
         </div>
     </div>
-
-    <div id="orderPopup" class="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center hidden">
-        <div class="bg-white rounded-lg shadow-lg p-6 w-1/3">
-            <button id="closePopup" class="float-right text-gray-700">&times;</button>
-            <div id="popupContent"></div>
-        </div>
-    </div>
-
-
 </x-app-layout>
-
-<script>
-    document.getElementById('checkoutButton').addEventListener('click', function(event) {
-        event.preventDefault();
-
-        fetch('{{ route('customer.order.shipping') }}')
-            .then(response => response.text())
-            .then(htmlContent => {
-                document.getElementById('popupContent').innerHTML = htmlContent;
-                document.getElementById('orderPopup').classList.remove('hidden');
-            })
-            .catch(error => {
-                console.error('Error fetching content:', error);
-            });
-    });
-
-    document.getElementById('closePopup').addEventListener('click', function() {
-        document.getElementById('orderPopup').classList.add('hidden');
-    });
-
-    document.addEventListener('click', function(event) {
-        if (event.target.id === 'orderPopup') {
-            document.getElementById('orderPopup').classList.add('hidden');
-        }
-    });
-</script>
-
