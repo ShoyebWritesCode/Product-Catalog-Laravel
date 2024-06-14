@@ -51,7 +51,7 @@ Route::middleware('auth')->group(function () {
 
 });
 
-Route::middleware(['auth', 'admin'])->group(function () {
+Route::middleware(['auth:admin'])->group(function () {
     Route::get('/admin/dashboard', [HomeController::class, 'index'])->name('admin.dashboard');
     Route::get('/admin/users', [HomeController::class, 'users'])->name('admin.users');
 
