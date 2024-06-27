@@ -80,7 +80,9 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::post('admin/admin/pendingorders/{order}', [AdminController::class, 'update'])->name('admin.pendingorders.update');
     Route::get('admin/admin/completedorders', [AdminController::class, 'completedorders'])->name('admin.completedorders');
     // Route::get('admin/admin/templates/create', [TemplateController::class, 'create'])->name('admin.templates.create');
-    Route::get('admin/admin/templates/create', [EmailTemplateController::class, 'create'])->name('admin.templates.create');
+    Route::get('admin/admin/templates', [EmailTemplateController::class, 'index'])->name('admin.templates.index');
+    Route::get('/templates/{template}/edit', [EmailTemplateController::class, 'edit'])->name('admin.templates.create');
+    Route::put('/templates/{template}', [EmailTemplateController::class, 'update'])->name('admin.templates.update');
     Route::post('admin/admin/templates/store', [EmailTemplateController::class, 'store'])->name('admin.templates.store');
     Route::post('admin/admin/templates/placeholders', [EmailTemplateController::class, 'addPlaceholder'])->name('admin.placeholders.add');
 });

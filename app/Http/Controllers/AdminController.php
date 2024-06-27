@@ -8,6 +8,8 @@ use App\Models\Product;
 use App\Models\Catagory;
 use App\Models\Review;
 use App\Models\Order;
+use App\Models\EmailTemplate;
+
 
 class AdminController extends Controller
 {
@@ -19,6 +21,7 @@ class AdminController extends Controller
         $totalProducts = Product::count();
         $totalPendingOrders = Order::where('status', 1)->count();
         $totalCompletedOrders = Order::where('status', 2)->count();
+        $totalTemplates = EmailTemplate::count();
         return view('admin.admin', compact('totalUsers', 'totalCategories', 'totalReviews', 'totalProducts', 'totalPendingOrders', 'totalCompletedOrders'));
     }
 
@@ -38,7 +41,7 @@ class AdminController extends Controller
     {
         $categories = Catagory::whereNull('parent_id')->get();
         $subcategories = Catagory::whereNotNull('parent_id')->get();
-        return view('admin.categories',compact('categories','subcategories'));
+        return view('admin.categories', compact('categories', 'subcategories'));
     }
 
     public function reviews()

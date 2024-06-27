@@ -120,15 +120,16 @@ class OrderController extends Controller
         $total = $order->total;
         $orderDetailLink = '<a href="' . route('customer.order.orderdetail', ['order' => $order->id]) . '">View Order Details</a>';
 
-        $template = EmailTemplate::where('name', 'order')->first();
+        $template = EmailTemplate::where('code', '120')->first();
         $content = $template->content;
         $content = str_replace(
             ['[name]', '[id]', '[total]', '[link]'],
             [$name, $id, $total, $orderDetailLink],
             $content
         );
+        $subject = $template->subject;
 
-        Mail::to($email)->send(new MyEmail($name, $id, $total, $content));
+        Mail::to($email)->send(new MyEmail($name, $id, $total, $content, $subject));
 
         session()->flash('success', 'Order placed successfully. Check your email for confirmation');
         return redirect()->route('customer.order.home')->with('success', 'Order placed successfully. Check your email for confirmation');

@@ -58,10 +58,10 @@
         ])
         @include('components.index', [
             'title' => 'Mail Templates',
-            'number' => 5,
+            'number' => 2,
             'icon' => 'fas fa-envelope',
             'color' => 'dark',
-            'link' => route("admin.templates.create"),
+            'link' => route("admin.templates.index"),
             'link_text' => 'More info'
         ])
     </div>

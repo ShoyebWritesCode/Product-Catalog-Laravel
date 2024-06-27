@@ -1,28 +1,33 @@
 @extends('adminlte::page')
 
-@section('title', 'Create Email Template')
+@section('title', 'Edit Email Template')
 
 @section('content_header')
-    <h1>Create Email Template</h1>
+    <h1>Edit Email Template</h1>
 @stop
 
 @section('content')
     <div class="card">
         <div class="card-body">
-            <form action="{{ route('admin.templates.store') }}" method="POST">
+            <form action="{{ route('admin.templates.update', ['template' => $template->id]) }}" method="POST">
                 @csrf
+                @method('PUT')
                 <div class="form-group">
                     <label for="name">Template Name:</label>
-                    <input type="text" class="form-control" id="name" name="name" required>
+                    <input type="text" class="form-control" id="name" name="name" value="{{ $template->name }}" required>
+                </div>
+                <div class="form-group">
+                    <label for="subject">Subject:</label>
+                    <input type="text" class="form-control" id="subject" name="subject" value="{{ $template->subject }}" required>
                 </div>
                 <div class="form-group">
                     <label for="content">Template Content:</label>
-                    <textarea class="form-control" id="content" name="content" rows="10"></textarea>
+                    <textarea class="form-control" id="content" name="content" rows="10">{{ $template->content }}</textarea>
                 </div>
                 <div class="form-group">
-                    <button type="button" class="btn btn-primary mr-2" data-toggle="modal" data-target="#placeholderModal">
+                    {{-- <button type="button" class="btn btn-primary mr-2" data-toggle="modal" data-target="#placeholderModal">
                         Add Placeholder
-                    </button>
+                    </button> --}}
                     <div class="btn-group">
                         <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             Insert Placeholder
