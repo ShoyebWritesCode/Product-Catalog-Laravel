@@ -9,7 +9,7 @@
 @section('content')
     <div class="card">
         <div class="card-body">
-            <form action="#" method="POST">
+            <form action="{{ route('admin.templates.store') }}" method="POST">
                 @csrf
                 <div class="form-group">
                     <label for="name">Template Name:</label>
@@ -27,10 +27,10 @@
                         <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             Insert Placeholder
                         </button>
-                        <div class="dropdown-menu">
-                            <a class="dropdown-item" href="#" data-placeholder="[Name]">Name</a>
-                            <a class="dropdown-item" href="#" data-placeholder="[Email]">Email</a>
-                            <a class="dropdown-item" href="#" data-placeholder="[Order Number]">Order Number</a>
+                        <div class="dropdown-menu" id="placeholdersDropdown">
+                            @foreach($placeholders as $placeholder)
+                                <a class="dropdown-item" href="#" data-placeholder="{{ $placeholder->name }}">{{ $placeholder->name }}</a>
+                            @endforeach
                         </div>
                     </div>
                 </div>
@@ -65,7 +65,18 @@
 @stop
 
 @section('css')
-
+    {{-- Add here extra stylesheets --}}
+    <style>
+        .cke_widget_wrapper .cke_widget_element {
+            display: inline-block;
+            background-color: #f0f0f0;
+            border: 1px dashed #ccc;
+            padding: 2px 5px;
+            margin: 2px;
+            border-radius: 3px;
+            color: gray;
+        }
+    </style>
 @stop
 
 @section('js')
@@ -109,8 +120,33 @@
                     document.getElementById('insertCustomPlaceholderBtn').addEventListener('click', function() {
                         var placeholder = document.getElementById('customPlaceholder').value;
                         if (placeholder) {
-                            editor.widgets.initOn(editor.insertHtml('<span class="cke_widget_element cke_placeholder">' + placeholder + '</span>'), 'placeholder');
-                            $('#placeholderModal').modal('hide'); // Close modal after insertion
+                            fetch('{{ route('admin.placeholders.add') }}', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                                },
+                                body: JSON.stringify({ name: placeholder })
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                editor.widgets.initOn(editor.insertHtml('<span class="cke_widget_element cke_placeholder">' + data.name + '</span>'), 'placeholder');
+                                $('#placeholderModal').modal('hide');
+                                // Add new placeholder to the dropdown
+                                var newPlaceholderItem = document.createElement('a');
+                                newPlaceholderItem.className = 'dropdown-item';
+                                newPlaceholderItem.href = '#';
+                                newPlaceholderItem.setAttribute('data-placeholder', data.name);
+                                newPlaceholderItem.textContent = data.name;
+                                document.getElementById('placeholdersDropdown').appendChild(newPlaceholderItem);
+
+                                // Re-bind event to new item
+                                newPlaceholderItem.addEventListener('click', function(event) {
+                                    event.preventDefault();
+                                    var placeholder = this.getAttribute('data-placeholder');
+                                    editor.widgets.initOn(editor.insertHtml('<span class="cke_widget_element cke_placeholder">' + placeholder + '</span>'), 'placeholder');
+                                });
+                            });
                         }
                     });
 

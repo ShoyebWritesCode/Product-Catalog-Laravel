@@ -14,6 +14,8 @@ use App\Mail\MyEmail;
 use Illuminate\Support\Facades\Mail;
 use App\Http\Controllers\EmailController;
 use App\Http\Controllers\TemplateController;
+use App\Http\Controllers\EmailTemplateController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -77,7 +79,10 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::get('admin/admin/pendingorders', [AdminController::class, 'pendingorders'])->name('admin.pendingorders');
     Route::post('admin/admin/pendingorders/{order}', [AdminController::class, 'update'])->name('admin.pendingorders.update');
     Route::get('admin/admin/completedorders', [AdminController::class, 'completedorders'])->name('admin.completedorders');
-    Route::get('admin/admin/templates/create', [TemplateController::class, 'create'])->name('admin.templates.create');
+    // Route::get('admin/admin/templates/create', [TemplateController::class, 'create'])->name('admin.templates.create');
+    Route::get('admin/admin/templates/create', [EmailTemplateController::class, 'create'])->name('admin.templates.create');
+    Route::post('admin/admin/templates/store', [EmailTemplateController::class, 'store'])->name('admin.templates.store');
+    Route::post('admin/admin/templates/placeholders', [EmailTemplateController::class, 'addPlaceholder'])->name('admin.placeholders.add');
 });
 
 require __DIR__ . '/auth.php';
