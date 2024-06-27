@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Admin;
+
 use App\Http\Controllers\Controller;
 use App\Models\Product;
 use App\Models\Catagory;
@@ -20,36 +21,35 @@ class ProductController extends Controller
         $namesubcategories = [];
         $nameparentcategories = [];
         $averageRatings = [];
-    
-  
+
+
         $categories = Catagory::all()->keyBy('id');
-    
+
         foreach ($products as $product) {
             $subcategories[$product->id] = Mapping::where('product_id', $product->id)->pluck('catagory_id')->toArray();
-    
-            $namesubcategories[$product->id] = array_map(function($catagory_id) use ($categories) {
+
+            $namesubcategories[$product->id] = array_map(function ($catagory_id) use ($categories) {
                 return $categories[$catagory_id]->name ?? 'Unknown';
             }, $subcategories[$product->id]);
 
-            $nameparentcategories[$product->id] = array_unique(array_map(function($catagory_id) use ($categories) {
+            $nameparentcategories[$product->id] = array_unique(array_map(function ($catagory_id) use ($categories) {
                 return $categories[$catagory_id]->parent->name ?? 'Unknown';
             }, $subcategories[$product->id]));
 
             $averageRatings[$product->id] = Review::where('product_id', $product->id)->avg('rating');
-            
         }
 
-        
-    
+
+
         return view('admin.product.home', compact('products', 'namesubcategories', 'nameparentcategories', 'averageRatings'));
     }
-    
+
 
     public function create()
     {
         $categories = Catagory::whereNull('parent_id')->get();
         $subcategories = Catagory::whereNotNull('parent_id')->get();
-        return view('admin.product.create',compact('categories','subcategories'));
+        return view('admin.product.create', compact('categories', 'subcategories'));
     }
 
     public function save(Request $request)
@@ -65,7 +65,7 @@ class ProductController extends Controller
         if ($request->hasFile('image')) {
             $destinationPath = config('utility.product_image_path');
             $image = $request->file('image');
-            $imageName = time().'.'.$image->getClientOriginalExtension();
+            $imageName = time() . '.' . $image->getClientOriginalExtension();
             $image->storeAs($destinationPath, $imageName);
 
             $product = new Product();
@@ -77,15 +77,15 @@ class ProductController extends Controller
             if ($request->hasFile('image1')) {
                 $destinationPath = config('utility.product_image_path');
                 $image1 = $request->file('image1');
-                $imageName1 = time().'1.'.$image1->getClientOriginalExtension();
+                $imageName1 = time() . '1.' . $image1->getClientOriginalExtension();
                 $image1->storeAs($destinationPath, $imageName1);
                 $product->image1 = $imageName1;
-            }	
+            }
 
             if ($request->hasFile('image2')) {
                 $destinationPath = config('utility.product_image_path');
                 $image2 = $request->file('image2');
-                $imageName2 = time().'2.'.$image2->getClientOriginalExtension();
+                $imageName2 = time() . '2.' . $image2->getClientOriginalExtension();
                 $image1->storeAs($destinationPath, $imageName2);
                 $product->image2 = $imageName2;
             }
@@ -103,12 +103,12 @@ class ProductController extends Controller
             }
 
             session()->flash('success', 'Product created successfully');
-            return redirect()->route('admin.product.home')->with('success', 'Product created successfully');
+            return redirect()->route('admin.products')->with('success', 'Product created successfully');
         } else {
             session()->flash('error', 'Image upload failed');
             return redirect()->route('admin.product.create')->with('error', 'Image upload failed');
         }
-    } 
+    }
 
     public function show(Product $product)
     {
@@ -117,25 +117,23 @@ class ProductController extends Controller
         $namesubcategories = [];
         $nameparentcategories = [];
         $averageRatings = [];
-    
-  
+
+
         $categories = Catagory::all()->keyBy('id');
- 
-            $subcategories[$product->id] = Mapping::where('product_id', $product->id)->pluck('catagory_id')->toArray();
-    
-            $namesubcategories[$product->id] = array_map(function($catagory_id) use ($categories) {
-                return $categories[$catagory_id]->name ?? 'Unknown';
-            }, $subcategories[$product->id]);
 
-            $nameparentcategories[$product->id] = array_unique(array_map(function($catagory_id) use ($categories) {
-                return $categories[$catagory_id]->parent->name ?? 'Unknown';
-            }, $subcategories[$product->id]));
+        $subcategories[$product->id] = Mapping::where('product_id', $product->id)->pluck('catagory_id')->toArray();
 
-            $reviews = Review::where('product_id', $product->id)->get();
-            $averageRatings[$product->id] = Review::where('product_id', $product->id)->avg('rating');
-            
-    return view('admin.product.show', compact('product', 'namesubcategories', 'nameparentcategories', 'reviews', 'averageRatings'));
-}
+        $namesubcategories[$product->id] = array_map(function ($catagory_id) use ($categories) {
+            return $categories[$catagory_id]->name ?? 'Unknown';
+        }, $subcategories[$product->id]);
 
+        $nameparentcategories[$product->id] = array_unique(array_map(function ($catagory_id) use ($categories) {
+            return $categories[$catagory_id]->parent->name ?? 'Unknown';
+        }, $subcategories[$product->id]));
 
+        $reviews = Review::where('product_id', $product->id)->get();
+        $averageRatings[$product->id] = Review::where('product_id', $product->id)->avg('rating');
+
+        return view('admin.product.show', compact('product', 'namesubcategories', 'nameparentcategories', 'reviews', 'averageRatings'));
+    }
 }

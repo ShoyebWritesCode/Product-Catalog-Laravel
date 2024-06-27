@@ -56,6 +56,14 @@
             'link' => route("admin.completedorders"),
             'link_text' => 'More info'
         ])
+        @include('components.index', [
+            'title' => 'Mail Templates',
+            'number' => 2,
+            'icon' => 'fas fa-envelope',
+            'color' => 'dark',
+            'link' => route("admin.templates.index"),
+            'link_text' => 'More info'
+        ])
     </div>
 @stop
 

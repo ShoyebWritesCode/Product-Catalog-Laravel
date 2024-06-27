@@ -9,6 +9,9 @@ use App\Models\OrderItems;
 use App\Models\Order;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\MyEmail;
+use App\Models\EmailTemplate;
 
 class OrderController extends Controller
 {
@@ -110,9 +113,35 @@ class OrderController extends Controller
         $order = Order::where('user_id', $user->id)->where('status', 0)->first();
         $order->status = 1;
         $order->save();
-        session()->flash('success', 'Order placed successfully');
-        return redirect()->route('customer.order.home')->with('success', 'Order placed successfully');
+
+        $name = auth()->user()->name;
+        $email = auth()->user()->email;
+        $id = $order->id;
+        $total = $order->total;
+        $orderDetailLink = '<a href="' . route('customer.order.orderdetail', ['order' => $order->id]) . '">View Order Details</a>';
+
+        $template = EmailTemplate::where('code', '120')->first();
+        $content = $template->content;
+        $content = str_replace(
+            ['[name]', '[id]', '[total]', '[link]'],
+            [$name, $id, $total, $orderDetailLink],
+            $content
+        );
+        $subject = $template->subject;
+
+        Mail::to($email)->send(new MyEmail($name, $id, $total, $content, $subject));
+
+        session()->flash('success', 'Order placed successfully. Check your email for confirmation');
+        return redirect()->route('customer.order.home')->with('success', 'Order placed successfully. Check your email for confirmation');
     }
+    // public function sendEmail()
+    // {
+    //     $name = auth()->user()->name;
+    //     $email = auth()->user()->email;
+    //     Mail::to($email)->send(new MyEmail($name));
+
+    //     return response()->json(['message' => 'Email sent successfully!']);
+    // }
 
     public function itemCount()
     {

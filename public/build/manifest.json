@@ -32,7 +32,7 @@
     "src": "node_modules/@fortawesome/fontawesome-free/webfonts/fa-v4compatibility.woff2"
   },
   "resources/css/app.css": {
-    "file": "assets/app-CT1B8-ko.css",
+    "file": "assets/app-Bn5FTJtG.css",
     "src": "resources/css/app.css",
     "isEntry": true
   },
@@ -48,6 +48,18 @@
     "src": "resources/js/custom/catagory.js",
     "isEntry": true
   },
+  "resources/js/custom/orderupdate.js": {
+    "file": "assets/orderupdate-BY8SW5cK.js",
+    "name": "orderupdate",
+    "src": "resources/js/custom/orderupdate.js",
+    "isEntry": true
+  },
+  "resources/js/custom/popup.js": {
+    "file": "assets/popup-l0sNRNKZ.js",
+    "name": "popup",
+    "src": "resources/js/custom/popup.js",
+    "isEntry": true
+  },
   "resources/js/custom/product.js": {
     "file": "assets/product-CBBKAeCQ.js",
     "name": "product",
@@ -55,7 +67,7 @@
     "isEntry": true
   },
   "resources/js/custom/show.js": {
-    "file": "assets/show-CFKMzmiy.js",
+    "file": "assets/show-ChipAI0d.js",
     "name": "show",
     "src": "resources/js/custom/show.js",
     "isEntry": true
