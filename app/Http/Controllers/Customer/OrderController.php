@@ -10,7 +10,8 @@ use App\Models\Order;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
-use App\Mail\MyEmail; // Import the MyEmail class
+use App\Mail\MyEmail;
+use App\Models\EmailTemplate;
 
 class OrderController extends Controller
 {
@@ -117,7 +118,17 @@ class OrderController extends Controller
         $email = auth()->user()->email;
         $id = $order->id;
         $total = $order->total;
-        Mail::to($email)->send(new MyEmail($name, $id, $total));
+        $orderDetailLink = '<a href="' . route('customer.order.orderdetail', ['order' => $order->id]) . '">View Order Details</a>';
+
+        $template = EmailTemplate::where('name', 'order')->first();
+        $content = $template->content;
+        $content = str_replace(
+            ['[name]', '[id]', '[total]', '[link]'],
+            [$name, $id, $total, $orderDetailLink],
+            $content
+        );
+
+        Mail::to($email)->send(new MyEmail($name, $id, $total, $content));
 
         session()->flash('success', 'Order placed successfully. Check your email for confirmation');
         return redirect()->route('customer.order.home')->with('success', 'Order placed successfully. Check your email for confirmation');

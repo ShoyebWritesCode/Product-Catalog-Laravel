@@ -67,14 +67,10 @@
 @section('css')
     {{-- Add here extra stylesheets --}}
     <style>
-        .cke_widget_wrapper .cke_widget_element {
-            display: inline-block;
+        .cke_placeholder {
             background-color: #f0f0f0;
             border: 1px dashed #ccc;
-            padding: 2px 5px;
-            margin: 2px;
-            border-radius: 3px;
-            color: gray;
+            color: #666;
         }
     </style>
 @stop
