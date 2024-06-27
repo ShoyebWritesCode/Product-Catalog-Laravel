@@ -10,6 +10,9 @@ use App\Http\Controllers\Customer\CustomerProductController;
 use App\Http\Controllers\Customer\ReviewController;
 use App\Http\Controllers\Customer\OrderController;
 use App\Http\Middleware\Admin;
+use App\Mail\MyEmail;
+use Illuminate\Support\Facades\Mail;
+use App\Http\Controllers\EmailController;
 
 /*
 |--------------------------------------------------------------------------
@@ -47,6 +50,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/orders/checkout/{order}', [OrderController::class, 'checkout'])->name('customer.order.checkout');
     Route::get('/history', [OrderController::class, 'history'])->name('customer.order.history');
     Route::get('/history/{order}', [OrderController::class, 'orderdetail'])->name('customer.order.orderdetail');
+    // Route::get('/email', [EmailController::class, 'sendEmail'])->name('email.send');
     // Route::get('/order/cart', [OrderController::class, 'itemCount'])->name('customer.order.cart');
 
 });

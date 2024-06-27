@@ -9,6 +9,8 @@ use App\Models\OrderItems;
 use App\Models\Order;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\MyEmail; // Import the MyEmail class
 
 class OrderController extends Controller
 {
@@ -110,9 +112,24 @@ class OrderController extends Controller
         $order = Order::where('user_id', $user->id)->where('status', 0)->first();
         $order->status = 1;
         $order->save();
-        session()->flash('success', 'Order placed successfully');
-        return redirect()->route('customer.order.home')->with('success', 'Order placed successfully');
+
+        $name = auth()->user()->name;
+        $email = auth()->user()->email;
+        $id = $order->id;
+        $total = $order->total;
+        Mail::to($email)->send(new MyEmail($name, $id, $total));
+
+        session()->flash('success', 'Order placed successfully. Check your email for confirmation');
+        return redirect()->route('customer.order.home')->with('success', 'Order placed successfully. Check your email for confirmation');
     }
+    // public function sendEmail()
+    // {
+    //     $name = auth()->user()->name;
+    //     $email = auth()->user()->email;
+    //     Mail::to($email)->send(new MyEmail($name));
+
+    //     return response()->json(['message' => 'Email sent successfully!']);
+    // }
 
     public function itemCount()
     {
