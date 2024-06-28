@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\MyEmail;
 use App\Models\EmailTemplate;
+use App\Helpers\MailHelper;
 
 class OrderController extends Controller
 {
@@ -96,13 +97,7 @@ class OrderController extends Controller
         $order->total += $product->price;
         $order->save();
 
-        // session()->flash('success', 'Added to cart successfully');
-        // return redirect()->back()->with('success', 'Added to Cart successfully');
-        // return response()->json(['success' => session('success')]);
         $message = 'Added to cart successfully!';
-        // dd($average);
-        // Log::debug($num);
-        // die('came here');
         return response()->json(['success' => true, 'message' => $message]);
         // return view('customer.product.show', ['num' => $num]);
     }
@@ -119,29 +114,33 @@ class OrderController extends Controller
         $id = $order->id;
         $total = $order->total;
         $orderDetailLink = '<a href="' . route('customer.order.orderdetail', ['order' => $order->id]) . '">View Order Details</a>';
+        $orderCustomer = EmailTemplate::CustomerCode;
 
-        $template = EmailTemplate::where('code', '120')->first();
-        $content = $template->content;
-        $content = str_replace(
-            ['[name]', '[id]', '[total]', '[link]'],
-            [$name, $id, $total, $orderDetailLink],
-            $content
-        );
-        $subject = $template->subject;
+        // $template = EmailTemplate::where('code', $orderCustomer)->first();
+        // $content = $template->content;
+        // $content = str_replace(
+        //     ['[name]', '[id]', '[total]', '[link]'],
+        //     [$name, $id, $total, $orderDetailLink],
+        //     $content
+        // );
+        // $subject = $template->subject;
 
-        Mail::to($email)->send(new MyEmail($name, $id, $total, $content, $subject));
+        // Mail::to($email)->send(new MyEmail($name, $id, $total, $content, $subject));
+
+        $replacements = [
+            'name' => $name,
+            'id' => $id,
+            'total' => $total,
+            'link' => $orderDetailLink
+        ];
+
+        MailHelper::sendTemplateMail($orderCustomer, $email, $replacements);
+
 
         session()->flash('success', 'Order placed successfully. Check your email for confirmation');
         return redirect()->route('customer.order.home')->with('success', 'Order placed successfully. Check your email for confirmation');
     }
-    // public function sendEmail()
-    // {
-    //     $name = auth()->user()->name;
-    //     $email = auth()->user()->email;
-    //     Mail::to($email)->send(new MyEmail($name));
 
-    //     return response()->json(['message' => 'Email sent successfully!']);
-    // }
 
     public function itemCount()
     {

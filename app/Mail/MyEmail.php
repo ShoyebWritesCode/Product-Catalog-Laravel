@@ -16,9 +16,10 @@ class MyEmail extends Mailable
     /**
      * Create a new message instance.
      */
-    public function __construct(private $name, private $id, private $total, private $content)
+    public function __construct(private $content, public $subject)
     {
-        //
+        $this->content = $content;
+        $this->subject = $subject;
     }
 
     /**
@@ -27,7 +28,7 @@ class MyEmail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'My Email',
+            subject: $this->subject,
         );
     }
 
@@ -39,9 +40,6 @@ class MyEmail extends Mailable
         return new Content(
             view: 'emails.order-email',
             with: [
-                'name' => $this->name,
-                'id' => $this->id,
-                'total' => $this->total,
                 'content' => $this->content,
             ],
         );
