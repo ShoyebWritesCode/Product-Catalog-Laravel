@@ -37,7 +37,7 @@
                     <div class="flex items-center justify-between mb-4">
                         <h1 class="text-2xl font-semibold">All Products</h1>
                         <div class="">
-                            <form action="{{ route('customer.product.search') }}" method="GET">
+                            <form action="#" method="GET">
                                 <div class="flex items-center">
                                     <input type="text" name="search" id="searchInput" class="form-input rounded-md shadow-sm block w-full sm:text-sm sm:leading-5" placeholder="Search products...">
                                     <button type="submit" class="ml-2 inline-flex items-center px-4 py-2 border border-transparent text-sm leading-5 font-medium rounded-md text-white bg-blue-500 hover:bg-blue-600 focus:outline-none focus:border-blue-700 focus:shadow-outline-blue active:bg-blue-700 transition duration-150 ease-in-out">
