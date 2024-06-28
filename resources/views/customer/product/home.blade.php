@@ -26,6 +26,7 @@
         <div id="orderPopup" class="max-h-96 hidden fixed inset-auto top-1/2 left-1/2 transform -translate-y-1/2 -translate-x-1/2 bg-gray-500 bg-opacity-50 overflow-auto z-50 p-4 rounded shadow-md">
             <span class="close-btn absolute top-right p-2 text-xl cursor-pointer hover:text-red-500">&times;</span>
         </div>
+
     </x-slot>
     
 
@@ -35,7 +36,19 @@
                 <div class="p-6 text-gray-900">
                     <div class="flex items-center justify-between mb-4">
                         <h1 class="text-2xl font-semibold">All Products</h1>
+                        <div class="">
+                            <form action="{{ route('customer.product.search') }}" method="GET">
+                                <div class="flex items-center">
+                                    <input type="text" name="search" class="form-input rounded-md shadow-sm block w-full sm:text-sm sm:leading-5" placeholder="Search products...">
+                                    <button type="submit" class="ml-2 inline-flex items-center px-4 py-2 border border-transparent text-sm leading-5 font-medium rounded-md text-white bg-blue-500 hover:bg-blue-600 focus:outline-none focus:border-blue-700 focus:shadow-outline-blue active:bg-blue-700 transition duration-150 ease-in-out">
+                                        Search
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
                     </div>
+                    
+
                     <hr class="mb-4">
                     @if (session('success'))
                         <div class="alert alert-success mb-4" role="alert">
