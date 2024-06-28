@@ -73,9 +73,15 @@ class CustomerProductController extends Controller
     {
         $search = $request->input('search');
 
-        $products = Product::where('name', 'like', '%' . $search . '%')
-            ->orWhere('description', 'like', '%' . $search . '%')
+
+        $products = Product::where(function ($query) use ($search) {
+            $query->where('name', 'like', '%' . $search . '%')
+                ->orWhere('description', 'like', '%' . $search . '%')
+                ->orWhere('price', 'like', '%' . $search . '%');
+        })
             ->get();
+
+
 
         return view('customer.product.search', [
             'products' => $products,

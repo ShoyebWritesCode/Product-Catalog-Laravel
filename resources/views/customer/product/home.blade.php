@@ -1,5 +1,6 @@
 <x-app-layout>
     @vite(['resources/scss/product.scss'])
+    @vite(['resources/js/custom/product.js'])
     <x-slot name="header">
         <div class="flex justify-between items-center">
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
@@ -39,7 +40,7 @@
                         <div class="">
                             <form action="#" method="GET">
                                 <div class="flex items-center">
-                                    <input type="text" name="search" id="searchInput" class="form-input rounded-md shadow-sm block w-full sm:text-sm sm:leading-5" placeholder="Search products...">
+                                    <input type="search" name="search" id="searchInput" class="form-input rounded-md shadow-sm block w-full sm:text-sm sm:leading-5" placeholder="Search products...">
                                     <button type="submit" class="ml-2 inline-flex items-center px-4 py-2 border border-transparent text-sm leading-5 font-medium rounded-md text-white bg-blue-500 hover:bg-blue-600 focus:outline-none focus:border-blue-700 focus:shadow-outline-blue active:bg-blue-700 transition duration-150 ease-in-out">
                                         Search
                                     </button>
@@ -62,7 +63,7 @@
                         <div class="flex flex-wrap gap-6" id="productList">
                             @foreach ($products as $product)
                                 <div class="bg-white border border-gray-300 rounded-lg p-4 w-48 flex flex-col items-center">
-                                    <img src="{{ asset('storage/images/' . $product->image) }}" alt="{{ $product->name }}" class="w-full h-32 object-cover rounded-md mb-2">
+                                    <img src="{{ asset('storage/images/' . $product->image) }}" alt="{{ $product->name }}" class="w-full h-32 object-cover rounded-md mb-2" loading="lazy">
                                     <a href="{{ route('customer.product.show', $product->id) }}" class="text-lg font-semibold text-center text-blue-500 hover:text-blue-700 mb-2">
                                         {{ $product->name }}
                                     </a>
@@ -102,23 +103,6 @@
     </div>
 </x-app-layout>
 <script>
-    const searchInput = document.getElementById('searchInput');
-    const productList = document.getElementById('productList');
-
-    searchInput.addEventListener('input', function(event) {
-        const searchQuery = event.target.value.trim();
-
-        fetch(`/products/search?search=${encodeURIComponent(searchQuery)}`)
-            .then(response => response.text())
-            .then(htmlContent => {
-                productList.innerHTML = htmlContent;
-            })
-            .catch(error => {
-                console.error('Error fetching content:', error);
-            });
-    });
-
-
 
     document.getElementById('cartLink').addEventListener('click', function(event) {
       event.preventDefault();

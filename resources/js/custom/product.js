@@ -19,3 +19,19 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 });
+
+const searchInput = document.getElementById("searchInput");
+const productList = document.getElementById("productList");
+
+searchInput.addEventListener("input", function (event) {
+    const searchQuery = event.target.value.trim();
+
+    fetch(`/products/search?search=${encodeURIComponent(searchQuery)}`)
+        .then((response) => response.text())
+        .then((htmlContent) => {
+            productList.innerHTML = htmlContent;
+        })
+        .catch((error) => {
+            console.error("Error fetching content:", error);
+        });
+});
