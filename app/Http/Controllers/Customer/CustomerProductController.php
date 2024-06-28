@@ -13,12 +13,48 @@ class CustomerProductController extends Controller
 {
     public function index()
     {
-        $products = Product::paginate(10);
+        // $products = Product::paginate(10);
+        $initialProducts = Product::take(10)->get();
         $subcategories = [];
         $namesubcategories = [];
         $nameparentcategories = [];
         $averageRatings = [];
 
+
+        $categories = Catagory::all()->keyBy('id');
+
+        foreach ($initialProducts as $product) {
+            $subcategories[$product->id] = Mapping::where('product_id', $product->id)->pluck('catagory_id')->toArray();
+
+            $namesubcategories[$product->id] = array_map(function ($catagory_id) use ($categories) {
+                return $categories[$catagory_id]->name ?? 'Unknown';
+            }, $subcategories[$product->id]);
+
+            $nameparentcategories[$product->id] = array_unique(array_map(function ($catagory_id) use ($categories) {
+                return $categories[$catagory_id]->parent->name ?? 'Unknown';
+            }, $subcategories[$product->id]));
+
+            $averageRatings[$product->id] = Review::where('product_id', $product->id)->avg('rating');
+        }
+
+
+
+        return view('customer.product.home', compact('initialProducts', 'namesubcategories', 'nameparentcategories', 'averageRatings'));
+    }
+
+    public function fetchProducts(Request $request)
+    {
+        $page = $request->get('page', 1);
+        $perPage = 10;
+
+        $products = Product::skip(($page - 1) * $perPage)
+            ->take($perPage)
+            ->get();
+
+        $subcategories = [];
+        $namesubcategories = [];
+        $nameparentcategories = [];
+        $averageRatings = [];
 
         $categories = Catagory::all()->keyBy('id');
 
@@ -36,10 +72,9 @@ class CustomerProductController extends Controller
             $averageRatings[$product->id] = Review::where('product_id', $product->id)->avg('rating');
         }
 
-
-
-        return view('customer.product.home', compact('products', 'namesubcategories', 'nameparentcategories', 'averageRatings'));
+        return view('partials.products', compact('products', 'namesubcategories', 'nameparentcategories', 'averageRatings'));
     }
+
 
 
     public function show(Product $product)
