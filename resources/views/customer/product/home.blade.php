@@ -39,7 +39,7 @@
                         <div class="">
                             <form action="{{ route('customer.product.search') }}" method="GET">
                                 <div class="flex items-center">
-                                    <input type="text" name="search" class="form-input rounded-md shadow-sm block w-full sm:text-sm sm:leading-5" placeholder="Search products...">
+                                    <input type="text" name="search" id="searchInput" class="form-input rounded-md shadow-sm block w-full sm:text-sm sm:leading-5" placeholder="Search products...">
                                     <button type="submit" class="ml-2 inline-flex items-center px-4 py-2 border border-transparent text-sm leading-5 font-medium rounded-md text-white bg-blue-500 hover:bg-blue-600 focus:outline-none focus:border-blue-700 focus:shadow-outline-blue active:bg-blue-700 transition duration-150 ease-in-out">
                                         Search
                                     </button>
@@ -59,7 +59,7 @@
                     @if ($products->isEmpty())
                         <p class="text-center text-gray-500">No products available.</p>
                     @else
-                        <div class="flex flex-wrap gap-6">
+                        <div class="flex flex-wrap gap-6" id="productList">
                             @foreach ($products as $product)
                                 <div class="bg-white border border-gray-300 rounded-lg p-4 w-48 flex flex-col items-center">
                                     <img src="{{ asset('storage/images/' . $product->image) }}" alt="{{ $product->name }}" class="w-full h-32 object-cover rounded-md mb-2">
@@ -102,6 +102,24 @@
     </div>
 </x-app-layout>
 <script>
+    const searchInput = document.getElementById('searchInput');
+    const productList = document.getElementById('productList');
+
+    searchInput.addEventListener('input', function(event) {
+        const searchQuery = event.target.value.trim();
+
+        fetch(`/products/search?search=${encodeURIComponent(searchQuery)}`)
+            .then(response => response.text())
+            .then(htmlContent => {
+                productList.innerHTML = htmlContent;
+            })
+            .catch(error => {
+                console.error('Error fetching content:', error);
+            });
+    });
+
+
+
     document.getElementById('cartLink').addEventListener('click', function(event) {
       event.preventDefault();
     
