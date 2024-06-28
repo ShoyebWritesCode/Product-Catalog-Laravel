@@ -13,7 +13,7 @@ class CustomerProductController extends Controller
 {
     public function index()
     {
-        $products = Product::all();
+        $products = Product::paginate(10);
         $subcategories = [];
         $namesubcategories = [];
         $nameparentcategories = [];
