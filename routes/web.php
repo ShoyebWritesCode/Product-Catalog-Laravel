@@ -42,6 +42,8 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     Route::get('/products', [CustomerProductController::class, 'index'])->name('customer.product.home');
+    Route::get('/products/fetch', [CustomerProductController::class, 'fetchProducts'])->name('customer.product.fetch');
+    Route::get('/products/search', [CustomerProductController::class, 'search'])->name('customer.product.search');
     Route::get('/products/{product}', [CustomerProductController::class, 'show'])->name('customer.product.show');
     Route::post('/products/{product}/reviews', [ReviewController::class, 'store'])->name('customer.product.reviews');
     Route::get('/orders', [OrderController::class, 'index'])->name('customer.order.home');
