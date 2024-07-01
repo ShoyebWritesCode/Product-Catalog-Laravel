@@ -19,6 +19,41 @@
                 <a href="{{ route('customer.order.history') }}" id="historyLink" class="text-gray-800 hover:text-gray-600 relative">
                     <i class="fas fa-history text-xl"></i>
                 </a>
+
+                <div class="relative">
+                    <button id="notificationDropdown" class="text-gray-800 hover:text-gray-600 relative">
+                        <i class="fas fa-bell text-xl"></i>
+                        @if ($unreadNotifications->count() > 0)
+                        <span class="bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center absolute top-0 right-0 -mt-1 -mr-1 text-xs">
+                            {{ $unreadNotifications->count() }}
+                        </span>
+                        @endif
+                    </button>
+                    <div id="notificationDropdownContent" class="hidden absolute right-0 mt-2 w-64 bg-white rounded-md shadow-lg z-10">
+                        @if ($unreadNotifications->count() > 0)
+                            <ul class="notification-list">
+                                @foreach ($unreadNotifications as $notification)
+                                    <li class="dropdown-item notification-item">
+                                        <form method="POST" action="{{ route('customer.notifications.markAsRead', $notification->id) }}" class="inline">
+                                            @csrf
+                                            <button type="submit" class="w-full text-left p-2">
+                                                <i class="fas fa-shopping-cart"></i> Order no.#{{ $notification->data['order_id'] }} Delivered.
+                                                <span class="float-right text-muted text-sm">{{ $notification->created_at->diffForHumans() }}</span>
+                                            </button>
+                                        </form>
+                                    </li>
+                                @endforeach
+                            </ul>
+                        @else
+                            <span class="dropdown-item">No unread notifications</span>
+                        @endif
+                    </div>
+                    
+                    
+                    
+                    
+                      
+                </div>
     
             </div>
         </div>
@@ -78,6 +113,26 @@
     </div>
 </x-app-layout>
 <script>
+
+    document.getElementById('notificationDropdown').addEventListener('click', function(event) {
+        event.preventDefault();
+        document.getElementById('notificationDropdownContent').classList.toggle('hidden');
+    });
+
+    document.addEventListener('click', function(event) {
+        const dropdown = document.getElementById('notificationDropdownContent');
+        if (!event.target.closest('#notificationDropdown') && !event.target.closest('#notificationDropdownContent')) {
+            dropdown.classList.add('hidden');
+        }
+    });
+
+
+
+
+
+
+
+
 
     document.getElementById('cartLink').addEventListener('click', function(event) {
       event.preventDefault();

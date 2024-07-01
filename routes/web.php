@@ -43,6 +43,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     Route::get('/products', [CustomerProductController::class, 'index'])->name('customer.product.home');
+    Route::post('/products/notifications/mark-as-read/{id}', [NotificationController::class, 'markAsReadCus'])->name('customer.notifications.markAsRead');
     Route::get('/products/fetch', [CustomerProductController::class, 'fetchProducts'])->name('customer.product.fetch');
     Route::get('/products/search', [CustomerProductController::class, 'search'])->name('customer.product.search');
     Route::get('/products/{product}', [CustomerProductController::class, 'show'])->name('customer.product.show');
@@ -82,6 +83,7 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::get('admin/admin/pendingorders', [AdminController::class, 'pendingorders'])->name('admin.pendingorders');
     Route::post('admin/admin/pendingorders/{order}', [AdminController::class, 'update'])->name('admin.pendingorders.update');
     Route::get('admin/admin/completedorders', [AdminController::class, 'completedorders'])->name('admin.completedorders');
+    Route::post('admin/admin/notifications/mark-as-read', [NotificationController::class, 'markAsRead'])->name('admin.notifications.markAsRead');
     Route::get('/admin/admin/order/{order}', [AdminController::class, 'orderdetail'])->name('admin.order.show');
     // Route::get('admin/admin/templates/create', [TemplateController::class, 'create'])->name('admin.templates.create');
     Route::get('admin/admin/templates', [EmailTemplateController::class, 'index'])->name('admin.templates.index');

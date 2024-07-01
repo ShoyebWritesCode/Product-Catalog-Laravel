@@ -112,7 +112,7 @@ class OrderController extends Controller
             'link' => $orderDetailLink
         ];
 
-        // MailHelper::sendTemplateMail($orderCustomer, $email, $replacements);
+        MailHelper::sendTemplateMail($orderCustomer, $email, $replacements);
 
         $admins = Admin::all();
         Notification::send($admins, new OrderPlaced($order));

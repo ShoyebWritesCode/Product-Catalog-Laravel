@@ -89,22 +89,22 @@
 
 @section('js')
 <script>
-    document.querySelectorAll('.update-form').forEach(form => {
-        form.addEventListener('submit', function(event) {
-            const orderId = this.getAttribute('data-order-id');
-            const url = this.getAttribute('action');
-            const data = new FormData(this);
-            fetch(url, {
-                method: 'POST',
-                body: data
-            })
-            .then(response => response.json())
-            .then(data => {
-                if(data.success) {
-                    window.location.href = "{{ route('admin.admin') }}";
-                }
-            });
-        });
-    });
+    // document.querySelectorAll('.update-form').forEach(form => {
+    //     form.addEventListener('submit', function(event) {
+    //         const orderId = this.getAttribute('data-order-id');
+    //         const url = this.getAttribute('action');
+    //         const data = new FormData(this);
+    //         fetch(url, {
+    //             method: 'POST',
+    //             body: data
+    //         })
+    //         .then(response => response.json())
+    //         .then(data => {
+    //             if(data.success) {
+    //                 window.location.href = "{{ route('admin.admin') }}";
+    //             }
+    //         });
+    //     });
+    // });
 </script>
 @stop

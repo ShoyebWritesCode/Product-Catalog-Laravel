@@ -11,7 +11,8 @@ use App\Models\Order;
 use App\Models\OrderItems;
 use App\Models\EmailTemplate;
 use Illuminate\Support\Facades\Notification;
-
+use App\Notifications\OrderConfirmed;
+use Illuminate\Support\Facades\Log;
 
 class AdminController extends Controller
 {
@@ -78,6 +79,19 @@ class AdminController extends Controller
     {
         $order->status = 2;
         $order->save();
+
+        $user = $order->user;
+
+        $existingNotification = $user->notifications()
+            ->where('type', OrderConfirmed::class)
+            ->where('data->order_id', $order->id)
+            ->first();
+
+        if (!$existingNotification) {
+            Notification::send($user, new OrderConfirmed($order));
+        }
+
+        Log::info('Update method called for order: ' . $order->id);
 
         $previousRoute = $request->headers->get('referer');
 
