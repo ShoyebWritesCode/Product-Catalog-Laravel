@@ -8,7 +8,9 @@ use App\Models\Product;
 use App\Models\Catagory;
 use App\Models\Review;
 use App\Models\Order;
+use App\Models\OrderItems;
 use App\Models\EmailTemplate;
+use Illuminate\Support\Facades\Notification;
 
 
 class AdminController extends Controller
@@ -22,7 +24,10 @@ class AdminController extends Controller
         $totalPendingOrders = Order::where('status', 1)->count();
         $totalCompletedOrders = Order::where('status', 2)->count();
         $totalTemplates = EmailTemplate::count();
-        return view('admin.admin', compact('totalUsers', 'totalCategories', 'totalReviews', 'totalProducts', 'totalPendingOrders', 'totalCompletedOrders'));
+
+
+        $unreadNotifications = auth()->user()->unreadNotifications;
+        return view('admin.admin', compact('totalUsers', 'totalCategories', 'totalReviews', 'totalProducts', 'totalPendingOrders', 'totalCompletedOrders', 'totalTemplates', 'unreadNotifications'));
     }
 
     public function products()
@@ -62,10 +67,24 @@ class AdminController extends Controller
         return view('admin.completedorders', compact('orders'));
     }
 
-    public function update(Order $order)
+    public function orderdetail(Order $order)
+    {
+        $orderItems = OrderItems::where('order_id', $order->id)->get();
+        $data = compact('order', 'orderItems');
+        return view('admin.showorder', $data);
+    }
+
+    public function update(Order $order, Request $request)
     {
         $order->status = 2;
         $order->save();
-        return redirect()->back()->with('success', 'Order status updated successfully');
+
+        $previousRoute = $request->headers->get('referer');
+
+        if ($previousRoute && str_contains($previousRoute, route('admin.order.show', $order->id))) {
+            return redirect()->route('admin.admin')->with('success', 'Order status updated successfully');
+        } else {
+            return redirect()->back()->with('success', 'Order status updated successfully');
+        }
     }
 }

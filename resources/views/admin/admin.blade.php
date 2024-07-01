@@ -3,7 +3,29 @@
 @section('title', 'Dashboard')
 
 @section('content_header')
-    <h1>Dashboard</h1>
+    <div class="d-flex justify-content-between align-items-center">
+        <h1>Dashboard</h1>
+        <div class="dropdown">
+            <a href="#" class="btn btn-secondary dropdown-toggle" id="notificationsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fas fa-bell"></i>
+                @if ($unreadNotifications->count() > 0)
+                    <span class="badge badge-danger">{{ $unreadNotifications->count() }}</span>
+                @endif
+            </a>
+            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="notificationsDropdown">
+                @if ($unreadNotifications->count() > 0)
+                    @foreach ($unreadNotifications as $notification)
+                        <a class="dropdown-item notification-item" href="{{ route('admin.order.show', $notification->data['order_id']) }}" data-id="{{ $notification->id }}">
+                            <i class="fas fa-shopping-cart"></i> New order placed with total ${{ $notification->data['order_total'] }}
+                            <span class="float-right text-muted text-sm">{{ $notification->created_at->diffForHumans() }}</span>
+                        </a>
+                    @endforeach
+                @else
+                    <span class="dropdown-item">No unread notifications</span>
+                @endif
+            </div>
+        </div>
+    </div>
 @stop
 
 @section('content')
@@ -58,7 +80,7 @@
         ])
         @include('components.index', [
             'title' => 'Mail Templates',
-            'number' => 2,
+            'number' => $totalTemplates,
             'icon' => 'fas fa-envelope',
             'color' => 'dark',
             'link' => route("admin.templates.index"),
@@ -73,5 +95,27 @@
 @stop
 
 @section('js')
-    <script> console.log("Hi, I'm using the Laravel-AdminLTE package!"); </script>
+    <script>
+        $(document).ready(function(){
+            $('.notification-item').on('click', function(event) {
+                
+                var notificationId = $(this).data('id');
+                var notificationItem = $(this);
+
+                $.ajax({
+                    url: "{{ route('admin.notifications.markAsRead') }}",
+                    method: 'POST',
+                    data: {
+                        _token: "{{ csrf_token() }}",
+                        id: notificationId
+                    },
+                    success: function() {
+                        notificationItem.remove();
+                    }
+                });
+            });
+        });
+    </script>
 @stop
+
+
