@@ -116,16 +116,6 @@ class OrderController extends Controller
         $orderDetailLink = '<a href="' . route('customer.order.orderdetail', ['order' => $order->id]) . '">View Order Details</a>';
         $orderCustomer = EmailTemplate::CustomerCode;
 
-        // $template = EmailTemplate::where('code', $orderCustomer)->first();
-        // $content = $template->content;
-        // $content = str_replace(
-        //     ['[name]', '[id]', '[total]', '[link]'],
-        //     [$name, $id, $total, $orderDetailLink],
-        //     $content
-        // );
-        // $subject = $template->subject;
-
-        // Mail::to($email)->send(new MyEmail($name, $id, $total, $content, $subject));
 
         $replacements = [
             'name' => $name,
