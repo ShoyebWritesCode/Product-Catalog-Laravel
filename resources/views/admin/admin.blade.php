@@ -12,18 +12,32 @@
                     <span class="badge badge-danger">{{ $unreadNotifications->count() }}</span>
                 @endif
             </a>
-            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="notificationsDropdown">
+            <div class="dropdown-menu dropdown-menu-right text-center" aria-labelledby="notificationsDropdown">
                 @if ($unreadNotifications->count() > 0)
                     @foreach ($unreadNotifications as $notification)
-                        <a class="dropdown-item notification-item" href="{{ route('admin.order.show', $notification->data['order_id']) }}" data-id="{{ $notification->id }}">
-                            <i class="fas fa-shopping-cart"></i> New order placed with total ${{ $notification->data['order_total'] }}
-                            <span class="float-right text-muted text-sm">{{ $notification->created_at->diffForHumans() }}</span>
-                        </a>
+                    <li class="dropdown-item notification-item">
+                        <form method="POST" action="{{ route('admin.notifications.markAsRead', $notification->id) }}" class="inline">
+                            @csrf
+                            <button type="submit" class="w-full text-left p-2">
+                                <i class="fas fa-shopping-cart"></i> Order no.#{{ $notification->data['order_id'] }} placed<br>
+                                 total {{ $notification->data['order_total'] }} BDT
+                                <span class="float-right text-muted text-sm">{{ $notification->created_at->diffForHumans() }}</span>
+                            </button>
+                        </form>
+                    </li>
+
                     @endforeach
+                    <a href="{{ route('admin.notifications.index')}}" class="dropdown-item view-more-btn badge-primary">
+                        View More
+                    </a>
                 @else
                     <span class="dropdown-item">No unread notifications</span>
+                    <a href="{{ route('admin.notifications.index')}}" class="dropdown-item view-more-btn badge-primary">
+                        View More
+                    </a>
                 @endif
             </div>
+            
         </div>
         
     </div>
@@ -96,27 +110,36 @@
 @stop
 
 @section('js')
-    <script>
-        $(document).ready(function(){
-            $('.notification-item').on('click', function(event) {
-                
-                var notificationId = $(this).data('id');
-                var notificationItem = $(this);
+    <script>    
 
-                $.ajax({
-                    url: "{{ route('admin.notifications.markAsRead') }}",
-                    method: 'POST',
-                    data: {
-                        _token: "{{ csrf_token() }}",
-                        id: notificationId
-                    },
-                    success: function() {
-                        notificationItem.remove();
-                    }
-                });
-            });
-        });
-    </script>
+    //   $(document).ready(function(){
+    //     $('.notification-item').on('click', function(event) {
+    //         event.preventDefault(); // Prevent default link behavior
+
+    //         var notificationId = $(this).data('id');
+    //         var notificationItem = $(this);
+
+    //         $.ajax({
+    //             url: "{{ route('admin.notifications.markAsRead', ':id') }}".replace(':id', notificationId),
+    //             method: 'POST',
+    //             data: {
+    //                 _token: "{{ csrf_token() }}"
+    //             },
+    //             success: function(response) {
+    //                 if (response.success) {
+    //                     notificationItem.remove();
+    //                     // Optionally show a success message or handle further actions
+    //                 } else {
+    //                     console.error('Error marking notification as read:', response.message);
+    //                 }
+    //             },
+    //             error: function(xhr, status, error) {
+    //                 console.error('Error marking notification as read:', error);
+    //             }
+    //         });
+    //     });
+    // });
+</script>
 @stop
 
 

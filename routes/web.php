@@ -83,7 +83,10 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::get('admin/admin/pendingorders', [AdminController::class, 'pendingorders'])->name('admin.pendingorders');
     Route::post('admin/admin/pendingorders/{order}', [AdminController::class, 'update'])->name('admin.pendingorders.update');
     Route::get('admin/admin/completedorders', [AdminController::class, 'completedorders'])->name('admin.completedorders');
-    Route::post('admin/admin/notifications/mark-as-read', [NotificationController::class, 'markAsRead'])->name('admin.notifications.markAsRead');
+    Route::post('/admin/admin/notifications/mark-as-read/{id}', [NotificationController::class, 'markAsReadCus'])->name('admin.notifications.markAsRead');
+    Route::delete('/admin/notifications/{notification}', [NotificationController::class, 'delete'])->name('admin.notifications.delete');
+    Route::get('admin/admin/notifications', [NotificationController::class, 'index'])->name('admin.notifications.index');
+
     Route::get('/admin/admin/order/{order}', [AdminController::class, 'orderdetail'])->name('admin.order.show');
     // Route::get('admin/admin/templates/create', [TemplateController::class, 'create'])->name('admin.templates.create');
     Route::get('admin/admin/templates', [EmailTemplateController::class, 'index'])->name('admin.templates.index');
@@ -91,7 +94,7 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::put('/templates/{template}', [EmailTemplateController::class, 'update'])->name('admin.templates.update');
     Route::post('admin/admin/templates/store', [EmailTemplateController::class, 'store'])->name('admin.templates.store');
     Route::post('admin/admin/templates/placeholders', [EmailTemplateController::class, 'addPlaceholder'])->name('admin.placeholders.add');
-    Route::post('/admin/admin/notifications/mark-as-read', [NotificationController::class, 'markAsRead'])->name('admin.notifications.markAsRead');
+    // Route::post('/admin/admin/notifications/mark-as-read', [NotificationController::class, 'markAsRead'])->name('admin.notifications.markAsRead');
 });
 
 require __DIR__ . '/auth.php';
