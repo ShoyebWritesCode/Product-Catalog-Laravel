@@ -52,4 +52,14 @@ class NotificationController extends Controller
 
         return response()->json(['success' => false, 'message' => 'Notification not found.'], 404);
     }
+
+    public function deleteAll()
+    {
+        $notifications = auth()->user()->notifications;
+        foreach ($notifications as $notification) {
+            $notification->delete();
+        }
+
+        return redirect()->back()->with('success', 'All notifications have been deleted.');
+    }
 }

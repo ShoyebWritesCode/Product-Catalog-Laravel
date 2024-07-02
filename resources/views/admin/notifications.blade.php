@@ -28,7 +28,7 @@
                                 {{-- @csrf --}}
                                <a href="{{ route('admin.notifications.markAllAsRead') }}" id="markAllAsRead" class="btn btn-success ml-2">Mark All as Read</a>
                             {{-- </form> --}}
-                            <button id="deleteSelected" class="btn btn-danger ml-2">Delete Selected</button>
+                            <a href="{{ route('admin.notifications.deleteAll') }}" id="markAllAsRead" class="btn btn-danger ml-2">Delete All </a>
                         </div>
                     </div>
                     <div class="tab-content" id="pills-tabContent">
