@@ -24,7 +24,10 @@
                             </li>
                         </ul>
                         <div>
-                            <button id="markAllAsRead" class="btn btn-success ml-2">Mark All as Read</button>
+                            {{-- <form id="markAllAsReadForm" method="POST" action="{{ route('admin.notifications.markAllAsRead') }}"> --}}
+                                {{-- @csrf --}}
+                               <a href="{{ route('admin.notifications.markAllAsRead') }}" id="markAllAsRead" class="btn btn-success ml-2">Mark All as Read</a>
+                            {{-- </form> --}}
                             <button id="deleteSelected" class="btn btn-danger ml-2">Delete Selected</button>
                         </div>
                     </div>
@@ -43,4 +46,33 @@
             </div>
         </div>
     </div>
+@stop
+
+@section('js')
+<script>
+     document.addEventListener('DOMContentLoaded', function() {
+        const markAllButton = document.getElementById('markAllAsRead');
+
+        markAllButton.addEventListener('click', function(event) {
+            event.preventDefault();
+
+        
+
+            fetch("{{ route('admin.notifications.markAllAsRead') }}", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                },
+            })
+            .then(response => {
+                    console.log('Notifications marked as read successfully');
+                    // Optionally update UI instead of reloading the whole page
+                    // location.reload();
+            })
+            .catch(error => {
+                console.error('Error marking notifications as read:', error);
+            });
+        });
+    </script>
 @stop

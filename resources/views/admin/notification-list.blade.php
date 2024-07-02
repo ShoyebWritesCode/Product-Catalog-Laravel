@@ -20,11 +20,11 @@
           <a href="{{ route('admin.order.show', $notification->data['order_id']) }}" class="btn btn-link view-order" data-notification-id="{{ $notification->id }}">
             <i class="fas fa-eye"></i>
           </a>
-          <form method="POST" action="{{ route('admin.notifications.delete', $notification->id) }}" class="inline delete-notification-form" style="display: inline;">
-            @csrf
-            @method('DELETE')
-            <button type="button" class="btn btn-link text-danger delete-notification-btn"><i class="fas fa-trash"></i></button>
-          </form>          
+          <form class="inline delete-notification-form" style="display: inline;">
+            <button type="button" class="btn btn-link text-danger delete-notification-btn" delete-notification-id="{{ $notification->id }}">
+                <i class="fas fa-trash"></i>
+            </button>
+        </form>
         </div>
       </li>
     @endforeach
@@ -37,35 +37,33 @@ document.addEventListener('DOMContentLoaded', function() {
     const deleteButtons = document.querySelectorAll('.delete-notification-btn');
 
     deleteButtons.forEach(button => {
-      button.addEventListener('click', function(event) {
-        event.preventDefault();
+        button.addEventListener('click', function(event) {
+            event.preventDefault();
 
-        if (confirm('Are you sure you want to delete this notification?')) {
-          const form = this.closest('form');
-          const url = form.action;
+                const notificationId = this.getAttribute('delete-notification-id');
+                const deleteUrl = "{{ route('admin.notifications.delete', ':notificationId') }}".replace(':notificationId', notificationId);
+                console.log('Deleting notification:', notificationId);
 
-          fetch(url, {
-            method: 'DELETE',
-            headers: {
-              'Content-Type': 'application/json',
-              'X-CSRF-TOKEN': '{{ csrf_token() }}',
-            },
-          })
-          .then(response => {
-            if (response.ok) {
-              console.log('Notification deleted successfully');
-              location.reload();
-            } else {
-              console.error('Failed to delete notification');
-            }
-          })
-          .catch(error => {
-            console.error('Error deleting notification:', error);
-          });
-        }
-      });
+                fetch(deleteUrl, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    },
+                })
+                .then(response => {
+                        console.log('Notification deleted successfully');
+                        const notificationItem = this.closest('.list-group-item');
+                        notificationItem.remove();
+                })
+                .catch(error => {
+                    console.error('Error deleting notification:', error);
+                });
+        });
     });
-  });
+});
+
+
 
 
 
@@ -81,6 +79,7 @@ document.addEventListener('DOMContentLoaded', function() {
           const markAsReadUrl = "{{ route('admin.notifications.markAsRead', ':notificationId') }}";
           const url = markAsReadUrl.replace(':notificationId', notificationId);
           const csrfToken = document.head.querySelector('meta[name="csrf-token"]').getAttribute('content');
+          console.log('Marking as read:', notificationId);
 
 
 

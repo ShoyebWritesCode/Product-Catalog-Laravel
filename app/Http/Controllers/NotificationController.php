@@ -21,10 +21,10 @@ class NotificationController extends Controller
         ]);
     }
 
-    public function markAsRead(Request $request)
+    public function markAsRead()
     {
         auth()->user()->unreadNotifications->markAsRead();
-        return response()->json(['success' => true]);
+        return redirect()->back()->with('success', 'All Notification marked as read.');
     }
 
     public function markAsReadCus($id)

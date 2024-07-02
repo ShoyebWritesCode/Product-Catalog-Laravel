@@ -84,7 +84,8 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::post('admin/admin/pendingorders/{order}', [AdminController::class, 'update'])->name('admin.pendingorders.update');
     Route::get('admin/admin/completedorders', [AdminController::class, 'completedorders'])->name('admin.completedorders');
     Route::post('/admin/admin/notifications/mark-as-read/{id}', [NotificationController::class, 'markAsReadCus'])->name('admin.notifications.markAsRead');
-    Route::delete('/admin/notifications/{notification}', [NotificationController::class, 'delete'])->name('admin.notifications.delete');
+    Route::get('/admin/admin/notifications/mark-as-read', [NotificationController::class, 'markAsRead'])->name('admin.notifications.markAllAsRead');
+    Route::delete('/admin/admin/notifications/{notification}', [NotificationController::class, 'delete'])->name('admin.notifications.delete');
     Route::get('admin/admin/notifications', [NotificationController::class, 'index'])->name('admin.notifications.index');
 
     Route::get('/admin/admin/order/{order}', [AdminController::class, 'orderdetail'])->name('admin.order.show');
