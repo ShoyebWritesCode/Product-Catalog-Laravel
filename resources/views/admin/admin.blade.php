@@ -14,11 +14,11 @@
             </a>
             <div class="dropdown-menu dropdown-menu-right text-center" aria-labelledby="notificationsDropdown">
                 @if ($unreadNotifications->count() > 0)
-                    @foreach ($unreadNotifications as $notification)
+                    @foreach ($unreadNotifications->take(3) as $notification)
                     <li class="dropdown-item notification-item">
                         <form method="POST" action="{{ route('admin.notifications.markAsRead', $notification->id) }}" class="inline">
                             @csrf
-                            <button type="submit" class="w-full text-left p-2">
+                            <button type="submit" class="w-full text-left p-2 ">
                                 <i class="fas fa-shopping-cart"></i> Order no.#{{ $notification->data['order_id'] }} placed<br>
                                  total {{ $notification->data['order_total'] }} BDT
                                 <span class="float-right text-muted text-sm">{{ $notification->created_at->diffForHumans() }}</span>
