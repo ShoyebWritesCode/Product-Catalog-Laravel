@@ -17,6 +17,7 @@ use App\Http\Controllers\TemplateController;
 use App\Http\Controllers\EmailTemplateController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\NotificationController as ControllersNotificationController;
+use App\Http\Controllers\ChartController;
 
 /*
 |--------------------------------------------------------------------------
@@ -97,6 +98,8 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::post('admin/admin/templates/store', [EmailTemplateController::class, 'store'])->name('admin.templates.store');
     Route::post('admin/admin/templates/placeholders', [EmailTemplateController::class, 'addPlaceholder'])->name('admin.placeholders.add');
     // Route::post('/admin/admin/notifications/mark-as-read', [NotificationController::class, 'markAsRead'])->name('admin.notifications.markAsRead');
+
+    Route::get('admin/admin/charts', [ChartController::class, 'index'])->name('admin.charts.index');
 });
 
 require __DIR__ . '/auth.php';

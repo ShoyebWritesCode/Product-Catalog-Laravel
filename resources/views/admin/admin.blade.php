@@ -101,6 +101,15 @@
             'link' => route("admin.templates.index"),
             'link_text' => 'More info'
         ])
+         @include('components.index', [
+            'title' => 'Sales Reports',
+            'number' => 0,
+            'icon' => 'fas fa-chart-line',
+            'color' => 'info',
+            'link' => route("admin.charts.index"),
+            'link_text' => 'More info'
+        ])
+        
     </div>
 @stop
 
