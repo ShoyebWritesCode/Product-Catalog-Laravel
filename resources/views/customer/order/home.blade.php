@@ -11,8 +11,9 @@
             </div>
             <a href="{{ route('customer.order.home') }}" class="text-gray-800 hover:text-gray-600 relative">
                 <i class="fas fa-shopping-cart text-xl"></i>
-                <span class="bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center absolute top-0 right-0 -mt-1 -mr-1 text-xs">
-                    {{ $numberOfItems }}  </span> </a>
+                <span
+                    class="bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center absolute top-0 right-0 -mt-1 -mr-1 text-xs">
+                    {{ $numberOfItems }} </span> </a>
         </div>
     </x-slot>
 
@@ -24,7 +25,7 @@
         @endsession
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
-                @if($order)
+                @if ($order)
                     <div class="bg-white border border-gray-300 rounded-lg p-4 mb-4">
                         <h3 class="text-2xl font-bold mb-2">Order #{{ $order->id }}</h3>
                         <table class="min-w-full bg-white border">
@@ -36,15 +37,18 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach($orderItems as $item)
+                                @foreach ($orderItems as $item)
                                     <tr>
                                         <td class="border px-4 py-2 text-center">
                                             <div class="flex justify-center space-x-2">
-                                                <img src="{{ asset('storage/images/' . $item->product->image) }}" alt="{{ $item->product->name }}" class="w-16 h-16 object-cover rounded-md">
+                                                <img src="{{ asset('storage/images/' . $item->product->image) }}"
+                                                    alt="{{ $item->product->name }}"
+                                                    class="w-16 h-16 object-cover rounded-md">
                                             </div>
                                         </td>
                                         <td class="border px-4 py-2 text-center">{{ $item->product->name }}</td>
-                                        <td class="border px-4 py-2 text-center text-red-600">{{ $item->product->price }} BDT</td>
+                                        <td class="border px-4 py-2 text-center text-red-600">
+                                            {{ $item->product->price }} BDT</td>
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -52,7 +56,8 @@
                         <div class="mt-4 flex justify-between items-center">
                             <span class="text-lg font-bold">Total: {{ $order->total }} BDT</span>
                             <a href="#" id="checkoutButton" class="no-underline text-gray-100">
-                                <button type="button" class="bg-red-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                                <button type="button"
+                                    class="bg-red-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                                     Next
                                 </button>
                             </a>
@@ -100,4 +105,3 @@
         }
     });
 </script>
-

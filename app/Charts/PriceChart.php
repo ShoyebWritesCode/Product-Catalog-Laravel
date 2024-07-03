@@ -19,7 +19,7 @@ class PriceChart
             ->setTitle('Top Selling Products by Total Price')
             ->setDataset([
                 [
-                    'name' => 'Tptal Sell (BDT)',
+                    'name' => 'Total Sell (BDT)',
                     'data' => $quantities
                 ],
             ])

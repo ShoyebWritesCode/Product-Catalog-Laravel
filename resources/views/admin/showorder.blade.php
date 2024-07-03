@@ -12,7 +12,7 @@
     <div class="container-fluid">
         <div class="card">
             <div class="card-body">
-                @if($order)
+                @if ($order)
                     <div class="card mb-4">
                         <div class="card-header">
                             <h3 class="card-title">Order #{{ $order->id }}</h3>
@@ -27,10 +27,12 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach($orderItems as $item)
+                                    @foreach ($orderItems as $item)
                                         <tr>
                                             <td class="text-center">
-                                                <img src="{{ asset('storage/images/' . $item->product->image) }}" alt="{{ $item->product->name }}" class="img-thumbnail" style="width: 75px; height: 75px;">
+                                                <img src="{{ asset('storage/images/' . $item->product->image) }}"
+                                                    alt="{{ $item->product->name }}" class="img-thumbnail"
+                                                    style="width: 75px; height: 75px;">
                                             </td>
                                             <td class="text-center">{{ $item->product->name }}</td>
                                             <td class="text-center text-red-600">{{ $item->product->price }} BDT</td>
@@ -66,7 +68,9 @@
                         </div>
                     </div>
                     <div class="mt-4 d-flex justify-content-end align-items-right">
-                        <form id="updateForm_{{ $order->id }}" class="update-form" data-order-id="{{ $order->id }}" method="POST" action="{{ route('admin.pendingorders.update', $order->id) }}" style="display: inline;">
+                        <form id="updateForm_{{ $order->id }}" class="update-form" data-order-id="{{ $order->id }}"
+                            method="POST" action="{{ route('admin.pendingorders.update', $order->id) }}"
+                            style="display: inline;">
                             @csrf
                             @method('POST')
                             <button type="submit" class="btn btn-success update-btn">
@@ -88,23 +92,5 @@
 @stop
 
 @section('js')
-<script>
-    // document.querySelectorAll('.update-form').forEach(form => {
-    //     form.addEventListener('submit', function(event) {
-    //         const orderId = this.getAttribute('data-order-id');
-    //         const url = this.getAttribute('action');
-    //         const data = new FormData(this);
-    //         fetch(url, {
-    //             method: 'POST',
-    //             body: data
-    //         })
-    //         .then(response => response.json())
-    //         .then(data => {
-    //             if(data.success) {
-    //                 window.location.href = "{{ route('admin.admin') }}";
-    //             }
-    //         });
-    //     });
-    // });
-</script>
+
 @stop
