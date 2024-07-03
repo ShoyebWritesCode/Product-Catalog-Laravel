@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Charts\ProductsChart;
 use App\Charts\PriceChart;
+use App\Charts\SalesChart;
 use Illuminate\Http\Request;
 use App\Models\OrderItems;
 
@@ -27,7 +28,7 @@ class ChartController extends Controller
     // }
 
 
-    public function index(ProductsChart $chart, PriceChart $priceChart)
+    public function index(ProductsChart $chart, PriceChart $priceChart, SalesChart $salesChart)
     {
         $topSellingProducts = (new OrderItems)->topSellingProductsQuantity();
 
@@ -42,8 +43,9 @@ class ChartController extends Controller
         $labels = $topSellingProductsPrice->pluck('product.name')->toArray();
 
         $priceChart = $priceChart->build($quantities, $labels);
+        $salesChart = $salesChart->build();
 
 
-        return view('admin.charts.index', compact('productchart', 'priceChart'));
+        return view('admin.charts.index', compact('productchart', 'priceChart', 'salesChart'));
     }
 }
