@@ -30,6 +30,7 @@ class SalesChart
                     'color' => '#ff0000'
                 ]
             ])
-            ->setXAxis($labels);
+            ->setXAxis($labels)
+            ->setGrid();
     }
 }

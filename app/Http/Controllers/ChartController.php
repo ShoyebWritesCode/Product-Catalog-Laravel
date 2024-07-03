@@ -7,45 +7,70 @@ use App\Charts\PriceChart;
 use App\Charts\SalesChart;
 use Illuminate\Http\Request;
 use App\Models\OrderItems;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\View;
 
 class ChartController extends Controller
 {
-    // public function index(ProductsChart $productchart)
-    // {
-    //     return view('admin.charts.index', ['productchart' => $productchart->build()]);
-    // }
 
-    // public function topSellingProductsQuantity()
-    // {
-    //     $topSellingProducts = (new OrderItems)->topSellingProductsQuantity();
-
-    //     foreach ($topSellingProducts as $item) {
-    //         echo 'Product ID: ' . $item->product_id;
-    //         echo ' Product Name: ' . $item->product->name;
-    //         echo ' Quantity Sold: ' . $item->quantity;
-    //         echo ' Product Price: ' . $item->product->price;
-    //     }
-    // }
-
-
-    public function index(ProductsChart $chart, PriceChart $priceChart, SalesChart $salesChart)
+    public function index(ProductsChart $chart, PriceChart $priceChart, SalesChart $salesChart, Request $request)
     {
-        $topSellingProducts = (new OrderItems)->topSellingProductsQuantity();
+        $filter = $request->input('filter', 'all'); // Default to 'all' if filter is not provided
 
+        $topSellingProducts = $this->getTopSellingProducts($filter);
         $quantities = $topSellingProducts->pluck('quantity')->toArray();
         $labels = $topSellingProducts->pluck('product.name')->toArray();
-
         $productchart = $chart->build($quantities, $labels);
 
-        $topSellingProductsPrice = (new OrderItems)->topSellingProductPrice();
+        $pricefilter = 'all';
+        $topSellingProductsPrice = $this->getTopSellingProductPrice($pricefilter);
+        $quantitiesPrice = $topSellingProductsPrice->pluck('total_price')->toArray();
+        $labelsPrice = $topSellingProductsPrice->pluck('product.name')->toArray();
+        $priceChart = $priceChart->build($quantitiesPrice, $labelsPrice);
 
-        $quantities = $topSellingProductsPrice->pluck('total_price')->toArray();
-        $labels = $topSellingProductsPrice->pluck('product.name')->toArray();
-
-        $priceChart = $priceChart->build($quantities, $labels);
         $salesChart = $salesChart->build();
+        if ($request->has('is_ajax') && $request->is_ajax) {
+            Log::debug("message called from ajax");
 
+            $html = View::make('admin.charts.productchart', compact('productchart'))->render();
+            return response()->json([
+                'html' => $html
+            ]);
+        }
 
         return view('admin.charts.index', compact('productchart', 'priceChart', 'salesChart'));
+    }
+
+    // Method to fetch top selling products based on filter
+    private function getTopSellingProducts($filter)
+    {
+        $orderItems = new OrderItems(); // Instantiate OrderItems model
+        switch ($filter) {
+            case 'last7':
+                return $orderItems->topSellingProductsQuantityLast7Days();
+            case 'last7weeks':
+                return $orderItems->topSellingProductsQuantityLast7Weeks();
+            case '12months':
+                return $orderItems->topSellingProductsQuantityLast12Months();
+            case 'all':
+            default:
+                return $orderItems->topSellingProductsQuantity();
+        }
+    }
+
+    private function getTopSellingProductPrice($filter)
+    {
+        $orderItems = new OrderItems(); // Instantiate OrderItems model
+        switch ($filter) {
+                // case 'last7':
+                //     return $orderItems->topSellingProductPriceLast7Days();
+                // case 'last7weeks':
+                //     return $orderItems->topSellingProductPriceLast7Weeks();
+                // case '12months':
+                //     return $orderItems->topSellingProductPriceLast12Months();
+                // case 'all':
+            default:
+                return $orderItems->topSellingProductPrice();
+        }
     }
 }

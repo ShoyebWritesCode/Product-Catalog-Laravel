@@ -30,6 +30,42 @@ class OrderItems extends Model
             ->take(5)
             ->get();
     }
+
+    public function topSellingProductsQuantityLast7Days()
+    {
+        return $this->select('product_id', DB::raw('COUNT(*) as quantity'))
+            ->with('product:id,name,price')
+            ->where('created_at', '>=', now()->subDays(7))
+            ->groupBy('product_id')
+            ->orderBy('quantity', 'desc')
+            ->take(5)
+            ->get();
+    }
+
+    public function topSellingProductsQuantityLast7Weeks()
+    {
+        return $this->select('product_id', DB::raw('COUNT(*) as quantity'))
+            ->with('product:id,name,price')
+            ->where('created_at', '>=', now()->subWeeks(7))
+            ->groupBy('product_id')
+            ->orderBy('quantity', 'desc')
+            ->take(5)
+            ->get();
+    }
+
+    public function topSellingProductsQuantityLast12Months()
+    {
+        return $this->select('product_id', DB::raw('COUNT(*) as quantity'))
+            ->with('product:id,name,price')
+            ->where('created_at', '>=', now()->subMonths(12))
+            ->groupBy('product_id')
+            ->orderBy('quantity', 'desc')
+            ->take(5)
+            ->get();
+    }
+
+
+
     public function topSellingProductPrice()
     {
         return $this->select('product_id', DB::raw('SUM(products.price) as total_price'))
