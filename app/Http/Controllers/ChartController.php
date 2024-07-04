@@ -29,12 +29,10 @@ class ChartController extends Controller
         $priceChart = $priceChart->build($quantitiesPrice, $labelsPrice);
 
         $salesChart = $salesChart->build();
-        if ($request->has('is_ajax') && $request->is_ajax) {
-            Log::debug("message called from ajax");
-
-            $html = View::make('admin.charts.productchart', compact('productchart'))->render();
+        if ($request->ajax()) {
             return response()->json([
-                'html' => $html
+                'quantities' => $quantities,
+                'labels' => $labels
             ]);
         }
 
