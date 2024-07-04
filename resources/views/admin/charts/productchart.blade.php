@@ -23,27 +23,3 @@
         </div>
     </div>
 </div>
-
-<script>
-    // document.getElementById('product-chart-filter').addEventListener('change', function() {
-    //     this.form.submit();
-
-    // });
-
-    document.getElementById('product-chart-filter').addEventListener('change', function(e) {
-        e.preventDefault();
-        var filter = this.value;
-        var url = "{{ route('admin.charts.index') }}" + "?filter=" + filter;
-
-        fetch(url)
-            .then(response =>
-                console.log(response)
-            )
-            .then(data => {
-
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
-    });
-</script>
