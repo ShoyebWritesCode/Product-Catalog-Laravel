@@ -37,9 +37,9 @@ class CustomerProductController extends Controller
             $averageRatings[$product->id] = Review::where('product_id', $product->id)->avg('rating');
         }
 
+        $unreadNotifications = auth()->user()->unreadNotifications;
 
-
-        return view('customer.product.home', compact('initialProducts', 'namesubcategories', 'nameparentcategories', 'averageRatings'));
+        return view('customer.product.home', compact('initialProducts', 'namesubcategories', 'nameparentcategories', 'averageRatings', 'unreadNotifications'));
     }
 
     public function fetchProducts(Request $request)

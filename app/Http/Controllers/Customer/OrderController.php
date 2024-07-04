@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Customer;
 
 use App\Http\Controllers\Controller;
 use App\Models\Product;
-use App\Models\Review;
+use App\Models\Admin;
 use App\Models\OrderItems;
 use App\Models\Order;
 use Illuminate\Http\Request;
@@ -13,23 +13,11 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\MyEmail;
 use App\Models\EmailTemplate;
 use App\Helpers\MailHelper;
+use App\Notifications\OrderPlaced;
+use Illuminate\Support\Facades\Notification;
 
 class OrderController extends Controller
 {
-    // public function index()
-    // {
-    //     $user = auth()->user();
-    //     $order = Order::where('user_id', $user->id)->where('status', 0)->first();
-    //     $orderItems = collect();
-
-
-    //     if ($order) {
-    //         $orderItems = OrderItems::where('order_id', $order->id)->get();
-    //     }
-
-    //     return view('customer.order.home', compact('order', 'orderItems'));
-    // }
-
 
     protected function getOrderData()
     {
@@ -126,6 +114,8 @@ class OrderController extends Controller
 
         MailHelper::sendTemplateMail($orderCustomer, $email, $replacements);
 
+        $admins = Admin::all();
+        Notification::send($admins, new OrderPlaced($order));
 
         session()->flash('success', 'Order placed successfully. Check your email for confirmation');
         return redirect()->route('customer.order.home')->with('success', 'Order placed successfully. Check your email for confirmation');

@@ -13,13 +13,11 @@ class ProductFactory extends Factory
 
     public function definition()
     {
-        // Get all image files from the storage directory
-        $imageFiles = File::files(public_path('storage/images'));
+        $imageFiles = File::files(public_path('images'));
         $images = array_map(function ($file) {
             return $file->getFilename();
         }, $imageFiles);
 
-        // Function to pick a random image
         $randomImage = function () use ($images) {
             return $images[array_rand($images)];
         };

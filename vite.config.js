@@ -9,7 +9,7 @@ export default defineConfig({
                 "resources/css/app.css",
                 "resources/js/app.js",
                 ...glob.sync("resources/js/custom/*.js"),
-                ...glob.sync("resources/scss/*.sccss"),
+                ...glob.sync("resources/scss/*.scss"),
                 "resources/scss/show.scss",
                 "resources/scss/table.scss",
             ],
