@@ -38,7 +38,7 @@ class ChartController extends Controller
             ]);
         }
 
-        return view('admin.charts.index', compact('productchart', 'priceChart', 'salesChart'));
+        return view('admin.charts.index', compact('productchart', 'priceChart', 'salesChart', 'labels', 'quantities'));
     }
 
     // Method to fetch top selling products based on filter
