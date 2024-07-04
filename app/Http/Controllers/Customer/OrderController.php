@@ -121,6 +121,52 @@ class OrderController extends Controller
         return redirect()->route('customer.order.home')->with('success', 'Order placed successfully. Check your email for confirmation');
     }
 
+    public function reorder(Order $order)
+    {
+        $user = auth()->user();
+        $Reorder = new Order();
+        $Reorder->user_id = $user->id;
+        $Reorder->status = 1;
+        $Reorder->total = $order->total;
+        $Reorder->city = $order->city;
+        $Reorder->address = $order->address;
+        $Reorder->phone = $order->phone;
+        $Reorder->save();
+
+        $orderItems = $order->orderItems()->get();
+
+        foreach ($orderItems as $item) {
+            $orderItem = new OrderItems();
+            $orderItem->order_id = $Reorder->id;
+            $orderItem->product_id = $item->product_id;
+        }
+        $orderItem->save();
+
+        $name = auth()->user()->name;
+        $email = auth()->user()->email;
+        $id = $order->id;
+        $total = $order->total;
+        $orderDetailLink = '<a href="' . route('customer.order.orderdetail', ['order' => $order->id]) . '">View Order Details</a>';
+        $orderCustomer = EmailTemplate::CustomerCode;
+
+
+        $replacements = [
+            'name' => $name,
+            'id' => $id,
+            'total' => $total,
+            'link' => $orderDetailLink
+        ];
+
+        MailHelper::sendTemplateMail($orderCustomer, $email, $replacements);
+
+        $admins = Admin::all();
+        Notification::send($admins, new OrderPlaced($order));
+
+        session()->flash('success', 'Re Order placed successfully. Check your email for confirmation');
+        return redirect()->route('customer.order.home')->with('success', 'Re Order placed successfully. Check your email for confirmation');
+    }
+
+
 
     public function itemCount()
     {

@@ -77,6 +77,15 @@
                             </div>
                         </div>
                     </div>
+                    <div class="flex justify-center mt-4">
+                        <form action="{{ route('customer.order.reorder', $order->id) }}" method="POST">
+                            @csrf
+                            <button type="submit"
+                                class="bg-red-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                                Re-Order
+                            </button>
+                        </form>
+                    </div>
                 @else
                     <p class="text-center text-gray-600">You have no open orders.</p>
                 @endif

@@ -56,6 +56,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/orders/{product}', [OrderController::class, 'add'])->name('customer.order.add');
     Route::get('/orders/checkout', [OrderController::class, 'checkoutpage'])->name('customer.order.checkoutpage');
     Route::post('/orders/checkout/{order}', [OrderController::class, 'checkout'])->name('customer.order.checkout');
+    Route::post('/orders/reorder/{order}', [OrderController::class, 'reorder'])->name('customer.order.reorder');
     Route::get('/history', [OrderController::class, 'history'])->name('customer.order.history');
     Route::get('/history/{order}', [OrderController::class, 'orderdetail'])->name('customer.order.orderdetail');
     // Route::get('/email', [EmailController::class, 'sendEmail'])->name('email.send');
