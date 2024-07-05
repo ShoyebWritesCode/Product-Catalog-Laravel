@@ -90,6 +90,17 @@ class OrderController extends Controller
         // return view('customer.product.show', ['num' => $num]);
     }
 
+    public function remove($id)
+    {
+        $orderItem = OrderItems::find($id);
+        $order = Order::find($orderItem->order_id);
+        $order->total -= $orderItem->product->price;
+        $order->save();
+        $orderItem->delete();
+
+        return redirect()->route('customer.order.home')->with('success', 'Item removed from cart successfully');
+    }
+
     public function checkout()
     {
         $user = auth()->user();

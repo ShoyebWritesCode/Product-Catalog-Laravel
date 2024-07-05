@@ -1,4 +1,4 @@
-@if ($order)
+@if ($order && $orderItems->isNotEmpty())
     <div class="bg-white border border-gray-300 rounded-lg p-4 mb-4">
         <h3 class="text-2xl font-bold mb-2">Order #{{ $order->id }}</h3>
         <table class="min-w-full bg-white border">
