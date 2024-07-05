@@ -15,22 +15,35 @@ use App\Models\EmailTemplate;
 use App\Helpers\MailHelper;
 use App\Notifications\OrderPlaced;
 use Illuminate\Support\Facades\Notification;
+use App\Http\Controllers\AddressController; // Add this line
 
 class OrderController extends Controller
 {
+    protected $addressController;
+    public function __construct(AddressController $addressController)
+    {
+        $this->addressController = $addressController;
+    }
+
 
     protected function getOrderData()
     {
         $user = auth()->user();
         $order = Order::where('user_id', $user->id)->where('status', 0)->first();
         $orderItems = collect();
+        $addressData = $this->addressController->index();
 
         if ($order) {
             $orderItems = OrderItems::where('order_id', $order->id)->get();
         }
 
-        return compact('order', 'orderItems');
+        return [
+            'order' => $order,
+            'orderItems' => $orderItems,
+            'address' => $addressData['address'],
+        ];
     }
+
 
     public function index()
     {
@@ -54,6 +67,7 @@ class OrderController extends Controller
 
     public function checkoutpage()
     {
+
         $data = $this->getOrderData();
         return view('customer.order.checkout', $data);
     }
