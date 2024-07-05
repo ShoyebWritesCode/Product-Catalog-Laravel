@@ -32,7 +32,7 @@
     "src": "node_modules/@fortawesome/fontawesome-free/webfonts/fa-v4compatibility.woff2"
   },
   "resources/css/app.css": {
-    "file": "assets/app-Bn5FTJtG.css",
+    "file": "assets/app-D2MZE400.css",
     "src": "resources/css/app.css",
     "isEntry": true
   },
@@ -61,7 +61,7 @@
     "isEntry": true
   },
   "resources/js/custom/product.js": {
-    "file": "assets/product-CBBKAeCQ.js",
+    "file": "assets/product-BPh8MKKc.js",
     "name": "product",
     "src": "resources/js/custom/product.js",
     "isEntry": true
@@ -72,6 +72,11 @@
     "src": "resources/js/custom/show.js",
     "isEntry": true
   },
+  "resources/scss/product.scss": {
+    "file": "assets/product-DCmhbVS9.css",
+    "src": "resources/scss/product.scss",
+    "isEntry": true
+  },
   "resources/scss/show.scss": {
     "file": "assets/show-DGDWOUB1.css",
     "src": "resources/scss/show.scss",
@@ -80,6 +85,12 @@
   "resources/scss/table.scss": {
     "file": "assets/table-CW9HvLdp.css",
     "src": "resources/scss/table.scss",
+    "isEntry": true
+  },
+  "resources/scss/variables.scss": {
+    "file": "assets/variables-l0sNRNKZ.js",
+    "name": "variables",
+    "src": "resources/scss/variables.scss",
     "isEntry": true
   }
 }

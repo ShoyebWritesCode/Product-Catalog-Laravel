@@ -124,14 +124,20 @@ class OrderController extends Controller
     public function reorder(Order $order)
     {
         $user = auth()->user();
-        $Reorder = new Order();
-        $Reorder->user_id = $user->id;
-        $Reorder->status = 1;
-        $Reorder->total = $order->total;
-        $Reorder->city = $order->city;
-        $Reorder->address = $order->address;
-        $Reorder->phone = $order->phone;
+        $Reorder = Order::where('user_id', $user->id)->where('status', 0)->first();
+        $Reorder->total += $order->total;
         $Reorder->save();
+
+        if (!$Reorder) {
+            $Reorder = new Order();
+            $Reorder->user_id = $user->id;
+            $Reorder->total = $order->total;
+            $order->status = 0;
+            $Reorder->city = $order->city;
+            $Reorder->address = $order->address;
+            $Reorder->phone = $order->phone;
+            $order->save();
+        }
 
         $orderItems = $order->orderItems()->get();
 
@@ -139,31 +145,12 @@ class OrderController extends Controller
             $orderItem = new OrderItems();
             $orderItem->order_id = $Reorder->id;
             $orderItem->product_id = $item->product_id;
+            $orderItem->save();
         }
-        $orderItem->save();
-
-        $name = auth()->user()->name;
-        $email = auth()->user()->email;
-        $id = $order->id;
-        $total = $order->total;
-        $orderDetailLink = '<a href="' . route('customer.order.orderdetail', ['order' => $order->id]) . '">View Order Details</a>';
-        $orderCustomer = EmailTemplate::CustomerCode;
 
 
-        $replacements = [
-            'name' => $name,
-            'id' => $id,
-            'total' => $total,
-            'link' => $orderDetailLink
-        ];
-
-        MailHelper::sendTemplateMail($orderCustomer, $email, $replacements);
-
-        $admins = Admin::all();
-        Notification::send($admins, new OrderPlaced($order));
-
-        session()->flash('success', 'Re Order placed successfully. Check your email for confirmation');
-        return redirect()->route('customer.order.home')->with('success', 'Re Order placed successfully. Check your email for confirmation');
+        session()->flash('success', 'Re Order items added to cart successfully.');
+        return redirect()->route('customer.order.home')->with('success', 'Re Order items added to cart successfully.');
     }
 
 
