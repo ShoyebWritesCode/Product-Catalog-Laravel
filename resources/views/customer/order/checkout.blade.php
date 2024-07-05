@@ -59,24 +59,46 @@
                             <span class="text-lg font-bold">Total: {{ $order->total }} BDT</span>
                         </div>
                     </div>
-                    <div class="bg-white border border-gray-300 rounded-lg p-4 mb-4">
-                        <h3 class="text-xl font-bold mb-4">Address Details</h3>
-                        <div class="mb-4">
-                            <div class="mt-4 flex justify-between items-center">
-                                <span class="text-lg font-bold">City: {{ $order->city }}</span>
+                    <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6 grid grid-cols-2 gap-6">
+                        <div class="bg-white border border-gray-300 rounded-lg p-4 mb-4 col-span-2 sm:col-span-1">
+                            <h3 class="text-xl font-bold mb-4">Shipping Address Details</h3>
+                            <div class="mb-4">
+                                <div class="mt-4 flex justify-between items-center">
+                                    <span class="text-lg font-bold">City: {{ $order->city }}</span>
+                                </div>
+                            </div>
+                            <div class="mb-4">
+                                <div class="mt-4 flex justify-between items-center">
+                                    <span class="text-lg font-bold">Address: {{ $order->address }}</span>
+                                </div>
+                            </div>
+                            <div class="mb-4">
+                                <div class="mt-4 flex justify-between items-center">
+                                    <span class="text-lg font-bold">Phone No. {{ $order->phone }}</span>
+                                </div>
                             </div>
                         </div>
-                        <div class="mb-4">
-                            <div class="mt-4 flex justify-between items-center">
-                                <span class="text-lg font-bold">Address: {{ $order->address }}</span>
+
+                        <div class="bg-white border border-gray-300 rounded-lg p-4 mb-4 col-span-2 sm:col-span-1">
+                            <h3 class="text-xl font-bold mb-4">Billing Address Details</h3>
+                            <div class="mb-4">
+                                <div class="mt-4 flex justify-between items-center">
+                                    <span class="text-lg font-bold">City: {{ $order->billing_city }}</span>
+                                </div>
                             </div>
-                        </div>
-                        <div class="mb-4">
-                            <div class="mt-4 flex justify-between items-center">
-                                <span class="text-lg font-bold">Phone No. {{ $order->phone }}</span>
+                            <div class="mb-4">
+                                <div class="mt-4 flex justify-between items-center">
+                                    <span class="text-lg font-bold">Address: {{ $order->billing_address }}</span>
+                                </div>
+                            </div>
+                            <div class="mb-4">
+                                <div class="mt-4 flex justify-between items-center">
+                                    <span class="text-lg font-bold">Phone No. {{ $order->bolling_phone }}</span>
+                                </div>
                             </div>
                         </div>
                     </div>
+
                     <div class="flex justify-center mt-4">
                         <form action="{{ route('customer.order.checkout', $order->id) }}" method="POST">
                             @csrf

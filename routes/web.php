@@ -57,6 +57,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/orders', [OrderController::class, 'index'])->name('customer.order.home');
     Route::get('/orders/shipping', [OrderController::class, 'shipping'])->name('customer.order.shipping');
     Route::post('/orders/shipping/{order}', [OrderController::class, 'shippingSave'])->name('customer.order.shipping.save');
+    Route::get('/orders/billing', [OrderController::class, 'billing'])->name('customer.order.billing');
+    Route::post('/orders/billing/{order}', [OrderController::class, 'billingSave'])->name('customer.order.billing.save');
     Route::get('/orderpopup', [OrderController::class, 'popup'])->name('customer.order.popup');
     Route::post('/orders/{product}', [OrderController::class, 'add'])->name('customer.order.add');
     Route::delete('/orders/{id}', [OrderController::class, 'remove'])->name('cart.remove');

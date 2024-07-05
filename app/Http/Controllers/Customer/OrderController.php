@@ -41,6 +41,7 @@ class OrderController extends Controller
             'order' => $order,
             'orderItems' => $orderItems,
             'address' => $addressData['address'],
+            'billingaddress' => $addressData['billingAddress']
         ];
     }
 
@@ -63,6 +64,11 @@ class OrderController extends Controller
     {
         $data = $this->getOrderData();
         return view('customer.order.shipping', $data);
+    }
+    public function billing()
+    {
+        $data = $this->getOrderData();
+        return view('customer.order.billing', $data);
     }
 
     public function checkoutpage()
@@ -200,17 +206,17 @@ class OrderController extends Controller
         $order->phone = $request->phone;
         $order->save();
         session()->flash('success', 'Shipping details saved successfully');
-        return redirect()->route('customer.order.checkoutpage')->with('success', 'Shipping details saved successfully');
+        return redirect()->route('customer.order.billing')->with('success', 'Shipping details saved successfully');
     }
 
     public function billingSave(Order $order, Request $request)
     {
-        $order->city = $request->city;
-        $order->address = $request->address;
-        $order->phone = $request->phone;
+        $order->billing_city = $request->city;
+        $order->billing_address = $request->address;
+        $order->bolling_phone = $request->phone;
         $order->save();
-        session()->flash('success', 'Shipping details saved successfully');
-        return redirect()->route('customer.order.checkoutpage')->with('success', 'Shipping details saved successfully');
+        session()->flash('success', 'Shipping and Billing details saved successfully');
+        return redirect()->route('customer.order.checkoutpage')->with('success', 'Shipping and Billing details saved successfully');
     }
 
     public function history()
