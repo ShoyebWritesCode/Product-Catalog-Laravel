@@ -27,7 +27,8 @@ class ProfileController extends Controller
         $addressData = $this->addressController->index();
         return view('profile.edit', [
             'user' => $request->user(),
-            'address' => $addressData['address']
+            'address' => $addressData['address'],
+            'billingaddress' => $addressData['billingAddress']
         ]);
     }
 

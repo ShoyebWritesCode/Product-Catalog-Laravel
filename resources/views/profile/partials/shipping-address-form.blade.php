@@ -15,21 +15,21 @@
 
         <div>
             <x-input-label for="city" :value="__('City')" />
-            <x-text-input id="city" name="city" type="text" class="mt-1 block w-full" :value="old('city', $address->city)" required
+            <x-text-input id="city" name="city" type="text" class="mt-1 block w-full" :value="old('city', isset($address) ? $address->city : '')" required
                 autofocus autocomplete="city" />
             <x-input-error class="mt-2" :messages="$errors->get('city')" />
         </div>
 
         <div>
             <x-input-label for="address" :value="__('Address')" />
-            <x-text-input id="address" name="address" type="text" class="mt-1 block w-full" :value="old('address', $address->address)"
+            <x-text-input id="address" name="address" type="text" class="mt-1 block w-full" :value="old('address', isset($address) ? $address->address : '')"
                 required autocomplete="address" />
             <x-input-error class="mt-2" :messages="$errors->get('address')" />
         </div>
 
         <div>
             <x-input-label for="phone" :value="__('Phone')" />
-            <x-text-input id="phone" name="phone" type="text" class="mt-1 block w-full" :value="old('phone', $address->phone)"
+            <x-text-input id="phone" name="phone" type="text" class="mt-1 block w-full" :value="old('phone', isset($address) ? $address->phone : '')"
                 required autocomplete="phone" />
             <x-input-error class="mt-2" :messages="$errors->get('phone')" />
         </div>

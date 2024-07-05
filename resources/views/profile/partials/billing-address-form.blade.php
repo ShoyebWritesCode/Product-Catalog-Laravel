@@ -9,27 +9,27 @@
         </p>
     </header>
 
-    <form method="post" action="#" class="mt-6 space-y-6">
+    <form method="post" action="{{ route('profile.billingaddress') }}" class="mt-6 space-y-6">
         @csrf
         @method('patch')
 
         <div>
             <x-input-label for="city" :value="__('City')" />
-            <x-text-input id="city" name="city" type="text" class="mt-1 block w-full" :value="old('city', $user->city)" required
+            <x-text-input id="city" name="city" type="text" class="mt-1 block w-full" :value="old('city', isset($billingaddress) ? $billingaddress->city : '')" required
                 autofocus autocomplete="city" />
             <x-input-error class="mt-2" :messages="$errors->get('city')" />
         </div>
 
         <div>
             <x-input-label for="address" :value="__('Address')" />
-            <x-text-input id="address" name="address" type="text" class="mt-1 block w-full" :value="old('address', $user->address)"
+            <x-text-input id="address" name="address" type="text" class="mt-1 block w-full" :value="old('address', isset($billingaddress) ? $billingaddress->address : '')"
                 required autocomplete="address" />
             <x-input-error class="mt-2" :messages="$errors->get('address')" />
         </div>
 
         <div>
             <x-input-label for="phone" :value="__('Phone')" />
-            <x-text-input id="phone" name="phone" type="text" class="mt-1 block w-full" :value="old('phone', $user->phone)"
+            <x-text-input id="phone" name="phone" type="text" class="mt-1 block w-full" :value="old('phone', isset($billingaddress) ? $billingaddress->phone : '')"
                 required autocomplete="phone" />
             <x-input-error class="mt-2" :messages="$errors->get('phone')" />
         </div>
