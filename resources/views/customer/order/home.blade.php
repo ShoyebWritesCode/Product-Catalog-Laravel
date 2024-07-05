@@ -34,6 +34,7 @@
                                     <th class="px-4 py-2 border text-center">Image</th>
                                     <th class="px-4 py-2 border text-center">Name</th>
                                     <th class="px-4 py-2 border text-center">Price</th>
+                                    <th class="px-4 py-2 border text-center">Remove</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -47,18 +48,14 @@
                                             </div>
                                         </td>
                                         <td class="border px-4 py-2 text-center">{{ $item->product->name }}</td>
-                                        <td class="border px-4 py-2 text-center text-red-600">
+                                        <td class="border px-4 py-2 text-center text-gray-600">
                                             {{ $item->product->price }} BDT</td>
                                         <td class="border px-4 py-2 text-center">
                                             <form action="{{ route('cart.remove', $item->id) }}" method="POST">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit" class="text-red-600 hover:text-red-800">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6"
-                                                        fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                        <path stroke-linecap="round" stroke-linejoin="round"
-                                                            stroke-width="2" d="M20 12H4" />
-                                                    </svg>
+                                                    <i class="fas fa-trash"></i>
                                                 </button>
                                             </form>
                                         </td>

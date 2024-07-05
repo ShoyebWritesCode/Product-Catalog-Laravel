@@ -135,26 +135,26 @@ class OrderController extends Controller
     public function reorder(Order $order)
     {
         $user = auth()->user();
-        $Reorder = Order::where('user_id', $user->id)->where('status', 0)->first();
-        $Reorder->total += $order->total;
-        $Reorder->save();
+        $reorder = Order::where('user_id', $user->id)->where('status', 0)->first();
+        $reorder->total += $order->total;
+        $reorder->save();
 
-        if (!$Reorder) {
-            $Reorder = new Order();
-            $Reorder->user_id = $user->id;
-            $Reorder->total = $order->total;
-            $order->status = 0;
-            $Reorder->city = $order->city;
-            $Reorder->address = $order->address;
-            $Reorder->phone = $order->phone;
-            $order->save();
+        if (!$reorder) {
+            $reorder = new Order();
+            $reorder->user_id = $user->id;
+            $reorder->total = $order->total;
+            $reorder->status = 0;
+            $reorder->city = $order->city;
+            $reorder->address = $order->address;
+            $reorder->phone = $order->phone;
+            $reorder->save();
         }
 
         $orderItems = $order->orderItems()->get();
 
         foreach ($orderItems as $item) {
             $orderItem = new OrderItems();
-            $orderItem->order_id = $Reorder->id;
+            $orderItem->order_id = $reorder->id;
             $orderItem->product_id = $item->product_id;
             $orderItem->save();
         }
