@@ -13,7 +13,9 @@
                 <i class="fas fa-shopping-cart text-xl"></i>
                 <span
                     class="bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center absolute top-0 right-0 -mt-1 -mr-1 text-xs">
-                    {{ $numberOfItems }} </span> </a>
+                    {{ $numberOfItems }}
+                </span>
+            </a>
         </div>
     </x-slot>
 
@@ -86,37 +88,59 @@
                 @csrf
                 <div class="mb-4">
                     <label for="city" class="block text-sm font-medium text-gray-700">City</label>
-                    <input type="text" id="city" name="city"
+                    <input type="text" id="billingCity" name="city"
                         class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                         value="{{ old('city', $billingaddress['city'] ?? '') }}" required>
                 </div>
                 <div class="mb-4">
                     <label for="address" class="block text-sm font-medium text-gray-700">Address</label>
-                    <input id="address" name="address" rows="3"
+                    <input id="billingAddress" name="address" rows="3"
                         class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                        value="{{ old('address', $billingaddress['address'] ?? '') }}" required>
+                        value="{{ old('address', $billingaddress['address'] ?? '') }}" required></input>
                 </div>
                 <div class="mb-4">
                     <label for="phone" class="block text-sm font-medium text-gray-700">Phone Number</label>
-                    <input type="text" id="phone" name="phone"
+                    <input type="text" id="billingPhone" name="phone"
                         class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                         value="{{ old('phone', $billingaddress['phone'] ?? '') }}" required>
                 </div>
                 <button type="submit"
                     class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Confirm</button>
             </form>
+            <br>
+            <div class="mb-4">
+                <input type="checkbox" id="sameAsShipping" class="mr-2">
+                <label for="sameAsShipping" class="text-sm font-medium text-gray-700">Same as shipping
+                    address</label>
+            </div>
         </div>
     </div>
-
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
-        // Open billing popup by default
-        document.addEventListener('DOMContentLoaded', function() {
-            document.getElementById('billingPopup').classList.remove('hidden');
-        });
-
-        // Close popup
-        document.getElementById('closePopup').addEventListener('click', function() {
-            document.getElementById('billingPopup').classList.add('hidden');
+        document.getElementById('sameAsShipping').addEventListener('change', function() {
+            if (this.checked) {
+                $.ajax({
+                    url: "{{ route('customer.order.sameaddr', $order->id) }}",
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function(data) {
+                        document.getElementById('billingCity').value = data.city;
+                        document.getElementById('billingAddress').value = data.address;
+                        document.getElementById('billingPhone').value = data.phone;
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error:', error);
+                    }
+                });
+            } else {
+                document.getElementById('billingCity').value = "{{ old('city', $billingaddress['city'] ?? '') }}";
+                document.getElementById('billingAddress').value =
+                    "{{ old('address', $billingaddress['address'] ?? '') }}";
+                document.getElementById('billingPhone').value =
+                    "{{ old('phone', $billingaddress['phone'] ?? '') }}";
+            }
         });
     </script>
+
+
 </x-app-layout>

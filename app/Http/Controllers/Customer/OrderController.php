@@ -70,6 +70,20 @@ class OrderController extends Controller
         $data = $this->getOrderData();
         return view('customer.order.billing', $data);
     }
+    public function getShippingAddress($id)
+    {
+        $order = Order::find($id);
+
+        if ($order) {
+            return response()->json([
+                'city' => $order->city,
+                'address' => $order->address,
+                'phone' => $order->phone,
+            ]);
+        } else {
+            return response()->json(['error' => 'Order not found'], 404);
+        }
+    }
 
     public function checkoutpage()
     {
