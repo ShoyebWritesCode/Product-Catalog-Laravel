@@ -82,16 +82,18 @@
     </div>
 
     <div id="orderPopup" class="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center hidden">
-        <div class="bg-white rounded-lg shadow-lg p-6 w-1/3">
+        <div class="bg-white rounded-lg shadow-lg p-6 w-2/5">
             <button id="closePopup" class="float-right text-gray-700">&times;</button>
-            <div id="popupContent"></div>
+            <div id="popupContent" class="flex justify-between space-x-4"></div>
         </div>
     </div>
+
 
 
 </x-app-layout>
 
 <script>
+    console.log('Hello from the order page');
     document.getElementById('checkoutButton').addEventListener('click', function(event) {
         event.preventDefault();
 
@@ -100,6 +102,10 @@
             .then(htmlContent => {
                 document.getElementById('popupContent').innerHTML = htmlContent;
                 document.getElementById('orderPopup').classList.remove('hidden');
+                const scripts = document.getElementById('popupContent').getElementsByTagName('script');
+                for (let script of scripts) {
+                    eval(script.innerHTML);
+                }
             })
             .catch(error => {
                 console.error('Error fetching content:', error);

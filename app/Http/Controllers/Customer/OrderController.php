@@ -225,6 +225,9 @@ class OrderController extends Controller
 
     public function billingSave(Order $order, Request $request)
     {
+        $order->city = $request->city;
+        $order->address = $request->address;
+        $order->phone = $request->phone;
         $order->billing_city = $request->city;
         $order->billing_address = $request->address;
         $order->bolling_phone = $request->phone;
