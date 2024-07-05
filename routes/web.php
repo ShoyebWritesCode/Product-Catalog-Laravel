@@ -18,6 +18,8 @@ use App\Http\Controllers\EmailTemplateController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\NotificationController as ControllersNotificationController;
 use App\Http\Controllers\ChartController;
+use App\Models\Address;
+use App\Http\Controllers\AddressController;
 
 /*
 |--------------------------------------------------------------------------
@@ -40,8 +42,11 @@ Route::get('/dashboard', function () {
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    // Route::get('/profile/shippingaddress', [AddressController::class, 'index'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::patch('/profile/shippingaddress', [AddressController::class, 'addAddress'])->name('profile.shippingaddress');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
 
     Route::get('/products', [CustomerProductController::class, 'index'])->name('customer.product.home');
     Route::post('/products/notifications/mark-as-read/{id}', [NotificationController::class, 'markAsReadCus'])->name('customer.notifications.markAsRead');

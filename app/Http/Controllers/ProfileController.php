@@ -8,16 +8,26 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
+use App\Http\Controllers\AddressController;
 
 class ProfileController extends Controller
 {
+    protected $addressController;
+
+    public function __construct(AddressController $addressController)
+    {
+        $this->addressController = $addressController;
+    }
+
     /**
      * Display the user's profile form.
      */
     public function edit(Request $request): View
     {
+        $addressData = $this->addressController->index();
         return view('profile.edit', [
             'user' => $request->user(),
+            'address' => $addressData['address']
         ]);
     }
 
