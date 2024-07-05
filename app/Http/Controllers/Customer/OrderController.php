@@ -203,6 +203,16 @@ class OrderController extends Controller
         return redirect()->route('customer.order.checkoutpage')->with('success', 'Shipping details saved successfully');
     }
 
+    public function billingSave(Order $order, Request $request)
+    {
+        $order->city = $request->city;
+        $order->address = $request->address;
+        $order->phone = $request->phone;
+        $order->save();
+        session()->flash('success', 'Shipping details saved successfully');
+        return redirect()->route('customer.order.checkoutpage')->with('success', 'Shipping details saved successfully');
+    }
+
     public function history()
     {
         $user = auth()->user();
