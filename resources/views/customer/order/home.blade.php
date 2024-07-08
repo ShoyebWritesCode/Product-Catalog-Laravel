@@ -82,7 +82,7 @@
     </div>
 
     <div id="orderPopup" class="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center hidden">
-        <div class="bg-white rounded-lg shadow-lg p-6 w-2/5">
+        <div class="bg-white rounded-lg shadow-lg p-6 w-1/10">
             <button id="closePopup" class="float-right text-gray-700">&times;</button>
             <div id="popupContent" class="flex justify-between space-x-4"></div>
         </div>
