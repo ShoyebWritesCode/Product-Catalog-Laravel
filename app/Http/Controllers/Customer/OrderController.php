@@ -114,6 +114,8 @@ class OrderController extends Controller
         $orderItem = new OrderItems();
         $orderItem->order_id = $order->id;
         $orderItem->product_id = $product->id;
+        $orderItem->product_name = $product->name;
+        $orderItem->product_price = $product->price;
         $orderItem->save();
 
         $order->total += $product->price;
@@ -190,6 +192,8 @@ class OrderController extends Controller
             $orderItem = new OrderItems();
             $orderItem->order_id = $reorder->id;
             $orderItem->product_id = $item->product_id;
+            $orderItem->product_name = $item->product_name;
+            $orderItem->product_price = $item->product_price;
             $orderItem->save();
         }
 

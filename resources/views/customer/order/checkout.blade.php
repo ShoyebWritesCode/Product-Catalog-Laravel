@@ -48,9 +48,9 @@
                                                     class="w-16 h-16 object-cover rounded-md">
                                             </div>
                                         </td>
-                                        <td class="border px-4 py-2 text-center">{{ $item->product->name }}</td>
+                                        <td class="border px-4 py-2 text-center">{{ $item->product_name }}</td>
                                         <td class="border px-4 py-2 text-center text-red-600">
-                                            {{ $item->product->price }} BDT</td>
+                                            {{ $item->product_price }} BDT</td>
                                     </tr>
                                 @endforeach
                             </tbody>

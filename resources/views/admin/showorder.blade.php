@@ -31,11 +31,11 @@
                                         <tr>
                                             <td class="text-center">
                                                 <img src="{{ asset('storage/images/' . $item->product->image) }}"
-                                                    alt="{{ $item->product->name }}" class="img-thumbnail"
+                                                    alt="{{ $item->product_name }}" class="img-thumbnail"
                                                     style="width: 75px; height: 75px;">
                                             </td>
-                                            <td class="text-center">{{ $item->product->name }}</td>
-                                            <td class="text-center text-red-600">{{ $item->product->price }} BDT</td>
+                                            <td class="text-center">{{ $item->product_name }}</td>
+                                            <td class="text-center text-red-600">{{ $item->product_price }} BDT</td>
                                         </tr>
                                     @endforeach
                                 </tbody>
