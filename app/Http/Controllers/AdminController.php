@@ -47,8 +47,8 @@ class AdminController extends Controller
         $product = Product::findOrFail($id);
         $product->name = $request->name;
         $product->description = $request->description;
+        $product->prev_price = $product->price;
         $product->price = $request->price;
-
 
         $product->save();
 

@@ -19,6 +19,7 @@ class CustomerProductController extends Controller
         $namesubcategories = [];
         $nameparentcategories = [];
         $averageRatings = [];
+        $discountPercent = [];
 
 
         $categories = Catagory::all()->keyBy('id');
@@ -35,11 +36,18 @@ class CustomerProductController extends Controller
             }, $subcategories[$product->id]));
 
             $averageRatings[$product->id] = Review::where('product_id', $product->id)->avg('rating');
+
+            if ($product->prev_price && $product->price < $product->prev_price) {
+                $discountPercent[$product->id] = (($product->prev_price - $product->price) / $product->prev_price) * 100;
+                $discountPercent[$product->id] = round($discountPercent[$product->id], 2);
+            } else {
+                $discountPercent[$product->id] = null;
+            }
         }
 
         $unreadNotifications = auth()->user()->unreadNotifications;
 
-        return view('customer.product.home', compact('initialProducts', 'namesubcategories', 'nameparentcategories', 'averageRatings', 'unreadNotifications'));
+        return view('customer.product.home', compact('initialProducts', 'namesubcategories', 'nameparentcategories', 'averageRatings', 'unreadNotifications', 'discountPercent'));
     }
 
     public function fetchProducts(Request $request)
