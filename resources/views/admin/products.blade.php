@@ -39,9 +39,21 @@
                             <td>{{ $product->name }}</td>
                             <td>{{ $product->price }}</td>
                             <td>
-                                <a href="{{ route('admin.product.edit', $product->id) }}" class="btn btn-sm btn-warning">
+                                <a href="{{ route('admin.product.edit', $product->id) }}"
+                                    class="btn btn-sm btn-warning mr-2">
                                     <i class="fas fa-edit"></i>
                                 </a>
+
+                                <form action="{{ route('admin.product.delete', $product->id) }}" method="POST"
+                                    class="inline">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-sm btn-danger"
+                                        onclick="return confirm('Are you sure you want to delete this product?');">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </form>
+
                             </td>
                         </tr>
                     @endforeach

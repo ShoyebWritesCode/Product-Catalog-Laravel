@@ -90,6 +90,7 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::get('admin/admin/products', [AdminController::class, 'products'])->name('admin.products');
     Route::get('/admin/admin/product/edit/{id}', [AdminController::class, 'edit'])->name('admin.product.edit');
     Route::put('/admin/admin/product/update/{id}', [AdminController::class, 'updateProduct'])->name('admin.product.update');
+    Route::delete('/admin/admin/product/update/{id}', [AdminController::class, 'deleteProduct'])->name('admin.product.delete');
     Route::get('admin/admin/users', [AdminController::class, 'users'])->name('admin.users');
     Route::get('admin/admin/categories', [AdminController::class, 'categories'])->name('admin.categories');
     Route::get('admin/admin/reviews', [AdminController::class, 'reviews'])->name('admin.reviews');

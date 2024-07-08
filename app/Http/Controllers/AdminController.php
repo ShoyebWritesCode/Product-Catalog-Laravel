@@ -37,6 +37,7 @@ class AdminController extends Controller
         return view('admin.products', compact('products'));
     }
 
+
     public function edit($id)
     {
         $product = Product::findOrFail($id);
@@ -53,6 +54,16 @@ class AdminController extends Controller
         $product->save();
 
         return redirect()->route('admin.products')->with('success', 'Product updated successfully');
+    }
+
+    public function deleteProduct($id)
+    {
+        $product = Product::findOrFail($id);
+        $product->reviews()->delete();
+        // $product->orderItems()->delete();
+        $product->mappings()->delete();
+        $product->delete();
+        return redirect()->route('admin.products')->with('success', 'Product deleted successfully');
     }
 
 
