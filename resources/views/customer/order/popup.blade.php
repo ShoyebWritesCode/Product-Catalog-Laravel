@@ -14,12 +14,12 @@
                     <tr>
                         <td class="border px-4 py-2 text-center">
                             <div class="flex justify-center space-x-2">
-                                <img src="{{ asset('storage/images/' . $item->product->image) }}"
-                                    alt="{{ $item->product->name }}" class="w-16 h-16 object-cover rounded-md">
+                                <img src="{{ asset('storage/images/' . $item->image) }}" alt="{{ $item->product_name }}"
+                                    class="w-16 h-16 object-cover rounded-md">
                             </div>
                         </td>
-                        <td class="border px-4 py-2 text-center">{{ $item->product->name }}</td>
-                        <td class="border px-4 py-2 text-center text-red-600">{{ $item->product->price }} BDT</td>
+                        <td class="border px-4 py-2 text-center">{{ $item->product_name }}</td>
+                        <td class="border px-4 py-2 text-center text-red-600">{{ $item->product_price }} BDT</td>
                     </tr>
                 @endforeach
             </tbody>

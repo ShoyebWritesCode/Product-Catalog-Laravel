@@ -43,8 +43,8 @@
                                     <tr>
                                         <td class="border px-4 py-2 text-center">
                                             <div class="flex justify-center space-x-2">
-                                                <img src="{{ asset('storage/images/' . $item->product->image) }}"
-                                                    alt="{{ $item->product->name }}"
+                                                <img src="{{ asset('storage/images/' . $item->image) }}"
+                                                    alt="{{ $item->product_name }}"
                                                     class="w-16 h-16 object-cover rounded-md">
                                             </div>
                                         </td>
