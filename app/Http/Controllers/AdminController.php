@@ -59,9 +59,9 @@ class AdminController extends Controller
     public function deleteProduct($id)
     {
         $product = Product::findOrFail($id);
-        $product->reviews()->delete();
-        // $product->orderItems()->delete();
-        $product->mappings()->delete();
+        //not needed for soft delete
+        // $product->reviews()->delete();
+        // $product->mappings()->delete();
         $product->delete();
         return redirect()->route('admin.products')->with('success', 'Product deleted successfully');
     }
