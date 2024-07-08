@@ -118,7 +118,7 @@ class OrderController extends Controller
         $orderItem->product_price = $product->price;
         $orderItem->save();
 
-        $order->total += $product->price;
+        $order->total += $orderItem->product_price;
         $order->save();
 
         $message = 'Added to cart successfully!';
@@ -130,7 +130,7 @@ class OrderController extends Controller
     {
         $orderItem = OrderItems::find($id);
         $order = Order::find($orderItem->order_id);
-        $order->total -= $orderItem->product->price;
+        $order->total -= $orderItem->product_price;
         $order->save();
         $orderItem->delete();
 
@@ -172,10 +172,12 @@ class OrderController extends Controller
     {
         $user = auth()->user();
         $reorder = Order::where('user_id', $user->id)->where('status', 0)->first();
-        $reorder->total += $order->total;
-        $reorder->save();
 
-        if (!$reorder) {
+
+        if ($reorder) {
+            $reorder->total += $order->total;
+            $reorder->save();
+        } else {
             $reorder = new Order();
             $reorder->user_id = $user->id;
             $reorder->total = $order->total;
