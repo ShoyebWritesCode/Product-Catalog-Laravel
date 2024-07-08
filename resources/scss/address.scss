@@ -1,0 +1,15 @@
+.hidden {
+    display: none;
+}
+
+.collapsed {
+    display: none;
+}
+
+.flex-grow {
+    flex-grow: 1;
+}
+
+.container {
+    transition: flex-grow 0.3s;
+}
