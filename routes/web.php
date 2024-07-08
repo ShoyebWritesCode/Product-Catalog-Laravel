@@ -88,6 +88,8 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::get('/admin/products/{product}', [ProductController::class, 'show'])->name('admin.product.show');
     Route::get('admin/admin', [AdminController::class, 'index'])->name('admin.admin');
     Route::get('admin/admin/products', [AdminController::class, 'products'])->name('admin.products');
+    Route::get('/admin/admin/product/edit/{id}', [AdminController::class, 'edit'])->name('admin.product.edit');
+    Route::put('/admin/admin/product/update/{id}', [AdminController::class, 'updateProduct'])->name('admin.product.update');
     Route::get('admin/admin/users', [AdminController::class, 'users'])->name('admin.users');
     Route::get('admin/admin/categories', [AdminController::class, 'categories'])->name('admin.categories');
     Route::get('admin/admin/reviews', [AdminController::class, 'reviews'])->name('admin.reviews');

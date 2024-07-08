@@ -123,7 +123,6 @@ class OrderController extends Controller
 
         $message = 'Added to cart successfully!';
         return response()->json(['success' => true, 'message' => $message]);
-        // return view('customer.product.show', ['num' => $num]);
     }
 
     public function remove($id)

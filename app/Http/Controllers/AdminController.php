@@ -37,6 +37,26 @@ class AdminController extends Controller
         return view('admin.products', compact('products'));
     }
 
+    public function edit($id)
+    {
+        $product = Product::findOrFail($id);
+        return view('admin.product.edit', compact('product'));
+    }
+    public function updateProduct(Request $request, $id)
+    {
+        $product = Product::findOrFail($id);
+        $product->name = $request->name;
+        $product->description = $request->description;
+        $product->price = $request->price;
+
+
+        $product->save();
+
+        return redirect()->route('admin.products')->with('success', 'Product updated successfully');
+    }
+
+
+
     public function users()
     {
         $users = User::all();
