@@ -16,7 +16,7 @@
         </div>
         <hr class="mb-4">
         @if (session('success'))
-            <div class="alert alert-success mb-4" role="alert">
+            <div class="alert alert-success mb-4" role="alert" id="successAlert">
                 {{ session('success') }}
             </div>
         @endif
@@ -49,4 +49,13 @@
             </table>
         </div>
     </div>
+@stop
+
+@section('js')
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#successAlert').fadeOut(2000);
+        });
+    </script>
 @stop
