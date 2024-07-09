@@ -8,6 +8,7 @@ use App\Models\Admin;
 use App\Models\OrderItems;
 use App\Models\Order;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\MyEmail;
@@ -15,7 +16,8 @@ use App\Models\EmailTemplate;
 use App\Helpers\MailHelper;
 use App\Notifications\OrderPlaced;
 use Illuminate\Support\Facades\Notification;
-use App\Http\Controllers\AddressController; // Add this line
+use App\Http\Controllers\AddressController;
+use Stripe;
 
 class OrderController extends Controller
 {
@@ -256,5 +258,48 @@ class OrderController extends Controller
         $orderItems = OrderItems::where('order_id', $order->id)->get();
         $data = compact('order', 'orderItems');
         return view('customer.order.orderdetail', $data);
+    }
+
+    public function stripeCheckout(Request $request, Order $order)
+    {
+        $stripe = new \Stripe\StripeClient(env('STRIPE_SECRET'));
+
+        $redirectUrl = route('stripe.checkout.success') . '?session_id={CHECKOUT_SESSION_ID}';
+
+        $response = $stripe->checkout->sessions->create([
+            'success_url' => $redirectUrl,
+
+            'customer_email' => auth()->user()->email,
+
+            'payment_method_types' => ['link', 'card'],
+
+            'line_items' => [
+                [
+                    'price_data' => [
+                        'product_data' => [
+                            'name' => 'Order #' . $order->id,
+                        ],
+                        'unit_amount' => 100 * $order->total,
+                        'currency' => 'BDT',
+                    ],
+                    'quantity' => 1
+                ],
+            ],
+
+            'mode' => 'payment',
+            'allow_promotion_codes' => true,
+        ]);
+
+        return redirect($response['url']);
+    }
+
+    public function stripeCheckoutSuccess(Request $request)
+    {
+        $stripe = new \Stripe\StripeClient(env('STRIPE_SECRET'));
+
+        $response = $stripe->checkout->sessions->retrieve($request->session_id);
+
+        $this->checkout();
+        return redirect()->route('customer.order.home')->with('success', 'Online payment done successfully. Check your email for confirmation');
     }
 }

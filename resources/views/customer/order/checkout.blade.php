@@ -99,13 +99,27 @@
                         </div>
                     </div>
 
-                    <div class="flex justify-center mt-4">
-                        <form action="{{ route('customer.order.checkout', $order->id) }}" method="POST">
+                    <div class="flex justify-start mt-4">
+                        <form id="payment-form" method="POST" class="flex flex-col items-start w-full"
+                            data-order-id="{{ $order->id }}">
                             @csrf
-                            <button type="submit"
-                                class="bg-red-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                                Checkout
-                            </button>
+                            <input type="hidden" name="payment_method" id="payment-method" value="cod">
+                            <div class="mb-4">
+                                <label for="payment_method" class="block text-lg font-medium text-gray-700">Select
+                                    Payment Method</label>
+                                <select id="payment_method" name="payment_method"
+                                    class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+                                    onchange="updateFormAction(this.value)">
+                                    <option value="cod">Cash on Delivery</option>
+                                    <option value="online">Online Payment</option>
+                                </select>
+                            </div>
+                            <div class="w-full flex justify-center">
+                                <button type="submit"
+                                    class="bg-red-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                                    Checkout
+                                </button>
+                            </div>
                         </form>
                     </div>
                 @else
@@ -114,4 +128,23 @@
             </div>
         </div>
     </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        function updateFormAction(paymentMethod) {
+            const form = document.getElementById('payment-form');
+            const orderId = form.getAttribute('data-order-id');
+            const paymentMethodInput = document.getElementById('payment_method');
+            console.log(orderId);
+            console.log(paymentMethodInput.value);
+            if (paymentMethodInput.value === 'online') {
+                form.action = "{{ route('customer.order.stripe', ':orderId') }}".replace(':orderId', orderId);
+                console.log('Online Payment');
+            } else {
+                form.action = "{{ route('customer.order.checkout', ':orderId') }}".replace(':orderId', orderId);
+                console.log('Cash on Delivery');
+            }
+        }
+    </script>
+
 </x-app-layout>
