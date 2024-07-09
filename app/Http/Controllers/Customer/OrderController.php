@@ -18,6 +18,7 @@ use App\Notifications\OrderPlaced;
 use Illuminate\Support\Facades\Notification;
 use App\Http\Controllers\AddressController;
 use Stripe;
+use App\Models\PaymentHistory;
 
 class OrderController extends Controller
 {
@@ -264,7 +265,7 @@ class OrderController extends Controller
     {
         $stripe = new \Stripe\StripeClient(env('STRIPE_SECRET'));
 
-        $redirectUrl = route('stripe.checkout.success') . '?session_id={CHECKOUT_SESSION_ID}';
+        $redirectUrl = route('stripe.checkout.success') . '?session_id={CHECKOUT_SESSION_ID}&order_id=' . $order->id;
 
         $response = $stripe->checkout->sessions->create([
             'success_url' => $redirectUrl,
@@ -279,7 +280,7 @@ class OrderController extends Controller
                         'product_data' => [
                             'name' => 'Order #' . $order->id,
                         ],
-                        'unit_amount' => 100 * $order->total,
+                        'unit_amount' => 100 *  $order->total,
                         'currency' => 'BDT',
                     ],
                     'quantity' => 1
@@ -300,9 +301,24 @@ class OrderController extends Controller
         $stripe = new \Stripe\StripeClient(env('STRIPE_SECRET'));
 
         $response = $stripe->checkout->sessions->retrieve($request->session_id);
-        // return response()->json($response->payment_status);
+        $paymentIntent = $stripe->paymentIntents->retrieve($response->payment_intent);
+        $charges = $stripe->charges->all(['payment_intent' => $paymentIntent->id]);
+        $charge = $charges->data[0];
+
+        // return response()->json($charge);
 
         $this->checkout();
+
+        $paymentHistory = new PaymentHistory();
+        $paymentHistory->order_id = $request->order_id;
+        $paymentHistory->transaction_id = $charge->id;
+        $paymentHistory->balance_transaction = $charge->balance_transaction;
+        $paymentHistory->amount_total = $charge->amount / 100;
+        $paymentHistory->payment_method = "Online Payment";
+        $paymentHistory->payment_status = $charge->status;
+        $paymentHistory->raw_response = json_encode($charge);
+        $paymentHistory->receipt_url = $charge->receipt_url;
+        $paymentHistory->save();
         return redirect()->route('customer.order.home', compact('response'))->with('success', 'Online payment done successfully. Check your email for confirmation');
     }
 }

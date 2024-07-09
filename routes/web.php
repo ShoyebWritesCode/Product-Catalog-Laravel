@@ -20,6 +20,7 @@ use App\Http\Controllers\NotificationController as ControllersNotificationContro
 use App\Http\Controllers\ChartController;
 use App\Models\Address;
 use App\Http\Controllers\AddressController;
+use App\Http\Controllers\PaymentHistoryController;
 
 /*
 |--------------------------------------------------------------------------
@@ -112,7 +113,7 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::put('/templates/{template}', [EmailTemplateController::class, 'update'])->name('admin.templates.update');
     Route::post('admin/admin/templates/store', [EmailTemplateController::class, 'store'])->name('admin.templates.store');
     Route::post('admin/admin/templates/placeholders', [EmailTemplateController::class, 'addPlaceholder'])->name('admin.placeholders.add');
-    // Route::post('/admin/admin/notifications/mark-as-read', [NotificationController::class, 'markAsRead'])->name('admin.notifications.markAsRead');
+    Route::get('admin/admin/payment-history', [PaymentHistoryController::class, 'index'])->name('admin.payment-history');
 
     Route::get('admin/admin/charts', [ChartController::class, 'index'])->name('admin.charts.index');
 });
