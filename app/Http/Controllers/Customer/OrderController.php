@@ -290,6 +290,8 @@ class OrderController extends Controller
             'allow_promotion_codes' => true,
         ]);
 
+
+
         return redirect($response['url']);
     }
 
@@ -298,8 +300,9 @@ class OrderController extends Controller
         $stripe = new \Stripe\StripeClient(env('STRIPE_SECRET'));
 
         $response = $stripe->checkout->sessions->retrieve($request->session_id);
+        // return response()->json($response->payment_status);
 
         $this->checkout();
-        return redirect()->route('customer.order.home')->with('success', 'Online payment done successfully. Check your email for confirmation');
+        return redirect()->route('customer.order.home', compact('response'))->with('success', 'Online payment done successfully. Check your email for confirmation');
     }
 }

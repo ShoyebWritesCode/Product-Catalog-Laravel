@@ -110,6 +110,7 @@
                                 <select id="payment_method" name="payment_method"
                                     class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
                                     onchange="updateFormAction(this.value)">
+                                    <option value="" selected disabled>Select Payment Method</option>
                                     <option value="cod">Cash on Delivery</option>
                                     <option value="online">Online Payment</option>
                                 </select>
@@ -129,7 +130,6 @@
         </div>
     </div>
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script>
         function updateFormAction(paymentMethod) {
             const form = document.getElementById('payment-form');
@@ -139,7 +139,6 @@
             console.log(paymentMethodInput.value);
             if (paymentMethodInput.value === 'online') {
                 form.action = "{{ route('customer.order.stripe', ':orderId') }}".replace(':orderId', orderId);
-                console.log('Online Payment');
             } else {
                 form.action = "{{ route('customer.order.checkout', ':orderId') }}".replace(':orderId', orderId);
                 console.log('Cash on Delivery');
