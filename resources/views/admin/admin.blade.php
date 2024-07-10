@@ -122,7 +122,7 @@
         ])
         @include('components.index', [
             'title' => 'Refund Requests',
-            'number' => 0,
+            'number' => $totalRefundRequests,
             'icon' => 'fas fa-ban',
             'color' => 'warning',
             'link' => route('admin.refundrequests'),

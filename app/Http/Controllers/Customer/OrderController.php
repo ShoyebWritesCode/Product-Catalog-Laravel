@@ -316,7 +316,9 @@ class OrderController extends Controller
         $charges = $stripe->charges->all(['payment_intent' => $paymentIntent->id]);
         $charge = $charges->data[0];
 
-        // return response()->json($charge);
+        $order = Order::find($request->order_id);
+        $order->payment_method = "online";
+        $order->save();
 
         $this->checkout();
 

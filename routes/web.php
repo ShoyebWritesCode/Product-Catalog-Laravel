@@ -102,6 +102,7 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::post('admin/admin/pendingorders/{order}', [AdminController::class, 'update'])->name('admin.pendingorders.update');
     Route::get('admin/admin/completedorders', [AdminController::class, 'completedorders'])->name('admin.completedorders');
     Route::get('admin/admin/refundrequests', [AdminController::class, 'refundorders'])->name('admin.refundrequests');
+    Route::get('admin/admin/refundrequests/accept/{order}', [AdminController::class, 'acceptrefund'])->name('admin.refund.accept');
     Route::get('admin/admin/refundrequests/reject/{order}', [AdminController::class, 'rejectrefund'])->name('admin.refund.reject');
     Route::post('/admin/admin/notifications/mark-as-read/{id}', [NotificationController::class, 'markAsReadCus'])->name('admin.notifications.markAsRead');
     Route::get('/admin/admin/notifications/mark-as-read', [NotificationController::class, 'markAsRead'])->name('admin.notifications.markAllAsRead');

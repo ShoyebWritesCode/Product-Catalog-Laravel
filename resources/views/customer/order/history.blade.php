@@ -35,7 +35,8 @@
                                     <tr>
                                         <th class="px-4 py-2 border text-center">Order ID</th>
                                         <th class="px-4 py-2 border text-center">Total</th>
-                                        <th class="px-4 py-2 border text-center">Date</th>
+                                        <th class="px-4 py-2 border text-center">Method</th>
+                                        <th class="px-4 py-2 border text-center">Order Date</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -46,6 +47,7 @@
                                                     href="{{ route('customer.order.orderdetail', $order->id) }}">{{ $order->id }}</a>
                                             </td>
                                             <td class="border px-4 py-2 text-center">{{ $order->total }} BDT</td>
+                                            <td class="border px-4 py-2 text-center">{{ $order->payment_method }}</td>
                                             <td class="border px-4 py-2 text-center">
                                                 {{ $order->created_at->format('d M Y') }}</td>
                                         </tr>
@@ -70,7 +72,9 @@
                                     <tr>
                                         <th class="px-4 py-2 border text-center">Order ID</th>
                                         <th class="px-4 py-2 border text-center">Total</th>
-                                        <th class="px-4 py-2 border text-center">Date</th>
+                                        <th class="px-4 py-2 border text-center">Method</th>
+                                        <th class="px-4 py-2 border text-center">Order Date</th>
+                                        <th class="px-4 py-2 border text-center">Delivery Date</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -81,8 +85,11 @@
                                                     href="{{ route('customer.order.orderdetail', $order->id) }}">{{ $order->id }}</a>
                                             </td>
                                             <td class="border px-4 py-2 text-center">{{ $order->total }} BDT</td>
+                                            <td class="border px-4 py-2 text-center">{{ $order->payment_method }}</td>
                                             <td class="border px-4 py-2 text-center">
                                                 {{ $order->created_at->format('d M Y') }}</td>
+                                            <td class="border px-4 py-2 text-center">
+                                                {{ $order->updated_at->format('d M Y') }}</td>
                                         </tr>
                                     @endforeach
                                 </tbody>
@@ -104,6 +111,7 @@
                                     <tr>
                                         <th class="px-4 py-2 border text-center">Order ID</th>
                                         <th class="px-4 py-2 border text-center">Total</th>
+                                        <th class="px-4 py-2 border text-center">Method</th>
                                         <th class="px-4 py-2 border text-center">Date</th>
                                         <th class="px-4 py-2 border text-center">Status</th>
                                     </tr>
@@ -116,15 +124,14 @@
                                                     href="{{ route('customer.order.orderdetail', $order->id) }}">{{ $order->id }}</a>
                                             </td>
                                             <td class="border px-4 py-2 text-center">{{ $order->total }} BDT</td>
+                                            <td class="border px-4 py-2 text-center">{{ $order->payment_method }}</td>
                                             <td class="border px-4 py-2 text-center">
                                                 {{ $order->created_at->format('d M Y') }}</td>
                                             <td class="border px-4 py-2 text-center">
                                                 @if ($order->refund == 0)
                                                     <span class="text-yellow-500">Pending</span>
                                                 @elseif ($order->refund == 1)
-                                                    <span
-                                                        class="text-green
-                                                    -500">Approved</span>
+                                                    <span class="text-green-500">Approved</span>
                                                 @elseif ($order->refund == 2)
                                                     <span class="text-red-500">Rejected</span>
                                                 @endif

@@ -27,10 +27,11 @@ class AdminController extends Controller
         $totalCompletedOrders = Order::where('status', 2)->count();
         $totalTemplates = EmailTemplate::count();
         $totalPayments = PaymentHistory::count();
+        $totalRefundRequests = Order::where('refund', 0)->count();
 
 
         $unreadNotifications = auth()->user()->unreadNotifications;
-        return view('admin.admin', compact('totalUsers', 'totalCategories', 'totalReviews', 'totalProducts', 'totalPendingOrders', 'totalCompletedOrders', 'totalTemplates', 'unreadNotifications', 'totalPayments'));
+        return view('admin.admin', compact('totalUsers', 'totalCategories', 'totalReviews', 'totalProducts', 'totalPendingOrders', 'totalCompletedOrders', 'totalTemplates', 'unreadNotifications', 'totalPayments', 'totalRefundRequests'));
     }
 
     public function products()
@@ -112,6 +113,30 @@ class AdminController extends Controller
         $order->refund = 2;
         $order->save();
         return redirect()->back()->with('success', 'Refund request rejected successfully');
+    }
+
+    public function acceptrefund(Order $order)
+    {
+        if ($order->payment_method == 'cod') {
+            $order->refund = 1;
+            $order->save();
+        } else if ($order->payment_method == 'online') {
+            $stripe = new \Stripe\StripeClient(env('STRIPE_SECRET'));
+            $payment = PaymentHistory::where('order_id', $order->id)->first();
+            $charge_id = $payment->transaction_id;
+            $refund_amount = $payment->amount_total * 100;
+            $refund = $stripe->refunds->create([
+                'charge' => $charge_id,
+                'amount' => $refund_amount,
+                'reason' => 'requested_by_customer'
+            ]);
+            if ($refund->status == 'succeeded') {
+                $order->refund = 1;
+                $order->save();
+            }
+        }
+
+        return redirect()->back()->with('success', 'Refund request accepted successfully');
     }
 
     public function orderdetail(Order $order)

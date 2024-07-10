@@ -34,7 +34,8 @@
                                     <td>{{ $order->user->name }}</td>
                                     <td>{{ $order->total }}</td>
                                     <td class="d-flex align-items-center">
-                                        <a href="#" class="btn btn-sm btn-success mr-2">
+                                        <a href="{{ route('admin.refund.accept', $order->id) }}"
+                                            class="btn btn-sm btn-success mr-2">
                                             <i class="fas fa-check-circle"></i>
                                         </a>
                                         <a href="{{ route('admin.refund.reject', $order->id) }}"

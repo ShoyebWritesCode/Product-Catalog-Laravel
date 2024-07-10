@@ -31,4 +31,9 @@ class Order extends Model
             ->orderBy('week')
             ->get();
     }
+
+    public function paymentHistory()
+    {
+        return $this->hasOne(PaymentHistory::class, 'order_id');
+    }
 }
