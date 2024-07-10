@@ -71,6 +71,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/orders/reorder/{order}', [OrderController::class, 'reorder'])->name('customer.order.reorder');
     Route::get('/history', [OrderController::class, 'history'])->name('customer.order.history');
     Route::get('/history/{order}', [OrderController::class, 'orderdetail'])->name('customer.order.orderdetail');
+    Route::get('/order/cancel/{order}', [OrderController::class, 'cancel'])->name('customer.order.cancel');
     // Route::get('/email', [EmailController::class, 'sendEmail'])->name('email.send');
     // Route::get('/order/cart', [OrderController::class, 'itemCount'])->name('customer.order.cart');
 
@@ -100,6 +101,8 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::get('admin/admin/pendingorders', [AdminController::class, 'pendingorders'])->name('admin.pendingorders');
     Route::post('admin/admin/pendingorders/{order}', [AdminController::class, 'update'])->name('admin.pendingorders.update');
     Route::get('admin/admin/completedorders', [AdminController::class, 'completedorders'])->name('admin.completedorders');
+    Route::get('admin/admin/refundrequests', [AdminController::class, 'refundorders'])->name('admin.refundrequests');
+    Route::get('admin/admin/refundrequests/reject/{order}', [AdminController::class, 'rejectrefund'])->name('admin.refund.reject');
     Route::post('/admin/admin/notifications/mark-as-read/{id}', [NotificationController::class, 'markAsReadCus'])->name('admin.notifications.markAsRead');
     Route::get('/admin/admin/notifications/mark-as-read', [NotificationController::class, 'markAsRead'])->name('admin.notifications.markAllAsRead');
     Route::delete('/admin/admin/notifications/{notification}', [NotificationController::class, 'delete'])->name('admin.notifications.delete');

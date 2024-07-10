@@ -102,10 +102,21 @@
                         <form action="{{ route('customer.order.reorder', $order->id) }}" method="POST">
                             @csrf
                             <button type="submit"
-                                class="bg-red-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                                class="bg-green-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                                 Re-Order
                             </button>
                         </form>
+
+                        @if ($order->refund == null)
+                            <div class="mx-4"></div>
+                            <a href="{{ route('customer.order.cancel', $order->id) }}">
+                                <button type="submit"
+                                    class="bg-red-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                                    Cancel Order
+                                </button>
+                            </a>
+                        @endif
+
                     </div>
                 @else
                     <p class="text-center text-gray-600">You have no open orders.</p>

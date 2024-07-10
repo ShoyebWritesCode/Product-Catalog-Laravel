@@ -9,6 +9,7 @@ use App\Models\Catagory;
 use App\Models\Review;
 use App\Models\Order;
 use App\Models\OrderItems;
+use App\Models\PaymentHistory;
 use App\Models\EmailTemplate;
 use Illuminate\Support\Facades\Notification;
 use App\Notifications\OrderConfirmed;
@@ -25,10 +26,11 @@ class AdminController extends Controller
         $totalPendingOrders = Order::where('status', 1)->count();
         $totalCompletedOrders = Order::where('status', 2)->count();
         $totalTemplates = EmailTemplate::count();
+        $totalPayments = PaymentHistory::count();
 
 
         $unreadNotifications = auth()->user()->unreadNotifications;
-        return view('admin.admin', compact('totalUsers', 'totalCategories', 'totalReviews', 'totalProducts', 'totalPendingOrders', 'totalCompletedOrders', 'totalTemplates', 'unreadNotifications'));
+        return view('admin.admin', compact('totalUsers', 'totalCategories', 'totalReviews', 'totalProducts', 'totalPendingOrders', 'totalCompletedOrders', 'totalTemplates', 'unreadNotifications', 'totalPayments'));
     }
 
     public function products()
@@ -97,6 +99,19 @@ class AdminController extends Controller
     {
         $orders = Order::where('status', 2)->get();
         return view('admin.completedorders', compact('orders'));
+    }
+
+    public function refundorders()
+    {
+        $refundorders = Order::where('refund', 0)->get();
+        return view('admin.refund', compact('refundorders'));
+    }
+
+    public function rejectrefund(Order $order)
+    {
+        $order->refund = 2;
+        $order->save();
+        return redirect()->back()->with('success', 'Refund request rejected successfully');
     }
 
     public function orderdetail(Order $order)

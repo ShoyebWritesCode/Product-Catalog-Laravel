@@ -249,9 +249,20 @@ class OrderController extends Controller
     public function history()
     {
         $user = auth()->user();
-        $pendingorders = Order::where('user_id', $user->id)->where('status', 1)->get();
+        $pendingorders = Order::where('user_id', $user->id)
+            ->where('status', 1)
+            ->where(function ($query) {
+                $query->whereNull('refund')
+                    ->orWhere('refund', 2);
+            })
+            ->get();
+
         $completedorders = Order::where('user_id', $user->id)->where('status', 2)->get();
-        return view('customer.order.history', compact('pendingorders', 'completedorders'));
+        $refundorders = Order::where('user_id', $user->id)
+            ->whereNotNull('refund')
+            ->get();
+
+        return view('customer.order.history', compact('pendingorders', 'completedorders', 'refundorders'));
     }
 
     public function orderdetail(Order $order)
@@ -320,5 +331,13 @@ class OrderController extends Controller
         $paymentHistory->receipt_url = $charge->receipt_url;
         $paymentHistory->save();
         return redirect()->route('customer.order.home', compact('response'))->with('success', 'Online payment done successfully. Check your email for confirmation');
+    }
+
+    public function cancel(Order $order)
+    {
+        $order->refund = 0;
+        $order->save();
+        session()->flash('success', 'Order cancelled successfully');
+        return redirect()->route('customer.order.history')->with('success', 'Order cancelled successfully');
     }
 }

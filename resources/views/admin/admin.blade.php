@@ -106,7 +106,7 @@
         ])
         @include('components.index', [
             'title' => 'Sales Reports',
-            'number' => 0,
+            'number' => 3,
             'icon' => 'fas fa-chart-line',
             'color' => 'info',
             'link' => route('admin.charts.index'),
@@ -114,10 +114,18 @@
         ])
         @include('components.index', [
             'title' => 'Payment History',
-            'number' => 0,
+            'number' => $totalPayments,
             'icon' => 'fas fa-money-bill-wave',
             'color' => 'success',
             'link' => route('admin.payment-history'),
+            'link_text' => 'More info',
+        ])
+        @include('components.index', [
+            'title' => 'Refund Requests',
+            'number' => 0,
+            'icon' => 'fas fa-ban',
+            'color' => 'warning',
+            'link' => route('admin.refundrequests'),
             'link_text' => 'More info',
         ])
 
