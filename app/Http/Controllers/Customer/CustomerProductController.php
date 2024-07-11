@@ -8,6 +8,8 @@ use App\Models\Review;
 use App\Models\Catagory;
 use App\Models\Mapping;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class CustomerProductController extends Controller
 {
@@ -186,8 +188,26 @@ class CustomerProductController extends Controller
 
         $unreadNotifications = auth()->user()->unreadNotifications;
 
-        // return response()->json($namesubcategories);
 
-        return view('customer.category.products', compact('Products', 'selectedCategory', 'namesubcategories', 'averageRatings', 'unreadNotifications', 'discountPercent', 'allParentCategories', 'allChildCategoriesOfParent'));
+        $collection = new Collection($Products);
+        $perPage = 10;
+        $currentPage = LengthAwarePaginator::resolveCurrentPage();
+        $currentPageItems = $collection->slice(($currentPage - 1) * $perPage, $perPage)->all();
+        $paginator = new LengthAwarePaginator($currentPageItems, $collection->count(), $perPage, $currentPage, [
+            'path' => LengthAwarePaginator::resolveCurrentPath(),
+        ]);
+        // return response()->json($paginator);
+
+        return view('customer.category.products', [
+            'countProducts' => count($Products),
+            'Products' => $paginator,
+            'selectedCategory' => $selectedCategory,
+            'namesubcategories' => $namesubcategories,
+            'averageRatings' => $averageRatings,
+            'unreadNotifications' => $unreadNotifications,
+            'discountPercent' => $discountPercent,
+            'allParentCategories' => $allParentCategories,
+            'allChildCategoriesOfParent' => $allChildCategoriesOfParent,
+        ]);
     }
 }
