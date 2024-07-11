@@ -1,4 +1,6 @@
 <x-app-layout>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/14.7.0/nouislider.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/14.7.0/nouislider.min.js"></script>
     @vite(['resources/scss/product.scss'])
     <x-slot name="header">
         <div class="flex justify-between items-center">
@@ -83,42 +85,119 @@
             <span class="close-btn absolute top-right p-2 text-xl cursor-pointer hover:text-red-500">&times;</span>
         </div>
     </x-slot>
-
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900">
-                    <div class="flex items-center justify-between mb-4">
-                        <h1 class="text-2xl font-semibold">{{ $selectedCategory->name }} Products
-                            ({{ $countProducts }})
-                        </h1>
-                    </div>
-                    <hr class="mb-4">
-                    @if (session('success'))
-                        <div class="alert alert-success mb-4" role="alert">
-                            {{ session('success') }}
-                        </div>
-                    @endif
+            <div class="flex">
 
-                    @if (count($Products) === 0)
-                        <p class="text-center text-gray-500">No products available.</p>
-                    @else
-                        <div class="flex flex-wrap gap-6" id="productList">
-                            <div id="product-container" class="flex flex-wrap gap-6">
-                                @include('partials.categoryproducts', ['Products' => $Products])
-                            </div>
-                            <div id="loading-indicator" class="text-center py-4 hidden">
-                                <p>Loading...</p>
+                <div class="w-1/4 pr-8 mt-1">
+                    <div class="bg-white rounded-lg shadow-sm p-4 mb-4">
+                        <h2 class="text-xl font-semibold mb-4">Filters</h2>
+
+
+                        <div class="mb-4">
+                            <h3 class="text-lg font-semibold mb-2">Subcategories</h3>
+                            <ul>
+                                @foreach ($allChildCategoriesOfParent[$selectedCategory->id] as $childCategory)
+                                    <li class=" flex items-center">
+                                        <input type="radio" id="category_{{ $childCategory->id }}"
+                                            name="child_category" value="{{ $childCategory->id }}" class="mr-2">
+                                        <label for="category_{{ $childCategory->id }}"
+                                            class="block px-1 py-1 text-gray-800 hover:bg-gray-100 no-underline">{{ $childCategory->name }}</label>
+                                    </li>
+                                @endforeach
+
+                            </ul>
+                        </div>
+
+
+
+
+                        <div class="mb-4">
+                            <h3 class="text-lg font-semibold mb-2">Price Range</h3>
+                            <form action="#" method="GET">
+                                <div class="flex items-center mb-2">
+                                    <input type="text" id="min_price" name="min_price" placeholder="Min"
+                                        class="w-1/3 px-2 py-1 border rounded mr-2" readonly>
+                                    <span class="mr-2">-</span>
+                                    <input type="text" id="max_price" name="max_price" placeholder="Max"
+                                        class="w-1/3 px-2 py-1 border rounded" readonly>
+                                </div>
+                                <div id="price-slider" class="w-3/4"></div>
+                                <button type="submit"
+                                    class="bg-blue-500 text-white py-1 px-4 rounded mt-2">Apply</button>
+                            </form>
+                        </div>
+
+                        <div class="mb-4">
+                            <h3 class="text-lg font-semibold mb-2">Color</h3>
+                            <div class="flex">
+                                <div class="flex flex-col">
+                                    <ul>
+                                        @foreach (['red', 'blue', 'green', 'gray'] as $color)
+                                            <li>
+                                                <div class="flex items-center mb-2">
+                                                    <input type="radio" id="color_{{ $color }}" name="color"
+                                                        value="{{ $color }}" class="mr-2">
+                                                    <div
+                                                        class="w-6 h-6 bg-{{ $color }}-500 rounded-full mr-2 cursor-pointer">
+                                                    </div>
+                                                    <label for="color_{{ $color }}"
+                                                        class="text-gray-800">{{ ucfirst($color) }}</label>
+                                                </div>
+                                            </li>
+                                        @endforeach
+                                    </ul>
+                                </div>
+
+
+
                             </div>
                         </div>
-                    @endif
-                    <div class="mt-4">
-                        {{ $Products->links() }}
+                    </div>
+                </div>
+
+                <div class="ml-4 mt-1">
+                </div>
+
+                <div class="w-3/4">
+                    <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                        <div class="p-6 text-gray-900">
+                            <div class="flex items-center justify-between mb-4">
+                                <h1 class="text-2xl font-semibold">{{ $selectedCategory->name }} Products
+                                    ({{ $countProducts }})
+                                </h1>
+                            </div>
+                            <hr class="mb-4">
+                            @if (session('success'))
+                                <div class="alert alert-success mb-4" role="alert">
+                                    {{ session('success') }}
+                                </div>
+                            @endif
+
+                            @if (count($Products) === 0)
+                                <p class="text-center text-gray-500">No products available.</p>
+                            @else
+                                <div class="flex flex-wrap gap-6" id="productList">
+                                    <div id="product-container" class="flex flex-wrap gap-6">
+                                        @include('partials.categoryproducts', [
+                                            'Products' => $Products,
+                                        ])
+                                    </div>
+                                    <div id="loading-indicator" class="text-center py-4 hidden">
+                                        <p>Loading...</p>
+                                    </div>
+                                </div>
+                            @endif
+                            <div class="mt-4">
+                                {{ $Products->links() }}
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+
+
 </x-app-layout>
 <script>
     document.getElementById('notificationDropdown').addEventListener('click', function(event) {
@@ -166,6 +245,29 @@
     document.addEventListener('click', function(event) {
         if (event.target.id === 'orderPopup') {
             document.getElementById('orderPopup').classList.add('hidden');
+        }
+    });
+
+
+
+    var priceSlider = document.getElementById('price-slider');
+    var minPriceInput = document.getElementById('min_price');
+    var maxPriceInput = document.getElementById('max_price');
+
+    noUiSlider.create(priceSlider, {
+        start: [0, 10000],
+        connect: true,
+        range: {
+            'min': 0,
+            'max': 10000
+        }
+    });
+
+    priceSlider.noUiSlider.on('update', function(values, handle) {
+        if (handle === 0) {
+            minPriceInput.value = Math.round(values[0]);
+        } else {
+            maxPriceInput.value = Math.round(values[1]);
         }
     });
 </script>
