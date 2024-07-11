@@ -137,4 +137,57 @@ class CustomerProductController extends Controller
             'search' => $search,
         ]);
     }
+
+    public function categoryProducts(Catagory $category)
+    {
+
+        $selectedCategory = $category;
+        $childrenCategories = Catagory::where('parent_id', $category->id)->get()->keyBy('id');
+        $Products = [];
+        $subcategories = [];
+        $namesubcategories = [];
+        $nameparentcategories = [];
+        $averageRatings = [];
+        $discountPercent = [];
+        foreach ($childrenCategories as $childCategory) {
+            $mappings = Mapping::where('catagory_id', $childCategory->id)->get();
+            foreach ($mappings as $mapping) {
+                $Products[] = Product::find($mapping->product_id);
+            }
+        }
+
+        $allParentCategories = [];
+        $allChildCategoriesOfParent = [];
+
+
+        $categories = Catagory::all()->keyBy('id');
+        $allParentCategories = Catagory::where('parent_id', null)->get();
+        foreach ($allParentCategories as $parentCategory) {
+            $allChildCategoriesOfParent[$parentCategory->id] = Catagory::where('parent_id', $parentCategory->id)->get();
+        }
+
+
+        foreach ($Products as $product) {
+            $subcategories[$product->id] = Mapping::where('product_id', $product->id)->pluck('catagory_id')->toArray();
+
+            $namesubcategories[$product->id] = array_map(function ($catagory_id) use ($childrenCategories) {
+                return $childrenCategories[$catagory_id]->name ?? 'Unknown';
+            }, $subcategories[$product->id]);
+
+            $averageRatings[$product->id] = Review::where('product_id', $product->id)->avg('rating');
+
+            if ($product->prev_price && $product->price < $product->prev_price) {
+                $discountPercent[$product->id] = (($product->prev_price - $product->price) / $product->prev_price) * 100;
+                $discountPercent[$product->id] = round($discountPercent[$product->id], 2);
+            } else {
+                $discountPercent[$product->id] = null;
+            }
+        }
+
+        $unreadNotifications = auth()->user()->unreadNotifications;
+
+        // return response()->json($namesubcategories);
+
+        return view('customer.category.products', compact('Products', 'selectedCategory', 'namesubcategories', 'averageRatings', 'unreadNotifications', 'discountPercent', 'allParentCategories', 'allChildCategoriesOfParent'));
+    }
 }

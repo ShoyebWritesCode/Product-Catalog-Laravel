@@ -72,9 +72,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/history', [OrderController::class, 'history'])->name('customer.order.history');
     Route::get('/history/{order}', [OrderController::class, 'orderdetail'])->name('customer.order.orderdetail');
     Route::get('/order/cancel/{order}', [OrderController::class, 'cancel'])->name('customer.order.cancel');
-    // Route::get('/email', [EmailController::class, 'sendEmail'])->name('email.send');
-    // Route::get('/order/cart', [OrderController::class, 'itemCount'])->name('customer.order.cart');
-
+    Route::get('category/products/{category}', [CustomerProductController::class, 'categoryProducts'])->name('customer.category.products');
 });
 
 Route::middleware(['auth:admin'])->group(function () {

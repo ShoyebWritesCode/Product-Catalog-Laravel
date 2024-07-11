@@ -15,4 +15,9 @@ class Catagory extends Model
     {
         return $this->belongsTo(Catagory::class, 'parent_id');
     }
+
+    public function children($id)
+    {
+        return $this->where('parent_id', $id)->get();
+    }
 }

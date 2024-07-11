@@ -1,6 +1,5 @@
 <x-app-layout>
     @vite(['resources/scss/product.scss'])
-    @vite(['resources/js/custom/product.js'])
     <x-slot name="header">
         <div class="flex justify-between items-center">
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
@@ -13,7 +12,7 @@
                             class="text-gray-800 hover:text-gray-600 no-underline font-bold">
                             {{ $category->name }}
                         </a>
-                        <div class="absolute left-0 hidden group-hover:block bg-white shadow-lg rounded  w-56">
+                        <div class="absolute left-0 hidden group-hover:block bg-white shadow-lg rounded w-56">
                             <ul class="grid grid-cols-2 gap-2 py-2">
                                 @foreach ($allChildCategoriesOfParent[$category->id] as $childCategory)
                                     <li>
@@ -29,12 +28,7 @@
                 @endforeach
             </nav>
 
-
-
-
-
             <div class="flex items-center space-x-4">
-
                 <a href="#" id="cartLink" class="text-gray-800 hover:text-gray-600 relative">
                     <i class="fas fa-shopping-cart text-xl"></i>
                     <span
@@ -42,12 +36,10 @@
                         {{ $numberOfItems }}
                     </span>
                 </a>
-                <p></p>
                 <a href="{{ route('customer.order.history') }}" id="historyLink"
                     class="text-gray-800 hover:text-gray-600 relative">
                     <i class="fas fa-history text-xl"></i>
                 </a>
-
                 <div class="relative">
                     <button id="notificationDropdown" class="text-gray-800 hover:text-gray-600 relative">
                         <i class="fas fa-bell text-xl"></i>
@@ -82,31 +74,24 @@
                             <span class="dropdown-item">No unread notifications</span>
                         @endif
                     </div>
-
-
-
-
-
                 </div>
-
             </div>
         </div>
-
         <!-- Popup Container -->
         <div id="orderPopup"
             class="max-h-96 hidden fixed inset-auto top-1/2 left-1/2 transform -translate-y-1/2 -translate-x-1/2 bg-gray-500 bg-opacity-50 overflow-auto z-50 p-4 rounded shadow-md">
             <span class="close-btn absolute top-right p-2 text-xl cursor-pointer hover:text-red-500">&times;</span>
         </div>
-
     </x-slot>
-
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
                     <div class="flex items-center justify-between mb-4">
-                        <h1 class="text-2xl font-semibold">All Products</h1>
+                        <h1 class="text-2xl font-semibold">{{ $selectedCategory->name }} Products
+                            ({{ count($Products) }})
+                        </h1>
                         <div class="">
                             <form action="#" method="GET">
                                 <div class="flex items-center">
@@ -130,12 +115,57 @@
                         </div>
                     @endif
 
-                    @if ($initialProducts->isEmpty())
+                    @if (count($Products) === 0)
                         <p class="text-center text-gray-500">No products available.</p>
                     @else
                         <div class="flex flex-wrap gap-6" id="productList">
                             <div id="product-container" class="flex flex-wrap gap-6">
-                                @include('partials.products', ['products' => $initialProducts])
+                                @foreach ($Products as $product)
+                                    <div
+                                        class="bg-white border border-gray-300 rounded-lg p-4 w-48 flex flex-col relative">
+                                        <img src="{{ asset('storage/images/' . $product->image) }}"
+                                            alt="{{ $product->name }}" class="w-full h-32 object-cover rounded-md mb-2"
+                                            loading="lazy">
+                                        <a href="{{ route('customer.product.show', $product->id) }}"
+                                            class="text-lg font-semibold text-center text-blue-500 hover:text-blue-700 mb-2">
+                                            {{ $product->name }}
+                                        </a>
+                                        {{-- <p class="text-sm text-center mb-2">
+                                            {{ Str::limit($product->description, 100, '...') }}
+                                        </p> --}}
+                                        <div class="text-center mb-2">
+                                            <p class="text-sm text-red-600">{{ $product->price }} BDT</p>
+                                            <p class="text-sm text-yellow-600">
+                                                {{ isset($averageRatings[$product->id]) ? number_format($averageRatings[$product->id], 2) : 'No Ratings' }}
+                                            </p>
+                                        </div>
+                                        {{-- <div class="flex flex-wrap justify-center mt-2">
+                                            @if (isset($nameparentcategories[$product->id]))
+                                                @foreach ($nameparentcategories[$product->id] as $category)
+                                                    <div class="border border-green-600 rounded-md px-2 mx-1 mb-1">
+                                                        <p class="text-sm text-green-600">{{ $category }}</p>
+                                                    </div>
+                                                @endforeach
+                                            @endif
+                                        </div>
+                                        <div class="flex flex-wrap justify-center mt-2">
+                                            @if (isset($namesubcategories[$product->id]))
+                                                @foreach ($namesubcategories[$product->id] as $subcategory)
+                                                    <div class="border border-green-600 rounded-md px-2 mx-1 mb-1">
+                                                        <p class="text-sm text-green-600">{{ $subcategory }}</p>
+                                                    </div>
+                                                @endforeach
+                                            @endif
+                                        </div> --}}
+                                        @if (isset($discountPercent[$product->id]))
+                                            <span
+                                                class="bg-red-500 text-white rounded-full py-1 px-3 flex items-center justify-center absolute top-0 right-0 -mt-3 -mr-3 text-sm">
+                                                Discount: {{ $discountPercent[$product->id] }}%
+                                            </span>
+                                        @endif
+                                    </div>
+                                @endforeach
+
                             </div>
                             <div id="loading-indicator" class="text-center py-4 hidden">
                                 <p>Loading...</p>
@@ -143,7 +173,7 @@
                         </div>
                     @endif
                     {{-- <div class="mt-4">
-                        {{ $products->links() }}
+                        {{ $Products->links() }}
                     </div> --}}
                 </div>
             </div>
