@@ -43,14 +43,14 @@
                                     <tr>
                                         <td class="border px-4 py-2 text-center">
                                             <div class="flex justify-center space-x-2">
-                                                <img src="{{ asset('storage/images/' . $item->product->image) }}"
-                                                    alt="{{ $item->product->name }}"
+                                                <img src="{{ asset('storage/images/' . $item->image) }}"
+                                                    alt="{{ $item->product_name }}"
                                                     class="w-16 h-16 object-cover rounded-md">
                                             </div>
                                         </td>
-                                        <td class="border px-4 py-2 text-center">{{ $item->product->name }}</td>
+                                        <td class="border px-4 py-2 text-center">{{ $item->product_name }}</td>
                                         <td class="border px-4 py-2 text-center text-red-600">
-                                            {{ $item->product->price }} BDT</td>
+                                            {{ $item->product_price }} BDT</td>
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -59,31 +59,68 @@
                             <span class="text-lg font-bold">Total: {{ $order->total }} BDT</span>
                         </div>
                     </div>
-                    <div class="bg-white border border-gray-300 rounded-lg p-4 mb-4">
-                        <h3 class="text-xl font-bold mb-4">Address Details</h3>
-                        <div class="mb-4">
-                            <div class="mt-4 flex justify-between items-center">
-                                <span class="text-lg font-bold">City: {{ $order->city }}</span>
+                    <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6 grid grid-cols-2 gap-6">
+                        <div class="bg-white border border-gray-300 rounded-lg p-4 mb-4 col-span-2 sm:col-span-1">
+                            <h3 class="text-xl font-bold mb-4">Shipping Address Details</h3>
+                            <div class="mb-4">
+                                <div class="mt-4 flex justify-between items-center">
+                                    <span class="text-lg font-bold">City: {{ $order->city }}</span>
+                                </div>
+                            </div>
+                            <div class="mb-4">
+                                <div class="mt-4 flex justify-between items-center">
+                                    <span class="text-lg font-bold">Address: {{ $order->address }}</span>
+                                </div>
+                            </div>
+                            <div class="mb-4">
+                                <div class="mt-4 flex justify-between items-center">
+                                    <span class="text-lg font-bold">Phone No. {{ $order->phone }}</span>
+                                </div>
                             </div>
                         </div>
-                        <div class="mb-4">
-                            <div class="mt-4 flex justify-between items-center">
-                                <span class="text-lg font-bold">Address: {{ $order->address }}</span>
+
+                        <div class="bg-white border border-gray-300 rounded-lg p-4 mb-4 col-span-2 sm:col-span-1">
+                            <h3 class="text-xl font-bold mb-4">Billing Address Details</h3>
+                            <div class="mb-4">
+                                <div class="mt-4 flex justify-between items-center">
+                                    <span class="text-lg font-bold">City: {{ $order->billing_city }}</span>
+                                </div>
                             </div>
-                        </div>
-                        <div class="mb-4">
-                            <div class="mt-4 flex justify-between items-center">
-                                <span class="text-lg font-bold">Phone No. {{ $order->phone }}</span>
+                            <div class="mb-4">
+                                <div class="mt-4 flex justify-between items-center">
+                                    <span class="text-lg font-bold">Address: {{ $order->billing_address }}</span>
+                                </div>
+                            </div>
+                            <div class="mb-4">
+                                <div class="mt-4 flex justify-between items-center">
+                                    <span class="text-lg font-bold">Phone No. {{ $order->bolling_phone }}</span>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <div class="flex justify-center mt-4">
-                        <form action="{{ route('customer.order.checkout', $order->id) }}" method="POST">
+
+                    <div class="flex justify-start mt-4">
+                        <form id="payment-form" method="POST" class="flex flex-col items-start w-full"
+                            data-order-id="{{ $order->id }}">
                             @csrf
-                            <button type="submit"
-                                class="bg-red-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                                Checkout
-                            </button>
+                            <input type="hidden" name="payment_method" id="payment-method" value="cod">
+                            <div class="mb-4">
+                                <label for="payment_method" class="block text-lg font-medium text-gray-700">Select
+                                    Payment Method</label>
+                                <select id="payment_method" name="payment_method"
+                                    class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+                                    onchange="updateFormAction(this.value)">
+                                    <option value="" selected disabled>Select Payment Method</option>
+                                    <option value="cod">Cash on Delivery</option>
+                                    <option value="online">Online Payment</option>
+                                </select>
+                            </div>
+                            <div class="w-full flex justify-center">
+                                <button type="submit"
+                                    class="bg-red-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                                    Checkout
+                                </button>
+                            </div>
                         </form>
                     </div>
                 @else
@@ -92,4 +129,21 @@
             </div>
         </div>
     </div>
+
+    <script>
+        function updateFormAction(paymentMethod) {
+            const form = document.getElementById('payment-form');
+            const orderId = form.getAttribute('data-order-id');
+            const paymentMethodInput = document.getElementById('payment_method');
+            console.log(orderId);
+            console.log(paymentMethodInput.value);
+            if (paymentMethodInput.value === 'online') {
+                form.action = "{{ route('customer.order.stripe', ':orderId') }}".replace(':orderId', orderId);
+            } else {
+                form.action = "{{ route('customer.order.checkout', ':orderId') }}".replace(':orderId', orderId);
+                console.log('Cash on Delivery');
+            }
+        }
+    </script>
+
 </x-app-layout>

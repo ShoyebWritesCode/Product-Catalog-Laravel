@@ -34,6 +34,7 @@
                                     <th class="px-4 py-2 border text-center">Image</th>
                                     <th class="px-4 py-2 border text-center">Name</th>
                                     <th class="px-4 py-2 border text-center">Price</th>
+                                    <th class="px-4 py-2 border text-center">Remove</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -41,16 +42,26 @@
                                     <tr>
                                         <td class="border px-4 py-2 text-center">
                                             <div class="flex justify-center space-x-2">
-                                                <img src="{{ asset('storage/images/' . $item->product->image) }}"
-                                                    alt="{{ $item->product->name }}"
+                                                <img src="{{ asset('storage/images/' . $item->image) }}"
+                                                    alt="{{ $item->product_name }}"
                                                     class="w-16 h-16 object-cover rounded-md">
                                             </div>
                                         </td>
-                                        <td class="border px-4 py-2 text-center">{{ $item->product->name }}</td>
-                                        <td class="border px-4 py-2 text-center text-red-600">
-                                            {{ $item->product->price }} BDT</td>
+                                        <td class="border px-4 py-2 text-center">{{ $item->product_name }}</td>
+                                        <td class="border px-4 py-2 text-center text-gray-600">
+                                            {{ $item->product_price }} BDT</td>
+                                        <td class="border px-4 py-2 text-center">
+                                            <form action="{{ route('cart.remove', $item->id) }}" method="POST">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="text-red-600 hover:text-red-800">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </form>
+                                        </td>
                                     </tr>
                                 @endforeach
+
                             </tbody>
                         </table>
                         <div class="mt-4 flex justify-between items-center">
@@ -71,16 +82,18 @@
     </div>
 
     <div id="orderPopup" class="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center hidden">
-        <div class="bg-white rounded-lg shadow-lg p-6 w-1/3">
+        <div class="bg-white rounded-lg shadow-lg p-6 w-1/10">
             <button id="closePopup" class="float-right text-gray-700">&times;</button>
-            <div id="popupContent"></div>
+            <div id="popupContent" class="flex justify-between space-x-4"></div>
         </div>
     </div>
+
 
 
 </x-app-layout>
 
 <script>
+    console.log('Hello from the order page');
     document.getElementById('checkoutButton').addEventListener('click', function(event) {
         event.preventDefault();
 
@@ -89,6 +102,10 @@
             .then(htmlContent => {
                 document.getElementById('popupContent').innerHTML = htmlContent;
                 document.getElementById('orderPopup').classList.remove('hidden');
+                const scripts = document.getElementById('popupContent').getElementsByTagName('script');
+                for (let script of scripts) {
+                    eval(script.innerHTML);
+                }
             })
             .catch(error => {
                 console.error('Error fetching content:', error);

@@ -9,6 +9,7 @@ use App\Models\Catagory;
 use App\Models\Review;
 use App\Models\Order;
 use App\Models\OrderItems;
+use App\Models\PaymentHistory;
 use App\Models\EmailTemplate;
 use Illuminate\Support\Facades\Notification;
 use App\Notifications\OrderConfirmed;
@@ -25,10 +26,12 @@ class AdminController extends Controller
         $totalPendingOrders = Order::where('status', 1)->count();
         $totalCompletedOrders = Order::where('status', 2)->count();
         $totalTemplates = EmailTemplate::count();
+        $totalPayments = PaymentHistory::count();
+        $totalRefundRequests = Order::where('refund', 0)->count();
 
 
         $unreadNotifications = auth()->user()->unreadNotifications;
-        return view('admin.admin', compact('totalUsers', 'totalCategories', 'totalReviews', 'totalProducts', 'totalPendingOrders', 'totalCompletedOrders', 'totalTemplates', 'unreadNotifications'));
+        return view('admin.admin', compact('totalUsers', 'totalCategories', 'totalReviews', 'totalProducts', 'totalPendingOrders', 'totalCompletedOrders', 'totalTemplates', 'unreadNotifications', 'totalPayments', 'totalRefundRequests'));
     }
 
     public function products()
@@ -36,6 +39,37 @@ class AdminController extends Controller
         $products = Product::all();
         return view('admin.products', compact('products'));
     }
+
+
+    public function edit($id)
+    {
+        $product = Product::findOrFail($id);
+        return view('admin.product.edit', compact('product'));
+    }
+    public function updateProduct(Request $request, $id)
+    {
+        $product = Product::findOrFail($id);
+        $product->name = $request->name;
+        $product->description = $request->description;
+        $product->prev_price = $product->price;
+        $product->price = $request->price;
+
+        $product->save();
+
+        return redirect()->route('admin.products')->with('success', 'Product updated successfully');
+    }
+
+    public function deleteProduct($id)
+    {
+        $product = Product::findOrFail($id);
+        //not needed for soft delete
+        // $product->reviews()->delete();
+        // $product->mappings()->delete();
+        $product->delete();
+        return redirect()->route('admin.products')->with('success', 'Product deleted successfully');
+    }
+
+
 
     public function users()
     {
@@ -66,6 +100,43 @@ class AdminController extends Controller
     {
         $orders = Order::where('status', 2)->get();
         return view('admin.completedorders', compact('orders'));
+    }
+
+    public function refundorders()
+    {
+        $refundorders = Order::where('refund', 0)->get();
+        return view('admin.refund', compact('refundorders'));
+    }
+
+    public function rejectrefund(Order $order)
+    {
+        $order->refund = 2;
+        $order->save();
+        return redirect()->back()->with('success', 'Refund request rejected successfully');
+    }
+
+    public function acceptrefund(Order $order)
+    {
+        if ($order->payment_method == 'cod') {
+            $order->refund = 1;
+            $order->save();
+        } else if ($order->payment_method == 'online') {
+            $stripe = new \Stripe\StripeClient(env('STRIPE_SECRET'));
+            $payment = PaymentHistory::where('order_id', $order->id)->first();
+            $charge_id = $payment->transaction_id;
+            $refund_amount = $payment->amount_total * 100;
+            $refund = $stripe->refunds->create([
+                'charge' => $charge_id,
+                'amount' => $refund_amount,
+                'reason' => 'requested_by_customer'
+            ]);
+            if ($refund->status == 'succeeded') {
+                $order->refund = 1;
+                $order->save();
+            }
+        }
+
+        return redirect()->back()->with('success', 'Refund request accepted successfully');
     }
 
     public function orderdetail(Order $order)
