@@ -20,9 +20,15 @@ class CustomerProductController extends Controller
         $nameparentcategories = [];
         $averageRatings = [];
         $discountPercent = [];
+        $allParentCategories = [];
+        $allChildCategoriesOfParent = [];
 
 
         $categories = Catagory::all()->keyBy('id');
+        $allParentCategories = Catagory::where('parent_id', null)->get();
+        foreach ($allParentCategories as $parentCategory) {
+            $allChildCategoriesOfParent[$parentCategory->id] = Catagory::where('parent_id', $parentCategory->id)->get();
+        }
 
         foreach ($initialProducts as $product) {
             $subcategories[$product->id] = Mapping::where('product_id', $product->id)->pluck('catagory_id')->toArray();
@@ -47,7 +53,7 @@ class CustomerProductController extends Controller
 
         $unreadNotifications = auth()->user()->unreadNotifications;
 
-        return view('customer.product.home', compact('initialProducts', 'namesubcategories', 'nameparentcategories', 'averageRatings', 'unreadNotifications', 'discountPercent'));
+        return view('customer.product.home', compact('initialProducts', 'namesubcategories', 'nameparentcategories', 'averageRatings', 'unreadNotifications', 'discountPercent', 'allParentCategories', 'allChildCategoriesOfParent'));
     }
 
     public function fetchProducts(Request $request)

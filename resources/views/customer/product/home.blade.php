@@ -6,6 +6,31 @@
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
                 {{ __('List Products') }}
             </h2>
+            <nav class="flex space-x-8">
+                @foreach ($allParentCategories as $category)
+                    <div class="relative group">
+                        <a href="#" class="text-gray-800 hover:text-gray-600 no-underline font-bold">
+                            {{ $category->name }}
+                        </a>
+                        <div class="absolute left-0 hidden group-hover:block bg-white shadow-lg rounded  w-56">
+                            <ul class="grid grid-cols-2 gap-2 py-2">
+                                @foreach ($allChildCategoriesOfParent[$category->id] as $childCategory)
+                                    <li>
+                                        <a href="#"
+                                            class="block px-1 py-1 text-gray-800 hover:bg-gray-100 font-semibold no-underline">
+                                            {{ $childCategory->name }}
+                                        </a>
+                                    </li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    </div>
+                @endforeach
+            </nav>
+
+
+
+
 
             <div class="flex items-center space-x-4">
 
