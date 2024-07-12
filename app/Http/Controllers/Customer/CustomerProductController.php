@@ -140,35 +140,44 @@ class CustomerProductController extends Controller
         ]);
     }
 
-    public function categoryProducts(Catagory $category)
+    public function categoryProducts(Request $request, Catagory $category)
     {
+        // Retrieve filter parameters from the request
+        $childCategory = $request->input('child_category');
+        $minPrice = $request->input('min_price');
+        $maxPrice = $request->input('max_price');
+        $color = $request->input('color');
 
         $selectedCategory = $category;
         $childrenCategories = Catagory::where('parent_id', $category->id)->get()->keyBy('id');
-        $Products = [];
+
+        // Fetch all products and apply filters
+        $Products = Product::whereHas('mappings', function ($query) use ($childrenCategories, $childCategory) {
+            $query->whereIn('catagory_id', $childrenCategories->pluck('id'));
+            if ($childCategory) {
+                $query->where('catagory_id', $childCategory);
+            }
+        });
+
+        if ($minPrice) {
+            $Products->where('price', '>=', $minPrice);
+        }
+
+        if ($maxPrice) {
+            $Products->where('price', '<=', $maxPrice);
+        }
+
+        if ($color) {
+            $Products->where('color', $color);
+        }
+
+        $Products = $Products->get();
+
         $subcategories = [];
         $namesubcategories = [];
         $nameparentcategories = [];
         $averageRatings = [];
         $discountPercent = [];
-        foreach ($childrenCategories as $childCategory) {
-            $mappings = Mapping::where('catagory_id', $childCategory->id)->get();
-            foreach ($mappings as $mapping) {
-                $Products[] = Product::find($mapping->product_id);
-            }
-        }
-
-        $allParentCategories = [];
-        $allChildCategoriesOfParent = [];
-
-
-        $categories = Catagory::all()->keyBy('id');
-        $allParentCategories = Catagory::where('parent_id', null)->get();
-        foreach ($allParentCategories as $parentCategory) {
-            $allChildCategoriesOfParent[$parentCategory->id] = Catagory::where('parent_id', $parentCategory->id)->get();
-        }
-
-
         foreach ($Products as $product) {
             $subcategories[$product->id] = Mapping::where('product_id', $product->id)->pluck('catagory_id')->toArray();
 
@@ -188,15 +197,19 @@ class CustomerProductController extends Controller
 
         $unreadNotifications = auth()->user()->unreadNotifications;
 
+        $allParentCategories = Catagory::where('parent_id', null)->get();
+        $allChildCategoriesOfParent = [];
+        foreach ($allParentCategories as $parentCategory) {
+            $allChildCategoriesOfParent[$parentCategory->id] = Catagory::where('parent_id', $parentCategory->id)->get();
+        }
 
         $collection = new Collection($Products);
-        $perPage = 10;
+        $perPage = 9;
         $currentPage = LengthAwarePaginator::resolveCurrentPage();
         $currentPageItems = $collection->slice(($currentPage - 1) * $perPage, $perPage)->all();
         $paginator = new LengthAwarePaginator($currentPageItems, $collection->count(), $perPage, $currentPage, [
             'path' => LengthAwarePaginator::resolveCurrentPath(),
         ]);
-        // return response()->json($paginator);
 
         return view('customer.category.products', [
             'countProducts' => count($Products),

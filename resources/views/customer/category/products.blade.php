@@ -1,6 +1,7 @@
 <x-app-layout>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/14.7.0/nouislider.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/14.7.0/nouislider.min.js"></script>
+
     @vite(['resources/scss/product.scss'])
     <x-slot name="header">
         <div class="flex justify-between items-center">
@@ -89,77 +90,76 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="flex">
 
-                <div class="w-1/4 pr-8 mt-1">
+                <div class="w-1/5 pr-4 mt-1">
                     <div class="bg-white rounded-lg shadow-sm p-4 mb-4">
-                        <h2 class="text-xl font-semibold mb-4">Filters</h2>
+
+                        <h1 class="text-xl font-semibold mb-4">Filters</h1>
 
 
-                        <div class="mb-4">
-                            <h3 class="text-lg font-semibold mb-2">Subcategories</h3>
-                            <ul>
-                                @foreach ($allChildCategoriesOfParent[$selectedCategory->id] as $childCategory)
-                                    <li class=" flex items-center">
-                                        <input type="radio" id="category_{{ $childCategory->id }}"
-                                            name="child_category" value="{{ $childCategory->id }}" class="mr-2">
-                                        <label for="category_{{ $childCategory->id }}"
-                                            class="block px-1 py-1 text-gray-800 hover:bg-gray-100 no-underline">{{ $childCategory->name }}</label>
-                                    </li>
-                                @endforeach
+                        <form action="#" method="GET">
+                            <div class="mb-4">
+                                <h3 class="text-lg font-semibold mb-2">Subcategories</h3>
+                                <ul>
+                                    @foreach ($allChildCategoriesOfParent[$selectedCategory->id] as $childCategory)
+                                        <li class="flex items-center">
+                                            <input type="radio" id="category_{{ $childCategory->id }}"
+                                                name="child_category" value="{{ $childCategory->id }}" class="mr-2"
+                                                {{ request('child_category') == $childCategory->id ? 'checked' : '' }}>
+                                            <label for="category_{{ $childCategory->id }}"
+                                                class="block px-1 py-1 text-gray-800 hover:bg-gray-100 no-underline">{{ $childCategory->name }}</label>
+                                        </li>
+                                    @endforeach
+                                </ul>
+                            </div>
 
-                            </ul>
-                        </div>
-
-
-
-
-                        <div class="mb-4">
-                            <h3 class="text-lg font-semibold mb-2">Price Range</h3>
-                            <form action="#" method="GET">
+                            <div class="mb-4">
+                                <h3 class="text-lg font-semibold mb-2">Price Range</h3>
                                 <div class="flex items-center mb-2">
                                     <input type="text" id="min_price" name="min_price" placeholder="Min"
-                                        class="w-1/3 px-2 py-1 border rounded mr-2" readonly>
-                                    <span class="mr-2">-</span>
+                                        class="w-1/3 px-2 py-1 border rounded mr-2 text-sm opacity-0"
+                                        value="{{ request('min_price') }}" readonly>
                                     <input type="text" id="max_price" name="max_price" placeholder="Max"
-                                        class="w-1/3 px-2 py-1 border rounded" readonly>
+                                        class="w-1/3 px-2 py-1 border rounded text-sm opacity-0"
+                                        value="{{ request('max_price') }}" readonly>
                                 </div>
                                 <div id="price-slider" class="w-3/4"></div>
-                                <button type="submit"
-                                    class="bg-blue-500 text-white py-1 px-4 rounded mt-2">Apply</button>
-                            </form>
-                        </div>
-
-                        <div class="mb-4">
-                            <h3 class="text-lg font-semibold mb-2">Color</h3>
-                            <div class="flex">
-                                <div class="flex flex-col">
-                                    <ul>
-                                        @foreach (['red', 'blue', 'green', 'gray'] as $color)
-                                            <li>
-                                                <div class="flex items-center mb-2">
-                                                    <input type="radio" id="color_{{ $color }}" name="color"
-                                                        value="{{ $color }}" class="mr-2">
-                                                    <div
-                                                        class="w-6 h-6 bg-{{ $color }}-500 rounded-full mr-2 cursor-pointer">
-                                                    </div>
-                                                    <label for="color_{{ $color }}"
-                                                        class="text-gray-800">{{ ucfirst($color) }}</label>
-                                                </div>
-                                            </li>
-                                        @endforeach
-                                    </ul>
-                                </div>
-
-
-
                             </div>
-                        </div>
+
+
+                            <div class="mb-4">
+                                <h3 class="text-lg font-semibold mb-2">Color</h3>
+                                <div class="flex">
+                                    <div class="flex flex-col">
+                                        <ul>
+                                            @foreach (['red', 'blue', 'green', 'gray'] as $color)
+                                                <li>
+                                                    <div class="flex items-center mb-2">
+                                                        <input type="radio" id="color_{{ $color }}"
+                                                            name="color" value="{{ $color }}" class="mr-2">
+                                                        <div
+                                                            class="w-6 h-6 bg-{{ $color }}-500 rounded-full mr-2 cursor-pointer">
+                                                        </div>
+                                                        <label for="color_{{ $color }}"
+                                                            class="text-gray-800">{{ ucfirst($color) }}</label>
+                                                    </div>
+                                                </li>
+                                            @endforeach
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <button type="submit" class="bg-blue-500 text-white py-1 px-4 rounded mt-2">Apply
+                                Filters</button>
+                        </form>
+
                     </div>
                 </div>
 
                 <div class="ml-4 mt-1">
                 </div>
 
-                <div class="w-3/4">
+                <div class="w-4/5" id="">
                     <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                         <div class="p-6 text-gray-900">
                             <div class="flex items-center justify-between mb-4">
@@ -250,24 +250,40 @@
 
 
 
-    var priceSlider = document.getElementById('price-slider');
-    var minPriceInput = document.getElementById('min_price');
-    var maxPriceInput = document.getElementById('max_price');
+    document.addEventListener('DOMContentLoaded', function() {
+        const minPriceInput = document.getElementById('min_price');
+        const maxPriceInput = document.getElementById('max_price');
 
-    noUiSlider.create(priceSlider, {
-        start: [0, 10000],
-        connect: true,
-        range: {
-            'min': 0,
-            'max': 10000
-        }
-    });
+        const minPrice = minPriceInput.value || 0; // Default value if no min_price is set
+        const maxPrice = maxPriceInput.value || 1000; // Default value if no max_price is set
 
-    priceSlider.noUiSlider.on('update', function(values, handle) {
-        if (handle === 0) {
-            minPriceInput.value = Math.round(values[0]);
-        } else {
-            maxPriceInput.value = Math.round(values[1]);
-        }
+        const slider = document.getElementById('price-slider');
+
+        noUiSlider.create(slider, {
+            start: [minPrice, maxPrice],
+            connect: true,
+            range: {
+                'min': 0,
+                'max': 10000
+            },
+            step: 50,
+            format: {
+                to: function(value) {
+                    return Math.round(value); // Round to integer
+                },
+                from: function(value) {
+                    return Math.round(Number(value)); // Parse the number and round to integer
+                }
+            },
+            tooltips: [true, true],
+        });
+
+        slider.noUiSlider.on('update', function(values, handle) {
+            if (handle === 0) {
+                minPriceInput.value = Math.round(values[0]);
+            } else {
+                maxPriceInput.value = Math.round(values[1]);
+            }
+        });
     });
 </script>
