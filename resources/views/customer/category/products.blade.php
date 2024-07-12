@@ -89,14 +89,19 @@
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="flex">
-
                 <div class="w-1/5 pr-4 mt-1">
                     <div class="bg-white rounded-lg shadow-sm p-4 mb-4">
-
-                        <h1 class="text-xl font-semibold mb-4">Filters</h1>
-
-
                         <form action="#" method="GET">
+                            <div class="flex items-center justify-between mb-4">
+                                <h1 class="text-xl font-semibold mb-0">Filters</h1>
+                                <button type="reset" id="resetFilters"
+                                    class="bg-blue-500 text-white py-1 px-2 rounded mt-0 ml-2">
+                                    <i class="fas fa-undo"></i>
+                                </button>
+
+
+                            </div>
+
                             <div class="mb-4">
                                 <h3 class="text-lg font-semibold mb-2">Subcategories</h3>
                                 <ul>
@@ -125,7 +130,6 @@
                                 <div id="price-slider" class="w-3/4"></div>
                             </div>
 
-
                             <div class="mb-4">
                                 <h3 class="text-lg font-semibold mb-2">Color</h3>
                                 <div class="flex">
@@ -152,9 +156,9 @@
                             <button type="submit" class="bg-blue-500 text-white py-1 px-4 rounded mt-2">Apply
                                 Filters</button>
                         </form>
-
                     </div>
                 </div>
+
 
                 <div class="ml-4 mt-1">
                 </div>
@@ -254,8 +258,8 @@
         const minPriceInput = document.getElementById('min_price');
         const maxPriceInput = document.getElementById('max_price');
 
-        const minPrice = minPriceInput.value || 0; // Default value if no min_price is set
-        const maxPrice = maxPriceInput.value || 1000; // Default value if no max_price is set
+        const minPrice = minPriceInput.value || 0;
+        const maxPrice = maxPriceInput.value || 10000;
 
         const slider = document.getElementById('price-slider');
 
@@ -269,10 +273,10 @@
             step: 50,
             format: {
                 to: function(value) {
-                    return Math.round(value); // Round to integer
+                    return Math.round(value);
                 },
                 from: function(value) {
-                    return Math.round(Number(value)); // Parse the number and round to integer
+                    return Math.round(Number(value));
                 }
             },
             tooltips: [true, true],
@@ -285,5 +289,11 @@
                 maxPriceInput.value = Math.round(values[1]);
             }
         });
+        // const resetButton = document.getElementById('resetFilters');
+        // resetButton.addEventListener('click', function() {
+        //     console.log('Resetting filters');
+        //     document.getElementById('filterForm').reset(); // Reset the form
+        //     // You may also need to reset any custom input handling here, like sliders or other UI elements
+        // });
     });
 </script>
