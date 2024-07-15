@@ -74,6 +74,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/order/cancel/{order}', [OrderController::class, 'cancel'])->name('customer.order.cancel');
     Route::get('category/products/{category}/filter', [CustomerProductController::class, 'categoryProducts'])->name('customer.category.products');
     Route::get('category/products/{category}/sort', [CustomerProductController::class, 'sortProducts'])->name('customer.products.sort');
+    Route::post('orders/save/quantities', [OrderController::class, 'saveQuantities'])->name('customer.order.saveQuantities');
 });
 
 Route::middleware(['auth:admin'])->group(function () {

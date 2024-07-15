@@ -114,20 +114,46 @@ class OrderController extends Controller
             $order->save();
         }
 
-        $orderItem = new OrderItems();
-        $orderItem->order_id = $order->id;
-        $orderItem->product_id = $product->id;
-        $orderItem->product_name = $product->name;
-        $orderItem->product_price = $product->price;
-        $orderItem->image = $product->image;
-        $orderItem->save();
+        $orderItem = OrderItems::where('order_id', $order->id)
+            ->where('product_id', $product->id)
+            ->first();
+
+        if (!$orderItem) {
+            $orderItem = new OrderItems();
+            $orderItem->order_id = $order->id;
+            $orderItem->product_id = $product->id;
+            $orderItem->product_name = $product->name;
+            $orderItem->product_price = $product->price;
+            $orderItem->image = $product->image;
+            $orderItem->save();
+            $message = 'Added to cart successfully!';
+        } else {
+            $message = 'Item already in cart!';
+        }
+
 
         $order->total += $orderItem->product_price;
         $order->save();
 
-        $message = 'Added to cart successfully!';
         return response()->json(['success' => true, 'message' => $message]);
     }
+
+    public function saveQuantities(Request $request)
+    {
+        $orderItems = $request->input('order_items', []);
+
+        foreach ($orderItems as $orderItemData) {
+            $orderItem = OrderItems::find($orderItemData['itemId']);
+
+            if ($orderItem) {
+                $orderItem->quantity = $orderItemData['quantity'];
+                $orderItem->save();
+                $orderItem->product->inventory -= $orderItemData['quantity'];
+            }
+        }
+        return response()->json(['message' => 'Quantities updated successfully', 'data' => $orderItems]);
+    }
+
 
     public function remove($id)
     {
@@ -146,6 +172,14 @@ class OrderController extends Controller
         $order = Order::where('user_id', $user->id)->where('status', 0)->first();
         $order->status = 1;
         $order->save();
+        $orderItems = OrderItems::where('order_id', $order->id)->get();
+
+        foreach ($orderItems as $item) {
+            $product = Product::find($item->product_id);
+            $product->inventory -= $item->quantity;
+            $product->save();
+        }
+
 
         $name = auth()->user()->name;
         $email = auth()->user()->email;
