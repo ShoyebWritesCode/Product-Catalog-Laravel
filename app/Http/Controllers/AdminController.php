@@ -178,7 +178,6 @@ class AdminController extends Controller
 
         $product->increment('inventory', $request->quantity);
 
-        // Redirect back with success message or any other logic
         return back()->with('success', 'Inventory added successfully.');
     }
 }
