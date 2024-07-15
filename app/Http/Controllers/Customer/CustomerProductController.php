@@ -204,7 +204,7 @@ class CustomerProductController extends Controller
         }
 
         $collection = new Collection($Products);
-        $perPage = 9;
+        $perPage = 12;
         $currentPage = LengthAwarePaginator::resolveCurrentPage();
         $currentPageItems = $collection->slice(($currentPage - 1) * $perPage, $perPage)->all();
         $paginator = new LengthAwarePaginator($currentPageItems, $collection->count(), $perPage, $currentPage, [
@@ -221,6 +221,53 @@ class CustomerProductController extends Controller
             'discountPercent' => $discountPercent,
             'allParentCategories' => $allParentCategories,
             'allChildCategoriesOfParent' => $allChildCategoriesOfParent,
+        ]);
+    }
+
+    public function sortProducts(Request $request, Catagory $category)
+    {
+        $selectedCategory = $category;
+        $childrenCategories = Catagory::where('parent_id', $category->id)->get()->keyBy('id');
+
+
+        $sort = $request->input('sort', 'name');
+
+        // $query = Product::query();
+
+        $Products = Product::whereHas('mappings', function ($query) use ($childrenCategories) {
+            $query->whereIn('catagory_id', $childrenCategories->pluck('id'));
+        });
+
+        switch ($sort) {
+            case 'price':
+                $Products->orderBy('price');
+                break;
+            case 'name':
+            default:
+                $Products->orderBy('name');
+                break;
+        }
+
+        // return response()->json($Products->get());
+
+        $products = $Products->paginate(12);
+
+        // Prepare additional data for the view
+        $allParentCategories = Catagory::where('parent_id', null)->get();
+        $allChildCategoriesOfParent = [];
+        foreach ($allParentCategories as $parentCategory) {
+            $allChildCategoriesOfParent[$parentCategory->id] = Catagory::where('parent_id', $parentCategory->id)->get();
+        }
+
+        $unreadNotifications = auth()->user()->unreadNotifications;
+
+        return view('customer.category.products', [
+            'countProducts' => $products->total(),
+            'Products' => $products,
+            'selectedCategory' => $selectedCategory,
+            'allParentCategories' => $allParentCategories,
+            'allChildCategoriesOfParent' => $allChildCategoriesOfParent,
+            'unreadNotifications' => $unreadNotifications,
         ]);
     }
 }

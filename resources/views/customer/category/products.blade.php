@@ -1,7 +1,6 @@
 <x-app-layout>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/14.7.0/nouislider.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/14.7.0/nouislider.min.js"></script>
-
     @vite(['resources/scss/product.scss'])
     <x-slot name="header">
         <div class="flex justify-between items-center">
@@ -91,7 +90,7 @@
             <div class="flex">
                 <div class="w-1/5 pr-4 mt-1">
                     <div class="bg-white rounded-lg shadow-sm p-4 mb-4">
-                        <form action="#" method="GET">
+                        <form action="{{ route('customer.category.products', $selectedCategory->id) }}" method="GET">
                             <div class="flex items-center justify-between mb-4">
                                 <h1 class="text-xl font-semibold mb-0">Filters</h1>
                                 <button type="reset" id="resetFilters"
@@ -168,8 +167,23 @@
                         <div class="p-6 text-gray-900">
                             <div class="flex items-center justify-between mb-4">
                                 <h1 class="text-2xl font-semibold">{{ $selectedCategory->name }} Products
-                                    ({{ $countProducts }})
-                                </h1>
+                                    ({{ $countProducts }})</h1>
+                                <form action="{{ route('customer.products.sort', $selectedCategory->id) }}"
+                                    method="GET" class="flex items-center">
+                                    <select name="sort" id="sort"
+                                        class="border rounded px-2 py-1 text-gray-700 ">
+                                        <option value="" disabled {{ request('sort') ? '' : 'selected' }}>Select
+                                        </option>
+
+                                        <option value="name" {{ request('sort') == 'name' ? 'selected' : '' }}>
+                                            Name(A-Z)
+                                        </option>
+                                        <option value="price" {{ request('sort') == 'price' ? 'selected' : '' }}>
+                                            Price(Low-High)</option>
+                                    </select>
+                                    <button type="submit"
+                                        class="ml-2 bg-blue-500 text-white py-1 px-4 rounded">Sort</button>
+                                </form>
                             </div>
                             <hr class="mb-4">
                             @if (session('success'))

@@ -72,7 +72,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/history', [OrderController::class, 'history'])->name('customer.order.history');
     Route::get('/history/{order}', [OrderController::class, 'orderdetail'])->name('customer.order.orderdetail');
     Route::get('/order/cancel/{order}', [OrderController::class, 'cancel'])->name('customer.order.cancel');
-    Route::get('category/products/{category}', [CustomerProductController::class, 'categoryProducts'])->name('customer.category.products');
+    Route::get('category/products/{category}/filter', [CustomerProductController::class, 'categoryProducts'])->name('customer.category.products');
+    Route::get('category/products/{category}/sort', [CustomerProductController::class, 'sortProducts'])->name('customer.products.sort');
 });
 
 Route::middleware(['auth:admin'])->group(function () {
