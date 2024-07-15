@@ -91,16 +91,22 @@
 
                     </div>
 
-                    <div class="flex justify-center mt-4">
-                        <form id="addToCartForm" action="{{ route('customer.order.add', $product->id) }}"
-                            method="POST">
-                            @csrf
-                            <button type="submit"
-                                class="bg-red-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                                Add to Cart
-                            </button>
-                        </form>
-                    </div>
+                    @if ($product->inventory > 0)
+                        <div class="flex justify-center mt-4">
+                            <form id="addToCartForm" action="{{ route('customer.order.add', $product->id) }}"
+                                method="POST">
+                                @csrf
+                                <button type="submit"
+                                    class="bg-red-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                                    Add to Cart
+                                </button>
+                            </form>
+                        </div>
+                    @else
+                        <div class="stock">
+                            <p class="text-red-500 text-center mt-4">Out of Stock</p>
+                        </div>
+                    @endif
 
                     <div class="mt-8">
                         @if ($reviews->isNotEmpty())
