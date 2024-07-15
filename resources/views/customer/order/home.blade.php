@@ -72,7 +72,7 @@
                             </tbody>
                         </table>
                         <div class="mt-4 flex justify-between items-center">
-                            <span class="text-lg font-bold">Total: {{ $order->total }} BDT</span>
+                            {{-- <span class="text-lg font-bold">Total: {{ $order->total }} BDT</span> --}}
                             <a href="#" id="checkoutButton" class="no-underline text-gray-100">
                                 <button type="button"
                                     class="bg-red-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">

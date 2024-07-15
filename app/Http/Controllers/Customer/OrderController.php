@@ -132,7 +132,7 @@ class OrderController extends Controller
         }
 
 
-        $order->total += $orderItem->product_price;
+        // $order->total += $orderItem->product_price;
         $order->save();
 
         return response()->json(['success' => true, 'message' => $message]);
@@ -148,7 +148,8 @@ class OrderController extends Controller
             if ($orderItem) {
                 $orderItem->quantity = $orderItemData['quantity'];
                 $orderItem->save();
-                $orderItem->product->inventory -= $orderItemData['quantity'];
+                $orderItem->order->total += $orderItem->product_price * $orderItemData['quantity'];
+                $orderItem->order->save();
             }
         }
         return response()->json(['message' => 'Quantities updated successfully', 'data' => $orderItems]);
@@ -159,7 +160,7 @@ class OrderController extends Controller
     {
         $orderItem = OrderItems::find($id);
         $order = Order::find($orderItem->order_id);
-        $order->total -= $orderItem->product_price;
+        $order->total -= $orderItem->product_price * $orderItem->quantity;
         $order->save();
         $orderItem->delete();
 
