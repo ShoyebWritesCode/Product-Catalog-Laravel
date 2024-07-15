@@ -119,6 +119,7 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::get('admin/admin/payment-history', [PaymentHistoryController::class, 'index'])->name('admin.payment-history');
 
     Route::get('admin/admin/charts', [ChartController::class, 'index'])->name('admin.charts.index');
+    Route::post('admin/admin/products/inventory/{product}', [AdminController::class, 'inventory'])->name('admin.product.inventory');
 });
 
 require __DIR__ . '/auth.php';

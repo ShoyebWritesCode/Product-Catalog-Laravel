@@ -7,6 +7,8 @@
 @stop
 
 @section('content')
+
+
     <div class="row mb-4">
         <div class="col-12 d-flex justify-content-between">
             <p></p>
@@ -29,6 +31,7 @@
                         <th>ID</th>
                         <th>Name</th>
                         <th>Price</th>
+                        <th>Inventory</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -38,7 +41,46 @@
                             <td>{{ $product->id }}</td>
                             <td>{{ $product->name }}</td>
                             <td>{{ $product->price }}</td>
+                            <td
+                                class="{{ $product->inventory < 10 ? 'text-danger' : ($product->inventory < 50 ? 'text-warning' : 'text-success') }}">
+                                {{ $product->inventory }}
+                            </td>
                             <td class="d-flex align-items-center">
+
+                                <a href="#" class="btn btn-sm btn-success mr-2" data-toggle="modal"
+                                    data-target="#inventoryModal{{ $product->id }}">
+                                    <i class="fas fa-plus"></i>
+                                </a>
+                                <div class="modal fade" id="inventoryModal{{ $product->id }}" tabindex="-1" role="dialog"
+                                    aria-labelledby="inventoryModalLabel{{ $product->id }}" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="inventoryModalLabel{{ $product->id }}">Add
+                                                    Inventory for Product #{{ $product->id }}</h5>
+                                                <button type="button" class="close" data-dismiss="modal"
+                                                    aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <form
+                                                    action="{{ route('admin.product.inventory', ['product' => $product->id]) }}"
+                                                    method="POST">
+                                                    @csrf
+                                                    <div class="form-group">
+                                                        <label for="quantity">Quantity</label>
+                                                        <input type="number" class="form-control" id="quantity"
+                                                            name="quantity" required>
+                                                    </div>
+                                                    <button type="submit" class="btn btn-primary">Add to Inventory</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
                                 <a href="{{ route('admin.product.edit', $product->id) }}"
                                     class="btn btn-sm btn-warning mr-2">
                                     <i class="fas fa-edit"></i>
@@ -66,6 +108,10 @@
 @section('js')
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
+        function openModal(btn) {
+            var target = $(btn).data('target');
+            $(target).modal('show');
+        }
         $(document).ready(function() {
             $('#successAlert').fadeOut(2000);
         });
