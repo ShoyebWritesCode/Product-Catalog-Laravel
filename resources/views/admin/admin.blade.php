@@ -57,14 +57,6 @@
             'link_text' => 'More info',
         ])
         @include('components.index', [
-            'title' => 'Users',
-            'number' => $totalUsers,
-            'icon' => 'fas fa-users',
-            'color' => 'success',
-            'link' => route('admin.users'),
-            'link_text' => 'More info',
-        ])
-        @include('components.index', [
             'title' => 'Categories',
             'number' => $totalCategories,
             'icon' => 'fas fa-th-large',
@@ -72,6 +64,31 @@
             'link' => route('admin.categories'),
             'link_text' => 'More info',
         ])
+        @include('components.index', [
+            'title' => 'Colors',
+            'number' => $totalReviews,
+            'icon' => 'fas fa-palette',
+            'color' => 'danger',
+            'link' => route('admin.colors'),
+            'link_text' => 'More info',
+        ])
+        @include('components.index', [
+            'title' => 'Sizes',
+            'number' => $totalPendingOrders,
+            'icon' => 'fas fa-expand',
+            'color' => 'primary',
+            'link' => route('admin.sizes'),
+            'link_text' => 'More info',
+        ])
+        @include('components.index', [
+            'title' => 'Users',
+            'number' => $totalUsers,
+            'icon' => 'fas fa-users',
+            'color' => 'success',
+            'link' => route('admin.users'),
+            'link_text' => 'More info',
+        ])
+
         @include('components.index', [
             'title' => 'Reviews',
             'number' => $totalReviews,

@@ -20,7 +20,9 @@ use App\Http\Controllers\NotificationController as ControllersNotificationContro
 use App\Http\Controllers\ChartController;
 use App\Models\Address;
 use App\Http\Controllers\AddressController;
+use App\Http\Controllers\InventoryController;
 use App\Http\Controllers\PaymentHistoryController;
+use App\Models\Inventory;
 
 /*
 |--------------------------------------------------------------------------
@@ -118,9 +120,10 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::post('admin/admin/templates/store', [EmailTemplateController::class, 'store'])->name('admin.templates.store');
     Route::post('admin/admin/templates/placeholders', [EmailTemplateController::class, 'addPlaceholder'])->name('admin.placeholders.add');
     Route::get('admin/admin/payment-history', [PaymentHistoryController::class, 'index'])->name('admin.payment-history');
-
     Route::get('admin/admin/charts', [ChartController::class, 'index'])->name('admin.charts.index');
-    Route::post('admin/admin/products/inventory/{product}', [AdminController::class, 'inventory'])->name('admin.product.inventory');
+
+    Route::get('admin/admin/colors', [InventoryController::class, 'colorsIndex'])->name('admin.colors');
+    Route::get('admin/admin/sizes', [InventoryController::class, 'sizesIndex'])->name('admin.sizes');
 });
 
 require __DIR__ . '/auth.php';

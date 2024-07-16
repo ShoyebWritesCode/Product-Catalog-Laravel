@@ -172,12 +172,4 @@ class AdminController extends Controller
             return redirect()->back()->with('success', 'Order status updated successfully');
         }
     }
-
-    public function inventory(Product $product, Request $request)
-    {
-
-        $product->increment('inventory', $request->quantity);
-
-        return back()->with('success', 'Inventory added successfully.');
-    }
 }
