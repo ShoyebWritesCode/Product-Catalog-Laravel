@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Color;
 use App\Models\Size;
+use App\Models\Inventory;
 
 class InventoryController extends Controller
 {
@@ -30,5 +31,23 @@ class InventoryController extends Controller
     {
         Size::create($request->all());
         return redirect()->back()->with('success', 'Size added successfully');
+    }
+
+    public function getInventoryQuantity(Request $request)
+    {
+        $sizeId = $request->query('size_id');
+        $colorId = $request->query('color_id');
+        $productId = $request->query('product_id');
+
+        $inventory = Inventory::where('size_id', $sizeId)
+            ->where('color_id', $colorId)
+            ->where('product_id', $productId)
+            ->first();
+
+        if ($inventory) {
+            return response()->json(['success' => true, 'quantity' => $inventory->quantity]);
+        } else {
+            return response()->json(['success' => false, 'quantity' => 0]);
+        }
     }
 }

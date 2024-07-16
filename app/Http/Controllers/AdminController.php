@@ -12,6 +12,7 @@ use App\Models\OrderItems;
 use App\Models\PaymentHistory;
 use App\Models\EmailTemplate;
 use App\Models\Color;
+use App\Models\Inventory;
 use App\Models\Size;
 use Illuminate\Support\Facades\Notification;
 use App\Notifications\OrderConfirmed;
@@ -59,8 +60,27 @@ class AdminController extends Controller
         $product->description = $request->description;
         $product->prev_price = $product->price;
         $product->price = $request->price;
-
         $product->save();
+
+        $color = $request->color;
+        $size = $request->size;
+        $quantity = $request->quantity;
+
+        $inventory = Inventory::where('product_id', $product->id)->where('color_id', $color)->where('size_id', $size)->first();
+        if ($inventory) {
+            $inventory->quantity = $quantity;
+            $inventory->save();
+        } else {
+            $inventory = new Inventory();
+            $inventory->product_id = $product->id;
+            $inventory->color_id = $color;
+            $inventory->size_id = $size;
+            $inventory->quantity = $quantity;
+            $inventory->save();
+        }
+
+        // return response()->json($request->all());
+
 
         return redirect()->route('admin.products')->with('success', 'Product updated successfully');
     }

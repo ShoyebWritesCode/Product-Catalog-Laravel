@@ -42,9 +42,8 @@
                             <td>{{ $product->name }}</td>
                             <td>{{ $product->price }}</td>
                             <td>
-                                <a href="#"
-                                    class="{{ $product->inventory < 10 ? 'text-danger' : ($product->inventory < 50 ? 'text-warning' : 'text-success') }}">
-                                    {{ $product->inventory }}
+                                <a href="#" class="">
+                                    {{ $product->totalQuantity() }}
                                 </a>
                             </td>
 

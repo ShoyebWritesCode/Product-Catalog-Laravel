@@ -126,6 +126,7 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::post('admin/admin/colors/create', [InventoryController::class, 'colorCreate'])->name('admin.color.create');
     Route::get('admin/admin/sizes', [InventoryController::class, 'sizesIndex'])->name('admin.sizes');
     Route::post('admin/admin/sizes/create', [InventoryController::class, 'sizeCreate'])->name('admin.size.create');
+    Route::get('admin/admin/product/inventory/quantity', [InventoryController::class, 'getInventoryQuantity'])->name('admin.product.inventory.quantity');
 });
 
 require __DIR__ . '/auth.php';

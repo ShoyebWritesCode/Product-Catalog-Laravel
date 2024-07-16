@@ -63,7 +63,7 @@
                                     <select name="size" id="size" class="form-control">
                                         <option value="">Select Size</option>
                                         @foreach ($sizes as $size)
-                                            <option value="{{ $size->name }}">
+                                            <option value="{{ $size->id }}">
                                                 {{ $size->name }}
                                             </option>
                                         @endforeach
@@ -77,7 +77,7 @@
                                     <select name="color" id="color" class="form-control">
                                         <option value="">Select Color</option>
                                         @foreach ($colors as $color)
-                                            <option value="{{ $color->name }}">
+                                            <option value="{{ $color->id }}">
                                                 {{ $color->name }}
                                             </option>
                                         @endforeach
@@ -106,7 +106,50 @@
 
 
 @section('js')
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const sizeSelect = document.getElementById('size');
+            const colorSelect = document.getElementById('color');
+            const productId = document.getElementById('product_id').value;
+            const quantityContainer = document.getElementById('quantity-container');
+            const quantityInput = document.getElementById('quantity');
+
+            function checkSelections() {
+                const sizeId = sizeSelect.value;
+                const colorId = colorSelect.value;
+
+                if (sizeId && colorId) {
+                    fetchQuantity(sizeId, colorId, productId);
+                } else {
+                    quantityContainer.style.display = 'none';
+                }
+            }
+
+            function fetchQuantity(sizeId, colorId, productId) {
+                fetch(
+                        `{{ route('admin.product.inventory.quantity') }}?size_id=${sizeId}&color_id=${colorId}&product_id=${productId}`
+                    )
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            quantityInput.value = data.quantity;
+                            quantityContainer.style.display = 'block';
+                        } else {
+                            quantityInput.value = 0;
+                            quantityContainer.style.display = 'block';
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error fetching quantity:', error);
+                        quantityContainer.style.display = 'none';
+                    });
+            }
+
+            sizeSelect.addEventListener('change', checkSelections);
+            colorSelect.addEventListener('change', checkSelections);
+        });
+
         document.addEventListener('DOMContentLoaded', function() {
             const sizeSelect = document.getElementById('size');
             const colorSelect = document.getElementById('color');

@@ -33,4 +33,14 @@ class Product extends Model
     {
         return $this->hasMany(Mapping::class);
     }
+
+    public function inventory()
+    {
+        return $this->hasMany(Inventory::class);
+    }
+
+    public function totalQuantity()
+    {
+        return $this->inventory()->sum('quantity');
+    }
 }
