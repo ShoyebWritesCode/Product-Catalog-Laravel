@@ -7,6 +7,8 @@ use App\Models\Product;
 use App\Models\Admin;
 use App\Models\OrderItems;
 use App\Models\Order;
+use App\Models\Color;
+use App\Models\Size;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Log;
@@ -17,6 +19,7 @@ use App\Helpers\MailHelper;
 use App\Notifications\OrderPlaced;
 use Illuminate\Support\Facades\Notification;
 use App\Http\Controllers\AddressController;
+use App\Models\Inventory;
 use Stripe;
 use App\Models\PaymentHistory;
 
@@ -181,8 +184,18 @@ class OrderController extends Controller
 
         foreach ($orderItems as $item) {
             $product = Product::find($item->product_id);
-            $product->inventory -= $item->quantity;
-            $product->save();
+            // $product->inventory -= $item->quantity;
+            // $product->save();
+            $color = Color::find($item->color_id);
+            $size = Size::find($item->size_id);
+
+            $inventory = Inventory::where('product_id', $product->id)
+                ->where('color_id', $color->id)
+                ->where('size_id', $size->id)
+                ->first();
+
+            $inventory->quantity -= $item->quantity;
+            $inventory->save();
         }
 
 

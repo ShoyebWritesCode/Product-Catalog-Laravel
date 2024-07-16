@@ -35,6 +35,8 @@
                                 <tr>
                                     <th class="px-4 py-2 border text-center">Image</th>
                                     <th class="px-4 py-2 border text-center">Name</th>
+                                    <th class="px-4 py-2 border text-center">Size</th>
+                                    <th class="px-4 py-2 border text-center">Color</th>
                                     <th class="px-4 py-2 border text-center">Price</th>
                                     <th class="px-4 py-2 border text-center">Quantity</th>
                                 </tr>
@@ -50,6 +52,8 @@
                                             </div>
                                         </td>
                                         <td class="border px-4 py-2 text-center">{{ $item->product_name }}</td>
+                                        <td class="border px-4 py-2 text-center">{{ $item->size->name }}</td>
+                                        <td class="border px-4 py-2 text-center">{{ $item->color->name }}</td>
                                         <td class="border px-4 py-2 text-center text-red-600">
                                             {{ $item->product_price }} BDT</td>
                                         <td class="border px-4 py-2 text-center">{{ $item->quantity }}</td>
