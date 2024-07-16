@@ -42,7 +42,7 @@
                             <td>{{ $product->name }}</td>
                             <td>{{ $product->price }}</td>
                             <td>
-                                <a href="{{ route('admin.product.inventory', ['product' => $product->id]) }}"
+                                <a href="#"
                                     class="{{ $product->inventory < 10 ? 'text-danger' : ($product->inventory < 50 ? 'text-warning' : 'text-success') }}">
                                     {{ $product->inventory }}
                                 </a>
@@ -67,9 +67,7 @@
                                                 </button>
                                             </div>
                                             <div class="modal-body">
-                                                <form
-                                                    action="{{ route('admin.product.inventory', ['product' => $product->id]) }}"
-                                                    method="POST">
+                                                <form action="#" method="POST">
                                                     @csrf
                                                     <div class="form-group">
                                                         <label for="quantity">Quantity</label>

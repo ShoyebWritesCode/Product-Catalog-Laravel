@@ -14,9 +14,21 @@ class InventoryController extends Controller
         return view('admin.colors', compact('colors'));
     }
 
+    public function colorCreate(Request $request)
+    {
+        Color::create($request->all());
+        return redirect()->back()->with('success', 'Color added successfully');
+    }
+
     public function sizesIndex()
     {
         $sizes = Size::all();
         return view('admin.sizes', compact('sizes'));
+    }
+
+    public function sizeCreate(Request $request)
+    {
+        Size::create($request->all());
+        return redirect()->back()->with('success', 'Size added successfully');
     }
 }

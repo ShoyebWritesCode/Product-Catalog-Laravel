@@ -58,127 +58,42 @@
                                         <span class="text-danger">{{ $message }}</span>
                                     @enderror
                                 </div>
-
-                                <div class="accordion" id="inventoryAccordion">
-                                    <div class="accordion-item">
-                                        <h2 class="accordion-header" id="headingRed">
-                                            <button class="accordion-button" type="button" style="background-color: red ;"
-                                                data-bs-toggle="collapse" data-bs-target="#collapseRed" aria-expanded="true"
-                                                aria-controls="collapseRed">
-                                                Red
-                                            </button>
-
-                                        </h2>
-                                        <div id="collapseRed" class="accordion-collapse collapse show"
-                                            aria-labelledby="headingRed" data-bs-parent="#inventoryAccordion">
-                                            <div class="accordion-body">
-                                                <div class="mb-4">
-                                                    <label for="quantitySR" class="form-label">Quantity SR:</label>
-                                                    <input type="number" name="quantitySR" id="quantitySR"
-                                                        class="form-control" value="{{ old('quantitySR') }}">
-                                                    @error('quantitySR')
-                                                        <span class="text-danger">{{ $message }}</span>
-                                                    @enderror
-                                                </div>
-                                                <div class="mb-4">
-                                                    <label for="quantityMR" class="form-label">Quantity MR:</label>
-                                                    <input type="number" name="quantityMR" id="quantityMR"
-                                                        class="form-control" value="{{ old('quantityMR') }}">
-                                                    @error('quantityMR')
-                                                        <span class="text-danger">{{ $message }}</span>
-                                                    @enderror
-                                                </div>
-                                                <div class="mb-4">
-                                                    <label for="quantityLR" class="form-label">Quantity LR:</label>
-                                                    <input type="number" name="quantityLR" id="quantityLR"
-                                                        class="form-control" value="{{ old('quantityLR') }}">
-                                                    @error('quantityLR')
-                                                        <span class="text-danger">{{ $message }}</span>
-                                                    @enderror
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="accordion-item">
-                                        <h2 class="accordion-header" id="headingBlue">
-                                            <button class="accordion-button collapsed" type="button"
-                                                data-bs-toggle="collapse" data-bs-target="#collapseBlue"
-                                                style="background-color: blue" aria-expanded="false"
-                                                aria-controls="collapseBlue">
-                                                Blue
-                                            </button>
-                                        </h2>
-                                        <div id="collapseBlue" class="accordion-collapse collapse"
-                                            aria-labelledby="headingBlue" data-bs-parent="#inventoryAccordion">
-                                            <div class="accordion-body">
-                                                <div class="mb-4">
-                                                    <label for="quantitySB" class="form-label">Quantity SB:</label>
-                                                    <input type="number" name="quantitySB" id="quantitySB"
-                                                        class="form-control" value="{{ old('quantitySB') }}">
-                                                    @error('quantitySB')
-                                                        <span class="text-danger">{{ $message }}</span>
-                                                    @enderror
-                                                </div>
-                                                <div class="mb-4">
-                                                    <label for="quantityMB" class="form-label">Quantity MB:</label>
-                                                    <input type="number" name="quantityMB" id="quantityMB"
-                                                        class="form-control" value="{{ old('quantityMB') }}">
-                                                    @error('quantityMB')
-                                                        <span class="text-danger">{{ $message }}</span>
-                                                    @enderror
-                                                </div>
-                                                <div class="mb-4">
-                                                    <label for="quantityLB" class="form-label">Quantity LB:</label>
-                                                    <input type="number" name="quantityLB" id="quantityLB"
-                                                        class="form-control" value="{{ old('quantityLB') }}">
-                                                    @error('quantityLB')
-                                                        <span class="text-danger">{{ $message }}</span>
-                                                    @enderror
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="accordion-item">
-                                        <h2 class="accordion-header" id="headingGreen">
-                                            <button class="accordion-button collapsed" type="button"
-                                                data-bs-toggle="collapse" data-bs-target="#collapseGreen"
-                                                style="background-color: green " aria-expanded="false"
-                                                aria-controls="collapseGreen">
-                                                Green
-                                            </button>
-                                        </h2>
-                                        <div id="collapseGreen" class="accordion-collapse collapse"
-                                            aria-labelledby="headingGreen" data-bs-parent="#inventoryAccordion">
-                                            <div class="accordion-body">
-                                                <div class="mb-4">
-                                                    <label for="quantitySG" class="form-label">Quantity SG:</label>
-                                                    <input type="number" name="quantitySG" id="quantitySG"
-                                                        class="form-control" value="{{ old('quantitySG') }}">
-                                                    @error('quantitySG')
-                                                        <span class="text-danger">{{ $message }}</span>
-                                                    @enderror
-                                                </div>
-                                                <div class="mb-4">
-                                                    <label for="quantityMG" class="form-label">Quantity MG:</label>
-                                                    <input type="number" name="quantityMG" id="quantityMG"
-                                                        class="form-control" value="{{ old('quantityMG') }}">
-                                                    @error('quantityMG')
-                                                        <span class="text-danger">{{ $message }}</span>
-                                                    @enderror
-                                                </div>
-                                                <div class="mb-4">
-                                                    <label for="quantityLG" class="form-label">Quantity LG:</label>
-                                                    <input type="number" name="quantityLG" id="quantityLG"
-                                                        class="form-control" value="{{ old('quantityLG') }}">
-                                                    @error('quantityLG')
-                                                        <span class="text-danger">{{ $message }}</span>
-                                                    @enderror
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+                                <div class="mb-4">
+                                    <label for="size" class="form-label">Size:</label>
+                                    <select name="size" id="size" class="form-control">
+                                        <option value="">Select Size</option>
+                                        @foreach ($sizes as $size)
+                                            <option value="{{ $size->name }}">
+                                                {{ $size->name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    @error('size')
+                                        <span class="text-danger">{{ $message }}</span>
+                                    @enderror
                                 </div>
-
+                                <div class="mb-4">
+                                    <label for="color" class="form-label">Color:</label>
+                                    <select name="color" id="color" class="form-control">
+                                        <option value="">Select Color</option>
+                                        @foreach ($colors as $color)
+                                            <option value="{{ $color->name }}">
+                                                {{ $color->name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    @error('color')
+                                        <span class="text-danger">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                                <div class="mb-4" id="quantity-container" style="display: none;">
+                                    <label for="quantity" class="form-label">Quantity:</label>
+                                    <input type="number" name="quantity" id="quantity" class="form-control"
+                                        value="{{ old('quantity') }}">
+                                    @error('quantity')
+                                        <span class="text-danger">{{ $message }}</span>
+                                    @enderror
+                                </div>
                                 <button type="submit" class="btn btn-danger">Update</button>
                             </form>
                         </div>
@@ -189,6 +104,24 @@
     </div>
 @stop
 
+
 @section('js')
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const sizeSelect = document.getElementById('size');
+            const colorSelect = document.getElementById('color');
+            const quantityContainer = document.getElementById('quantity-container');
+
+            function checkSelections() {
+                if (sizeSelect.value && colorSelect.value) {
+                    quantityContainer.style.display = 'block';
+                } else {
+                    quantityContainer.style.display = 'none';
+                }
+            }
+
+            sizeSelect.addEventListener('change', checkSelections);
+            colorSelect.addEventListener('change', checkSelections);
+        });
+    </script>
 @stop

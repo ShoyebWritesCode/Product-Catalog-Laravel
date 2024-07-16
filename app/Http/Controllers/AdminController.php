@@ -11,6 +11,8 @@ use App\Models\Order;
 use App\Models\OrderItems;
 use App\Models\PaymentHistory;
 use App\Models\EmailTemplate;
+use App\Models\Color;
+use App\Models\Size;
 use Illuminate\Support\Facades\Notification;
 use App\Notifications\OrderConfirmed;
 use Illuminate\Support\Facades\Log;
@@ -28,10 +30,12 @@ class AdminController extends Controller
         $totalTemplates = EmailTemplate::count();
         $totalPayments = PaymentHistory::count();
         $totalRefundRequests = Order::where('refund', 0)->count();
+        $totalColors = Color::count();
+        $totalSizes = Size::count();
 
 
         $unreadNotifications = auth()->user()->unreadNotifications;
-        return view('admin.admin', compact('totalUsers', 'totalCategories', 'totalReviews', 'totalProducts', 'totalPendingOrders', 'totalCompletedOrders', 'totalTemplates', 'unreadNotifications', 'totalPayments', 'totalRefundRequests'));
+        return view('admin.admin', compact('totalUsers', 'totalCategories', 'totalReviews', 'totalProducts', 'totalPendingOrders', 'totalCompletedOrders', 'totalTemplates', 'unreadNotifications', 'totalPayments', 'totalRefundRequests', 'totalColors', 'totalSizes'));
     }
 
     public function products()
@@ -44,7 +48,9 @@ class AdminController extends Controller
     public function edit($id)
     {
         $product = Product::findOrFail($id);
-        return view('admin.product.edit', compact('product'));
+        $colors = Color::all();
+        $sizes = Size::all();
+        return view('admin.product.edit', compact('product', 'colors', 'sizes'));
     }
     public function updateProduct(Request $request, $id)
     {

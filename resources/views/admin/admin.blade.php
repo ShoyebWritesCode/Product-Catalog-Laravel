@@ -66,7 +66,7 @@
         ])
         @include('components.index', [
             'title' => 'Colors',
-            'number' => $totalReviews,
+            'number' => $totalColors,
             'icon' => 'fas fa-palette',
             'color' => 'danger',
             'link' => route('admin.colors'),
@@ -74,7 +74,7 @@
         ])
         @include('components.index', [
             'title' => 'Sizes',
-            'number' => $totalPendingOrders,
+            'number' => $totalSizes,
             'icon' => 'fas fa-expand',
             'color' => 'primary',
             'link' => route('admin.sizes'),

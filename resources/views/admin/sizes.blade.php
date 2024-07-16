@@ -11,7 +11,7 @@
     <div class="row mb-4">
         <div class="col-12 d-flex justify-content-between">
             <p></p>
-            <a href="{{ route('admin.product.create') }}" class="btn btn-primary">
+            <a href="" class="btn btn-primary" data-toggle="modal" data-target="#inventoryModal">
                 Add Size
             </a>
             <div class="modal fade" id="inventoryModal" tabindex="-1" role="dialog" aria-labelledby="inventoryModalLabel"
@@ -26,7 +26,7 @@
                             </button>
                         </div>
                         <div class="modal-body">
-                            <form action="" method="POST">
+                            <form action="{{ route('admin.size.create') }}" method="POST">
                                 @csrf
                                 <div class="form-group">
                                     <label for="name">Name</label>
@@ -50,7 +50,7 @@
     </div>
     <div class="row">
         <div class="col-12">
-            <x-table :headers="['ID', 'Name', 'Description']" :rows="$sizess->map(function ($size) {
+            <x-table :headers="['ID', 'Name', 'Description']" :rows="$sizes->map(function ($size) {
                 return [$size->id, $size->name, $size->description];
             })" />
         </div>
