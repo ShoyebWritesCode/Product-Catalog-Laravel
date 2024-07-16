@@ -97,7 +97,7 @@ class OrderController extends Controller
 
 
 
-    public function add(Product $product)
+    public function add(Request $request, Product $product)
     {
         // $num = 0;
         $user = auth()->user();
@@ -116,6 +116,8 @@ class OrderController extends Controller
 
         $orderItem = OrderItems::where('order_id', $order->id)
             ->where('product_id', $product->id)
+            ->where('size_id', $request->size)
+            ->where('color_id', $request->color)
             ->first();
 
         if (!$orderItem) {
@@ -125,6 +127,8 @@ class OrderController extends Controller
             $orderItem->product_name = $product->name;
             $orderItem->product_price = $product->price;
             $orderItem->image = $product->image;
+            $orderItem->size_id = $request->size;
+            $orderItem->color_id = $request->color;
             $orderItem->save();
             $message = 'Added to cart successfully!';
         } else {
