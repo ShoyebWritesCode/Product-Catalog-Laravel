@@ -98,7 +98,21 @@ class OrderController extends Controller
     {
 
         $data = $this->getOrderData();
-        return view('customer.order.checkout', $data);
+        $addr = $data['order']->city;
+        $shippingCost = 0;
+
+        if ($addr === "Dhaka") {
+            $shippingCost = 50;
+        } else {
+            $shippingCost = 100;
+        }
+
+        $data['order']->total += $shippingCost;
+        $data['order']->save();
+
+        // return response()->json($data);
+
+        return view('customer.order.checkout', $data, compact('shippingCost'));
     }
 
 

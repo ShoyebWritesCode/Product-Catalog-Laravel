@@ -59,12 +59,15 @@
                                             {{ $item->product_price }} BDT</td>
                                         <td class="border px-4 py-2 text-center">{{ $item->quantity }}</td>
                                         <td class="border px-4 py-2 text-center">
-                                            {{ $item->quantity * $item->product_price }}</td>
+                                            {{ $item->quantity * $item->product_price }} BDT</td>
                                     </tr>
                                 @endforeach
                             </tbody>
                         </table>
                         <div class="mt-4 flex justify-between items-center">
+                            <span class="text-lg font-bold">Shipping Cost: {{ $shippingCost }} BDT</span>
+                            <br>
+                            <br>
                             <span class="text-lg font-bold">Total: {{ $order->total }} BDT</span>
                         </div>
                     </div>
