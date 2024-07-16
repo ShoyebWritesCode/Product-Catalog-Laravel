@@ -92,14 +92,52 @@
                     </div>
 
                     @if ($product->inventory > 0)
-                        <div class="flex justify-center mt-4">
+                        <div class="flex flex-col mt-4">
                             <form id="addToCartForm" action="{{ route('customer.order.add', $product->id) }}"
-                                method="POST">
+                                method="POST" class="w-full ">
                                 @csrf
-                                <button type="submit"
-                                    class="bg-red-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                                    Add to Cart
-                                </button>
+
+                                <!-- Select Size and Color in the same line -->
+                                <div class="flex mb-4">
+                                    <!-- Select Size -->
+                                    <div class="mr-48">
+                                        <label class="block text-gray-700 text-sm font-bold mb-2">Size:</label>
+                                        <div class="flex items-center">
+                                            @foreach ($sizes as $size)
+                                                <input type="radio" id="size_{{ $size->id }}" name="size"
+                                                    value="{{ $size->id }}" class="hidden size-option-input">
+                                                <label for="size_{{ $size->id }}"
+                                                    class="size-option bg-gray-200 text-gray-800 font-semibold py-2 px-4 rounded cursor-pointer mr-2 hover:bg-gray-300">
+                                                    {{ $size->name }}
+                                                </label>
+                                            @endforeach
+                                        </div>
+                                    </div>
+
+                                    <!-- Select Color -->
+                                    <div class="mr-32">
+                                        <label class="block text-gray-700 text-sm font-bold mb-2">Color:</label>
+                                        <div class="flex items-center">
+                                            @foreach ($colors as $color)
+                                                <input type="radio" id="color_{{ $color->id }}" name="color"
+                                                    value="{{ $color->id }}" class="hidden color-option-input">
+                                                <label for="color_{{ $color->id }}"
+                                                    class="color-option bg-{{ $color->description }}-500 text-gray-800 font-semibold py-2 px-4 rounded cursor-pointer mr-2 hover:bg-gray-300">
+                                                    {{ $color->name }}
+                                                </label>
+                                            @endforeach
+                                        </div>
+                                    </div>
+                                    <div class="stock mt-6"></div>
+                                </div>
+                                <div class="w-1/6 self-end ml-auto">
+                                    <button type="submit"
+                                        class="bg-red-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                                        id="CartButton">
+                                        Add to Cart
+                                    </button>
+                                </div>
+
                             </form>
                         </div>
                     @else
@@ -186,4 +224,63 @@
     </div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     @vite(['resources/js/custom/show.js'])
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const sizeInputs = document.querySelectorAll('.size-option-input');
+            const colorInputs = document.querySelectorAll('.color-option-input');
+
+            // Event listener for size and color inputs
+            sizeInputs.forEach(sizeInput => {
+                sizeInput.addEventListener('change', function() {
+                    updateInventory();
+                });
+            });
+
+            colorInputs.forEach(colorInput => {
+                colorInput.addEventListener('change', function() {
+                    updateInventory();
+                });
+            });
+
+            // Function to update inventory via AJAX
+            function updateInventory() {
+                const selectedSize = document.querySelector('input[name="size"]:checked');
+                const selectedColor = document.querySelector('input[name="color"]:checked');
+                const productId =
+                    {{ $product->id }};
+
+                if (selectedSize && selectedColor) {
+                    const sizeId = selectedSize.value;
+                    const colorId = selectedColor.value;
+
+                    // AJAX request
+                    fetch(
+                            `{{ route('product.inventory.quantity') }}?size_id=${sizeId}&color_id=${colorId}&product_id=${productId}`
+                        )
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                console.log('Inventory Quantity:', data.quantity);
+                                if (data.quantity > 0) {
+                                    document.querySelector('.stock').innerHTML =
+                                        `<p class="text-green-500">In Stock</p>`;
+                                    document.getElementById('CartButton').style.display = 'block';
+                                } else {
+                                    document.querySelector('.stock').innerHTML =
+                                        `<p class="text-red-500">Out of Stock</p>`;
+                                    document.getElementById('CartButton').style.display = 'none';
+                                }
+                            } else {
+                                document.querySelector('.stock').innerHTML =
+                                    `<p class="text-red-500">Out of Stock</p>`;
+                                document.getElementById('CartButton').style.display = 'none';
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error fetching inventory quantity:', error);
+                        });
+                }
+            }
+        });
+    </script>
 </x-app-layout>

@@ -51,7 +51,21 @@ class AdminController extends Controller
         $product = Product::findOrFail($id);
         $colors = Color::all();
         $sizes = Size::all();
-        return view('admin.product.edit', compact('product', 'colors', 'sizes'));
+        $inventories = Inventory::where('product_id', $id)->get();
+        $combinations = [];
+        foreach ($sizes as $size) {
+            foreach ($colors as $color) {
+                $combinations[] = [
+                    'size_id' => $size->id,
+                    'size_name' => $size->name,
+                    'color_id' => $color->id,
+                    'color_name' => $color->name,
+                ];
+            }
+        }
+
+
+        return view('admin.product.edit', compact('product', 'colors', 'sizes', 'combinations', 'inventories'));
     }
     public function updateProduct(Request $request, $id)
     {
@@ -62,25 +76,16 @@ class AdminController extends Controller
         $product->price = $request->price;
         $product->save();
 
-        $color = $request->color;
-        $size = $request->size;
-        $quantity = $request->quantity;
-
-        $inventory = Inventory::where('product_id', $product->id)->where('color_id', $color)->where('size_id', $size)->first();
-        if ($inventory) {
-            $inventory->quantity = $quantity;
-            $inventory->save();
-        } else {
-            $inventory = new Inventory();
-            $inventory->product_id = $product->id;
-            $inventory->color_id = $color;
-            $inventory->size_id = $size;
-            $inventory->quantity = $quantity;
-            $inventory->save();
+        foreach ($request->inventories as $inventoryData) {
+            Inventory::updateOrCreate(
+                [
+                    'product_id' => $product->id,
+                    'size_id' => $inventoryData['size_id'],
+                    'color_id' => $inventoryData['color_id'],
+                ],
+                ['quantity' => $inventoryData['quantity']]
+            );
         }
-
-        // return response()->json($request->all());
-
 
         return redirect()->route('admin.products')->with('success', 'Product updated successfully');
     }

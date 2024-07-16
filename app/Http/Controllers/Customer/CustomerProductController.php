@@ -6,7 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Models\Product;
 use App\Models\Review;
 use App\Models\Catagory;
+use App\Models\Color;
 use App\Models\Mapping;
+use App\Models\Size;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -100,6 +102,8 @@ class CustomerProductController extends Controller
         $namesubcategories = [];
         $nameparentcategories = [];
         $averageRatings = [];
+        $colors = Color::all();
+        $sizes = Size::all();
 
 
         $categories = Catagory::all()->keyBy('id');
@@ -117,7 +121,7 @@ class CustomerProductController extends Controller
         $reviews = Review::where('product_id', $product->id)->get();
         $averageRatings[$product->id] = Review::where('product_id', $product->id)->avg('rating');
 
-        return view('customer.product.show', compact('product', 'namesubcategories', 'nameparentcategories', 'reviews', 'averageRatings'));
+        return view('customer.product.show', compact('product', 'namesubcategories', 'nameparentcategories', 'reviews', 'averageRatings', 'colors', 'sizes'));
     }
 
     public function search(Request $request)

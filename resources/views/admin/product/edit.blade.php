@@ -14,16 +14,26 @@
                 <div class="col-lg-12">
                     <div class="card">
                         <div class="card-body">
-                            <hr>
+
                             @if (session('error'))
                                 <div class="alert alert-danger" role="alert">
                                     {{ session('error') }}
                                 </div>
                             @endif
+                            <h3>Product Details</h3>
+                            <hr>
                             <form action="{{ route('admin.product.update', $product->id) }}" method="POST"
                                 enctype="multipart/form-data">
                                 @csrf
                                 @method('PUT')
+                                <div class="mb-4">
+                                    <label for="product_id" class="form-label">Product ID:</label>
+                                    <input type="text" name="product_id" id="product_id" class="form-control"
+                                        value="{{ old('product_id', $product->id) }}" readonly>
+                                    @error('product_id')
+                                        <span class="text-danger">{{ $message }}</span>
+                                    @enderror
+                                </div>
                                 <div class="mb-4">
                                     <label for="name" class="form-label">Name:</label>
                                     <input type="text" name="name" id="name" class="form-control"
@@ -48,52 +58,50 @@
                                         <span class="text-danger">{{ $message }}</span>
                                     @enderror
                                 </div>
+                                <h3 style="cursor: pointer;" id="toggleInventory">Inventory Details</h3>
+                                <hr>
 
-                                <div class="mb-4">
-                                    <h3>Inventory</h3>
-                                    <label for="product_id" class="form-label">Product ID:</label>
-                                    <input type="text" name="product_id" id="product_id" class="form-control"
-                                        value="{{ old('product_id', $product->id) }}" readonly>
-                                    @error('product_id')
-                                        <span class="text-danger">{{ $message }}</span>
-                                    @enderror
+                                <div id="inventoryDetails" style="display: none;">
+                                    <hr>
+                                    <table class="table table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th>Size</th>
+                                                <th>Color</th>
+                                                <th style="width: 120px;">Quantity</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach ($sizes as $size)
+                                                @foreach ($colors as $color)
+                                                    @php
+                                                        $inventory = $inventories
+                                                            ->where('size_id', $size->id)
+                                                            ->where('color_id', $color->id)
+                                                            ->first();
+                                                    @endphp
+                                                    <tr>
+                                                        <td>{{ $size->name }}</td>
+                                                        <td>{{ $color->name }}</td>
+                                                        <td style="width: 120px;">
+                                                            <input type="number"
+                                                                name="inventories[{{ $size->id }}_{{ $color->id }}][quantity]"
+                                                                class="form-control"
+                                                                value="{{ old('inventories.' . $size->id . '_' . $color->id . '.quantity', $inventory ? $inventory->quantity : 0) }}">
+                                                            <input type="hidden"
+                                                                name="inventories[{{ $size->id }}_{{ $color->id }}][size_id]"
+                                                                value="{{ $size->id }}">
+                                                            <input type="hidden"
+                                                                name="inventories[{{ $size->id }}_{{ $color->id }}][color_id]"
+                                                                value="{{ $color->id }}">
+                                                        </td>
+                                                    </tr>
+                                                @endforeach
+                                            @endforeach
+                                        </tbody>
+                                    </table>
                                 </div>
-                                <div class="mb-4">
-                                    <label for="size" class="form-label">Size:</label>
-                                    <select name="size" id="size" class="form-control">
-                                        <option value="">Select Size</option>
-                                        @foreach ($sizes as $size)
-                                            <option value="{{ $size->id }}">
-                                                {{ $size->name }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                    @error('size')
-                                        <span class="text-danger">{{ $message }}</span>
-                                    @enderror
-                                </div>
-                                <div class="mb-4">
-                                    <label for="color" class="form-label">Color:</label>
-                                    <select name="color" id="color" class="form-control">
-                                        <option value="">Select Color</option>
-                                        @foreach ($colors as $color)
-                                            <option value="{{ $color->id }}">
-                                                {{ $color->name }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                    @error('color')
-                                        <span class="text-danger">{{ $message }}</span>
-                                    @enderror
-                                </div>
-                                <div class="mb-4" id="quantity-container" style="display: none;">
-                                    <label for="quantity" class="form-label">Quantity:</label>
-                                    <input type="number" name="quantity" id="quantity" class="form-control"
-                                        value="{{ old('quantity') }}">
-                                    @error('quantity')
-                                        <span class="text-danger">{{ $message }}</span>
-                                    @enderror
-                                </div>
+
                                 <button type="submit" class="btn btn-danger">Update</button>
                             </form>
                         </div>
@@ -102,69 +110,17 @@
             </div>
         </div>
     </div>
-@stop
 
+
+@stop
 
 @section('js')
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const sizeSelect = document.getElementById('size');
-            const colorSelect = document.getElementById('color');
-            const productId = document.getElementById('product_id').value;
-            const quantityContainer = document.getElementById('quantity-container');
-            const quantityInput = document.getElementById('quantity');
-
-            function checkSelections() {
-                const sizeId = sizeSelect.value;
-                const colorId = colorSelect.value;
-
-                if (sizeId && colorId) {
-                    fetchQuantity(sizeId, colorId, productId);
-                } else {
-                    quantityContainer.style.display = 'none';
-                }
-            }
-
-            function fetchQuantity(sizeId, colorId, productId) {
-                fetch(
-                        `{{ route('admin.product.inventory.quantity') }}?size_id=${sizeId}&color_id=${colorId}&product_id=${productId}`
-                    )
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            quantityInput.value = data.quantity;
-                            quantityContainer.style.display = 'block';
-                        } else {
-                            quantityInput.value = 0;
-                            quantityContainer.style.display = 'block';
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error fetching quantity:', error);
-                        quantityContainer.style.display = 'none';
-                    });
-            }
-
-            sizeSelect.addEventListener('change', checkSelections);
-            colorSelect.addEventListener('change', checkSelections);
-        });
-
-        document.addEventListener('DOMContentLoaded', function() {
-            const sizeSelect = document.getElementById('size');
-            const colorSelect = document.getElementById('color');
-            const quantityContainer = document.getElementById('quantity-container');
-
-            function checkSelections() {
-                if (sizeSelect.value && colorSelect.value) {
-                    quantityContainer.style.display = 'block';
-                } else {
-                    quantityContainer.style.display = 'none';
-                }
-            }
-
-            sizeSelect.addEventListener('change', checkSelections);
-            colorSelect.addEventListener('change', checkSelections);
+        $(document).ready(function() {
+            $('#toggleInventory').click(function() {
+                $('#inventoryDetails').toggle();
+            });
         });
     </script>
 @stop

@@ -38,3 +38,38 @@ $(document).ready(function () {
         });
     });
 });
+
+document.addEventListener("DOMContentLoaded", function () {
+    const sizeInputs = document.querySelectorAll(".size-option-input");
+    const colorInputs = document.querySelectorAll(".color-option-input");
+
+    sizeInputs.forEach((input) => {
+        input.addEventListener("change", function () {
+            resetSizeOptions();
+            if (this.checked) {
+                this.nextElementSibling.classList.add("bg-black", "text-white");
+            }
+        });
+    });
+
+    colorInputs.forEach((input) => {
+        input.addEventListener("change", function () {
+            resetColorOptions();
+            if (this.checked) {
+                this.nextElementSibling.classList.add("bg-black", "text-white");
+            }
+        });
+    });
+
+    function resetSizeOptions() {
+        document.querySelectorAll(".size-option").forEach((option) => {
+            option.classList.remove("bg-black", "text-white");
+        });
+    }
+
+    function resetColorOptions() {
+        document.querySelectorAll(".color-option").forEach((option) => {
+            option.classList.remove("bg-black", "text-white");
+        });
+    }
+});

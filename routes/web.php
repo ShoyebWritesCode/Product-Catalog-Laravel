@@ -77,6 +77,7 @@ Route::middleware('auth')->group(function () {
     Route::get('category/products/{category}/filter', [CustomerProductController::class, 'categoryProducts'])->name('customer.category.products');
     Route::get('category/products/{category}/sort', [CustomerProductController::class, 'sortProducts'])->name('customer.products.sort');
     Route::post('orders/save/quantities', [OrderController::class, 'saveQuantities'])->name('customer.order.saveQuantities');
+    Route::get('product/inventory/quantity', [InventoryController::class, 'getInventoryQuantity'])->name('product.inventory.quantity');
 });
 
 Route::middleware(['auth:admin'])->group(function () {
@@ -126,7 +127,6 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::post('admin/admin/colors/create', [InventoryController::class, 'colorCreate'])->name('admin.color.create');
     Route::get('admin/admin/sizes', [InventoryController::class, 'sizesIndex'])->name('admin.sizes');
     Route::post('admin/admin/sizes/create', [InventoryController::class, 'sizeCreate'])->name('admin.size.create');
-    Route::get('admin/admin/product/inventory/quantity', [InventoryController::class, 'getInventoryQuantity'])->name('admin.product.inventory.quantity');
 });
 
 require __DIR__ . '/auth.php';
