@@ -39,6 +39,7 @@
                                     <th class="px-4 py-2 border text-center">Color</th>
                                     <th class="px-4 py-2 border text-center">Price</th>
                                     <th class="px-4 py-2 border text-center">Quantity</th>
+                                    <th class="px-4 py-2 border text-center">Total</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -57,6 +58,8 @@
                                         <td class="border px-4 py-2 text-center text-red-600">
                                             {{ $item->product_price }} BDT</td>
                                         <td class="border px-4 py-2 text-center">{{ $item->quantity }}</td>
+                                        <td class="border px-4 py-2 text-center">
+                                            {{ $item->quantity * $item->product_price }}</td>
                                     </tr>
                                 @endforeach
                             </tbody>

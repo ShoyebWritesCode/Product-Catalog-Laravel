@@ -57,7 +57,7 @@
                                             {{ $item->product_price }} BDT</td>
                                         <td class="border px-2 py-1 text-center">
                                             <input type="number" class="quantity-input" name="quantity[]"
-                                                value="1" min="1" max="{{ $item->product->inventory }}">
+                                                value="1" min="1" max="5">
                                         </td>
 
 

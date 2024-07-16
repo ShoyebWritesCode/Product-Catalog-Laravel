@@ -55,6 +55,9 @@ class OrderController extends Controller
     public function index()
     {
         $data = $this->getOrderData();
+        $data['order']->total = 0;
+        $data['order']->save();
+
 
         return view('customer.order.home', $data);
     }

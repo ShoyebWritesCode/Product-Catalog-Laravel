@@ -16,10 +16,6 @@ class OrderItems extends Model
     {
         return $this->belongsTo(Order::class, 'order_id');
     }
-    public function product()
-    {
-        return $this->belongsTo(Product::class, 'product_id');
-    }
 
     public function topSellingProductsQuantity()
     {
@@ -75,6 +71,11 @@ class OrderItems extends Model
             ->orderBy('total_price', 'desc')
             ->take(5)
             ->get();
+    }
+
+    public function product()
+    {
+        return $this->belongsTo(Product::class, 'product_id');
     }
 
     public function size()
