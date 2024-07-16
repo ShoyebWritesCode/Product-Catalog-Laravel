@@ -41,10 +41,13 @@
                             <td>{{ $product->id }}</td>
                             <td>{{ $product->name }}</td>
                             <td>{{ $product->price }}</td>
-                            <td
-                                class="{{ $product->inventory < 10 ? 'text-danger' : ($product->inventory < 50 ? 'text-warning' : 'text-success') }}">
-                                {{ $product->inventory }}
+                            <td>
+                                <a href="{{ route('admin.product.inventory', ['product' => $product->id]) }}"
+                                    class="{{ $product->inventory < 10 ? 'text-danger' : ($product->inventory < 50 ? 'text-warning' : 'text-success') }}">
+                                    {{ $product->inventory }}
+                                </a>
                             </td>
+
                             <td class="d-flex align-items-center">
 
                                 <a href="#" class="btn btn-sm btn-success mr-2" data-toggle="modal"
