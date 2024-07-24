@@ -99,7 +99,7 @@ class OrderController extends Controller
 
         $data = $this->getOrderData();
         $addr = $data['order']->city;
-        $shippingCost = 0;
+        // $shippingCost = 0;
 
         if ($addr === "Dhaka") {
             $shippingCost = 50;
@@ -107,8 +107,8 @@ class OrderController extends Controller
             $shippingCost = 100;
         }
 
-        $data['order']->total += $shippingCost;
-        $data['order']->save();
+        // $data['order']->total += $shippingCost;
+        // $data['order']->save();
 
         // return response()->json($data);
 
@@ -311,6 +311,18 @@ class OrderController extends Controller
         $order->billing_address = $request->address;
         $order->bolling_phone = $request->phone;
         $order->save();
+        $data = $this->getOrderData();
+        $addr = $data['order']->city;
+        $shippingCost = 0;
+
+        if ($addr === "Dhaka") {
+            $shippingCost = 50;
+        } else {
+            $shippingCost = 100;
+        }
+
+        $data['order']->total += $shippingCost;
+        $data['order']->save();
         session()->flash('success', 'Shipping and Billing details saved successfully');
         return redirect()->route('customer.order.checkoutpage')->with('success', 'Shipping and Billing details saved successfully');
     }

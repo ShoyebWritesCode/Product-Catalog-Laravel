@@ -91,7 +91,7 @@
 
                     </div>
 
-                    @if ($product->inventory > 0)
+                    @if ($product->totalQuantity() > 0)
                         <div class="flex flex-col mt-4">
                             <form id="addToCartForm" action="{{ route('customer.order.add', $product->id) }}"
                                 method="POST" class="w-full ">

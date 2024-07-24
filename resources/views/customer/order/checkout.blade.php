@@ -64,11 +64,27 @@
                                 @endforeach
                             </tbody>
                         </table>
-                        <div class="mt-4 flex justify-between items-center">
-                            <span class="text-lg font-bold">Shipping Cost: {{ $shippingCost }} BDT</span>
+                        <div class="mt-1 flex justify-between items-center">
+                            <span class="text-lg font-bold opacity-0"></span>
                             <br>
                             <br>
-                            <span class="text-lg font-bold">Total: {{ $order->total }} BDT</span>
+                            <span class="text-lg font-bold text-gray-300">Product Total:
+                                {{ $order->total - $shippingCost }}
+                                BDT</span>
+                        </div>
+                        <div class="mt-1 flex justify-between items-center">
+                            <span class="text-lg font-bold opacity-0"></span>
+                            <br>
+                            <br>
+                            <span class="text-lg font-bold text-red-300">Shipping Cost: {{ $shippingCost }}
+                                BDT</span>
+                        </div>
+                        <div class="mt-1 flex justify-between items-center">
+                            <span class="text-lg font-bold opacity-0"></span>
+                            <br>
+                            <br>
+                            <span class="text-lg font-bold text-green-300">Grand Total: {{ $order->total }}
+                                BDT</span>
                         </div>
                     </div>
                     <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6 grid grid-cols-2 gap-6">
