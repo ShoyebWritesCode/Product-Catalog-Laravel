@@ -1,6 +1,6 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="flex justify-between items-center">
+        {{-- <div class="flex justify-between items-center">
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
                 <h1 class="text-2xl font-bold mb-2">{{ 'My Order' }}</h1>
             </h2>
@@ -16,7 +16,8 @@
                     {{ $numberOfItems }}
                 </span>
             </a>
-        </div>
+        </div> --}}
+        @include('partials.nav')
     </x-slot>
 
     <div class="py-12">

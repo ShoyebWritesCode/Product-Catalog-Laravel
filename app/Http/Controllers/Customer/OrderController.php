@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Customer;
 
 use App\Http\Controllers\Controller;
 use App\Models\Product;
+use App\Models\Catagory;
 use App\Models\Admin;
 use App\Models\OrderItems;
 use App\Models\Order;
@@ -58,8 +59,18 @@ class OrderController extends Controller
         $data['order']->total = 0;
         $data['order']->save();
 
+        $allParentCategories = [];
 
-        return view('customer.order.home', $data);
+
+        $categories = Catagory::all()->keyBy('id');
+        $allParentCategories = Catagory::where('parent_id', null)->get();
+        foreach ($allParentCategories as $parentCategory) {
+            $allChildCategoriesOfParent[$parentCategory->id] = Catagory::where('parent_id', $parentCategory->id)->get();
+        }
+        $unreadNotifications = auth()->user()->unreadNotifications;
+
+
+        return view('customer.order.home', $data, compact('allParentCategories', 'allChildCategoriesOfParent', 'unreadNotifications'));
     }
 
     public function popup()
@@ -99,7 +110,7 @@ class OrderController extends Controller
 
         $data = $this->getOrderData();
         $addr = $data['order']->city;
-        // $shippingCost = 0;
+        $shippingCost = 0;
 
         if ($addr === "Dhaka") {
             $shippingCost = 50;
@@ -107,12 +118,21 @@ class OrderController extends Controller
             $shippingCost = 100;
         }
 
-        // $data['order']->total += $shippingCost;
-        // $data['order']->save();
+        $data['order']->total += $shippingCost;
+        $data['order']->save();
 
         // return response()->json($data);
+        $allParentCategories = [];
 
-        return view('customer.order.checkout', $data, compact('shippingCost'));
+
+        $categories = Catagory::all()->keyBy('id');
+        $allParentCategories = Catagory::where('parent_id', null)->get();
+        foreach ($allParentCategories as $parentCategory) {
+            $allChildCategoriesOfParent[$parentCategory->id] = Catagory::where('parent_id', $parentCategory->id)->get();
+        }
+        $unreadNotifications = auth()->user()->unreadNotifications;
+
+        return view('customer.order.checkout', $data, compact('shippingCost', 'allParentCategories', 'allChildCategoriesOfParent', 'unreadNotifications'));
     }
 
 
@@ -231,13 +251,13 @@ class OrderController extends Controller
             'link' => $orderDetailLink
         ];
 
-        MailHelper::sendTemplateMail($orderCustomer, $email, $replacements);
+        // MailHelper::sendTemplateMail($orderCustomer, $email, $replacements);
 
         $admins = Admin::all();
         Notification::send($admins, new OrderPlaced($order));
 
         session()->flash('success', 'Order placed successfully. Check your email for confirmation');
-        return redirect()->route('customer.order.home')->with('success', 'Order placed successfully. Check your email for confirmation');
+        return redirect()->route('customer.product.home')->with('success', 'Order placed successfully. Check your email for confirmation');
     }
 
     public function reorder(Order $order)
@@ -311,18 +331,7 @@ class OrderController extends Controller
         $order->billing_address = $request->address;
         $order->bolling_phone = $request->phone;
         $order->save();
-        $data = $this->getOrderData();
-        $addr = $data['order']->city;
-        $shippingCost = 0;
 
-        if ($addr === "Dhaka") {
-            $shippingCost = 50;
-        } else {
-            $shippingCost = 100;
-        }
-
-        $data['order']->total += $shippingCost;
-        $data['order']->save();
         session()->flash('success', 'Shipping and Billing details saved successfully');
         return redirect()->route('customer.order.checkoutpage')->with('success', 'Shipping and Billing details saved successfully');
     }
@@ -342,8 +351,17 @@ class OrderController extends Controller
         $refundorders = Order::where('user_id', $user->id)
             ->whereNotNull('refund')
             ->get();
+        $allParentCategories = [];
 
-        return view('customer.order.history', compact('pendingorders', 'completedorders', 'refundorders'));
+
+        $categories = Catagory::all()->keyBy('id');
+        $allParentCategories = Catagory::where('parent_id', null)->get();
+        foreach ($allParentCategories as $parentCategory) {
+            $allChildCategoriesOfParent[$parentCategory->id] = Catagory::where('parent_id', $parentCategory->id)->get();
+        }
+        $unreadNotifications = auth()->user()->unreadNotifications;
+
+        return view('customer.order.history', compact('pendingorders', 'completedorders', 'refundorders', 'allParentCategories', 'allChildCategoriesOfParent', 'unreadNotifications'));
     }
 
     public function orderdetail(Order $order)

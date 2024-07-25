@@ -4,18 +4,31 @@
     @vite(['resources/scss/product.scss'])
     <x-slot name="header">
         <div class="flex justify-between items-center">
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                {{ __('List Products') }}
-            </h2>
+            <a href="{{ route('customer.product.home') }}" class="no-underline">
+                <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+                    {{ __('Product Catalogue') }}
+                </h2>
+            </a>
             <nav class="flex space-x-8">
                 @foreach ($allParentCategories as $category)
                     <div class="relative group">
-                        <a href="{{ route('customer.category.products', $category->id) }}"
+                        {{-- <a href="{{ route('customer.category.products', $category->id) }}"
                             class="text-gray-800 hover:text-gray-600 no-underline font-bold">
                             {{ $category->name }}
-                        </a>
-                        <div class="absolute left-0 hidden group-hover:block bg-white shadow-lg rounded w-56">
-                            <ul class="grid grid-cols-2 gap-2 py-2">
+                        </a> --}}
+                        <ul class="nav-item dropdown">
+                            <a href="{{ route('customer.category.products', $category->id) }}"
+                                class="text-gray-800 hover:text-gray-600 no-underline font-bold">
+                                {{ $category->name }}
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="#"> Submenu item 1</a></li>
+                                <li><a class="dropdown-item" href="#"> Submenu item 2 </a></li>
+                                <li><a class="dropdown-item" href="#"> Submenu item 3 </a></li>
+                            </ul>
+                        </ul>
+                        <div class="absolute left-0 hidden group-hover:block bg-white shadow-lg rounded w-32">
+                            <ul class="grid grid-cols-1 gap-2 py-2">
                                 @foreach ($allChildCategoriesOfParent[$category->id] as $childCategory)
                                     <li>
                                         <a href="#"
@@ -138,7 +151,8 @@
                                                 <li>
                                                     <div class="flex items-center mb-2">
                                                         <input type="radio" id="color_{{ $color }}"
-                                                            name="color" value="{{ $color }}" class="mr-2">
+                                                            name="color" value="{{ $color }}"
+                                                            class="mr-2">
                                                         <div
                                                             class="w-6 h-6 bg-{{ $color }}-500 rounded-full mr-2 cursor-pointer">
                                                         </div>

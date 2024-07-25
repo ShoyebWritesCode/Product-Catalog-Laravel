@@ -1,7 +1,7 @@
 <x-app-layout>
     @vite(['resources/scss/show.scss'])
     <x-slot name="header">
-        <div class="flex justify-between items-center">
+        {{-- <div class="flex justify-between items-center">
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
                 <h1 class="text-2xl font-bold mb-2">{{ $product->name }}</h1>
             </h2>
@@ -18,7 +18,9 @@
             </a>
 
 
-        </div>
+        </div> --}}
+
+        @include('partials.nav')
     </x-slot>
 
     <div id="successMessage" class="alert alert-success mb-4" role="alert" style="display: none;"></div>
@@ -280,6 +282,55 @@
                             console.error('Error fetching inventory quantity:', error);
                         });
                 }
+            }
+        });
+
+
+        document.getElementById('notificationDropdown').addEventListener('click', function(event) {
+            event.preventDefault();
+            document.getElementById('notificationDropdownContent').classList.toggle('hidden');
+        });
+
+        document.addEventListener('click', function(event) {
+            const dropdown = document.getElementById('notificationDropdownContent');
+            if (!event.target.closest('#notificationDropdown') && !event.target.closest(
+                    '#notificationDropdownContent')) {
+                dropdown.classList.add('hidden');
+            }
+        });
+
+
+
+
+
+
+
+
+
+        document.getElementById('cartLink').addEventListener('click', function(event) {
+            event.preventDefault();
+
+            fetch('{{ route('customer.order.popup') }}')
+                .then(response => response.text())
+                .then(htmlContent => {
+                    document.getElementById('orderPopup').innerHTML = htmlContent;
+                })
+                .catch(error => {
+                    console.error('Error fetching content:', error);
+                });
+
+            document.getElementById('orderPopup').classList.remove('hidden');
+        });
+
+        document.addEventListener('click', function(event) {
+            if (event.target.id === 'orderPopup') {
+                document.getElementById('orderPopup').classList.add('hidden');
+            }
+        });
+
+        document.addEventListener('click', function(event) {
+            if (event.target.id === 'orderPopup') {
+                document.getElementById('orderPopup').classList.add('hidden');
             }
         });
     </script>

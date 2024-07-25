@@ -60,6 +60,51 @@ class CustomerProductController extends Controller
         return view('customer.product.home', compact('initialProducts', 'namesubcategories', 'nameparentcategories', 'averageRatings', 'unreadNotifications', 'discountPercent', 'allParentCategories', 'allChildCategoriesOfParent'));
     }
 
+    public function navindex()
+    {
+        // $products = Product::paginate(10);
+        $initialProducts = Product::take(10)->get();
+        $subcategories = [];
+        $namesubcategories = [];
+        $nameparentcategories = [];
+        $averageRatings = [];
+        $discountPercent = [];
+        $allParentCategories = [];
+        $allChildCategoriesOfParent = [];
+
+
+        $categories = Catagory::all()->keyBy('id');
+        $allParentCategories = Catagory::where('parent_id', null)->get();
+        foreach ($allParentCategories as $parentCategory) {
+            $allChildCategoriesOfParent[$parentCategory->id] = Catagory::where('parent_id', $parentCategory->id)->get();
+        }
+
+        foreach ($initialProducts as $product) {
+            $subcategories[$product->id] = Mapping::where('product_id', $product->id)->pluck('catagory_id')->toArray();
+
+            $namesubcategories[$product->id] = array_map(function ($catagory_id) use ($categories) {
+                return $categories[$catagory_id]->name ?? 'Unknown';
+            }, $subcategories[$product->id]);
+
+            $nameparentcategories[$product->id] = array_unique(array_map(function ($catagory_id) use ($categories) {
+                return $categories[$catagory_id]->parent->name ?? 'Unknown';
+            }, $subcategories[$product->id]));
+
+            $averageRatings[$product->id] = Review::where('product_id', $product->id)->avg('rating');
+
+            if ($product->prev_price && $product->price < $product->prev_price) {
+                $discountPercent[$product->id] = (($product->prev_price - $product->price) / $product->prev_price) * 100;
+                $discountPercent[$product->id] = round($discountPercent[$product->id], 2);
+            } else {
+                $discountPercent[$product->id] = null;
+            }
+        }
+
+        $unreadNotifications = auth()->user()->unreadNotifications;
+
+        return view('partials.nav', compact('initialProducts', 'namesubcategories', 'nameparentcategories', 'averageRatings', 'unreadNotifications', 'discountPercent', 'allParentCategories', 'allChildCategoriesOfParent'));
+    }
+
     public function fetchProducts(Request $request)
     {
         $page = $request->get('page', 1);
@@ -104,9 +149,14 @@ class CustomerProductController extends Controller
         $averageRatings = [];
         $colors = Color::all();
         $sizes = Size::all();
+        $allParentCategories = [];
 
 
         $categories = Catagory::all()->keyBy('id');
+        $allParentCategories = Catagory::where('parent_id', null)->get();
+        foreach ($allParentCategories as $parentCategory) {
+            $allChildCategoriesOfParent[$parentCategory->id] = Catagory::where('parent_id', $parentCategory->id)->get();
+        }
 
         $subcategories[$product->id] = Mapping::where('product_id', $product->id)->pluck('catagory_id')->toArray();
 
@@ -120,8 +170,9 @@ class CustomerProductController extends Controller
 
         $reviews = Review::where('product_id', $product->id)->get();
         $averageRatings[$product->id] = Review::where('product_id', $product->id)->avg('rating');
+        $unreadNotifications = auth()->user()->unreadNotifications;
 
-        return view('customer.product.show', compact('product', 'namesubcategories', 'nameparentcategories', 'reviews', 'averageRatings', 'colors', 'sizes'));
+        return view('customer.product.show', compact('product', 'namesubcategories', 'nameparentcategories', 'reviews', 'averageRatings', 'colors', 'sizes', 'allParentCategories', 'allChildCategoriesOfParent', 'unreadNotifications'));
     }
 
     public function search(Request $request)
