@@ -74,6 +74,8 @@ class AdminController extends Controller
         $product->description = $request->description;
         $product->prev_price = $product->price;
         $product->price = $request->price;
+        $product->featured = $request->has('featured') ? 1 : 0;
+        $product->new = $request->has('new') ? 1 : 0;
         $product->save();
 
         foreach ($request->inventories as $inventoryData) {

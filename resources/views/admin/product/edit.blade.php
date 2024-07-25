@@ -34,6 +34,19 @@
                                         <span class="text-danger">{{ $message }}</span>
                                     @enderror
                                 </div>
+                                <!-- Featured Checkbox -->
+                                <div class="mb-4 form-check">
+                                    <input type="checkbox" name="featured" id="featured" class="form-check-input"
+                                        value="1" {{ old('featured', $product->featured) ? 'checked' : '' }}>
+                                    <label for="featured" class="form-check-label">Featured</label>
+                                </div>
+
+                                <!-- New Checkbox -->
+                                <div class="mb-4 form-check">
+                                    <input type="checkbox" name="new" id="new" class="form-check-input"
+                                        value="1" {{ old('new', $product->new) ? 'checked' : '' }}>
+                                    <label for="new" class="form-check-label">New</label>
+                                </div>
                                 <div class="mb-4">
                                     <label for="name" class="form-label">Name:</label>
                                     <input type="text" name="name" id="name" class="form-control"
