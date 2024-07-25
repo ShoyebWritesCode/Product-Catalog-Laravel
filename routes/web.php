@@ -53,6 +53,8 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/products', [CustomerProductController::class, 'index'])->name('customer.product.home');
     Route::get('/products/all', [CustomerProductController::class, 'allProducts'])->name('customer.product.all');
+    Route::get('/products/featured', [CustomerProductController::class, 'featuredProducts'])->name('customer.product.featured');
+    Route::get('/products/new', [CustomerProductController::class, 'newProducts'])->name('customer.product.new');
     Route::get('/navbar', [CustomerProductController::class, 'navindex'])->name('customer.navbar');
     Route::post('/products/notifications/mark-as-read/{id}', [NotificationController::class, 'markAsReadCus'])->name('customer.notifications.markAsRead');
     Route::get('/products/fetch', [CustomerProductController::class, 'fetchProducts'])->name('customer.product.fetch');

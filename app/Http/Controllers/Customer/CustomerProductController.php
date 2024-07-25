@@ -19,7 +19,7 @@ class CustomerProductController extends Controller
     {
         $initialProducts = Product::take(10)->get();
         $featuredProducts = Product::where('featured', true)->get();
-        $newProducts = $initialProducts->random(10);
+        $newProducts = Product::where('new', true)->get();
         $discountedProducts = $initialProducts->random(10);
         $subcategories = [];
         $namesubcategories = [];
@@ -65,6 +65,18 @@ class CustomerProductController extends Controller
     {
         $data = $this->getProductData();
         return view('customer.product.home', $data);
+    }
+
+    public function featuredProducts()
+    {
+        $data = $this->getProductData();
+        return view('customer.product.featuredproducts', $data);
+    }
+
+    public function newProducts()
+    {
+        $data = $this->getProductData();
+        return view('customer.product.newproducts', $data);
     }
 
     public function allProducts()

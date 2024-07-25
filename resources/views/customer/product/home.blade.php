@@ -17,7 +17,7 @@
                     </div>
                     @include('partials.featured')
                     <div class="flex justify-center mt-4">
-                        <a href="{{ route('customer.product.all') }}">
+                        <a href="{{ route('customer.product.featured') }}">
                             <button
                                 class="text-white bg-blue-500 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 rounded-md px-4 py-2 transition duration-150 ease-in-out">
                                 View All
@@ -26,9 +26,28 @@
                     </div>
                 </div>
             </div>
-
         </div>
+    </div>
 
+    <div class="py-3">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                <div class="p-6 text-gray-900">
+                    <div class="flex items-center justify-between mb-4">
+                        <h1 class="text-2xl font-semibold">New Products</h1>
+                    </div>
+                    @include('partials.featured', ['featuredProducts' => $newProducts])
+                    <div class="flex justify-center mt-4">
+                        <a href="{{ route('customer.product.new') }}">
+                            <button
+                                class="text-white bg-blue-500 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 rounded-md px-4 py-2 transition duration-150 ease-in-out">
+                                View All
+                            </button>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <div class="py-3">

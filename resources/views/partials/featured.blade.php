@@ -6,7 +6,7 @@
 @endif
 
 @if ($featuredProducts->isEmpty())
-    <p class="text-center text-gray-500">No featured products available.</p>
+    <p class="text-center text-gray-500">No products available in this section.</p>
 @else
     <div class="flex flex-col mb-8">
         <div class="flex items-center justify-between mb-2">
