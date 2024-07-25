@@ -15,10 +15,12 @@ use Illuminate\Pagination\LengthAwarePaginator;
 
 class CustomerProductController extends Controller
 {
-    public function index()
+    public function getProductData()
     {
-        // $products = Product::paginate(10);
         $initialProducts = Product::take(10)->get();
+        $featuredProducts = Product::where('featured', true)->get();
+        $newProducts = $initialProducts->random(10);
+        $discountedProducts = $initialProducts->random(10);
         $subcategories = [];
         $namesubcategories = [];
         $nameparentcategories = [];
@@ -26,7 +28,6 @@ class CustomerProductController extends Controller
         $discountPercent = [];
         $allParentCategories = [];
         $allChildCategoriesOfParent = [];
-
 
         $categories = Catagory::all()->keyBy('id');
         $allParentCategories = Catagory::where('parent_id', null)->get();
@@ -57,7 +58,19 @@ class CustomerProductController extends Controller
 
         $unreadNotifications = auth()->user()->unreadNotifications;
 
-        return view('customer.product.home', compact('initialProducts', 'namesubcategories', 'nameparentcategories', 'averageRatings', 'unreadNotifications', 'discountPercent', 'allParentCategories', 'allChildCategoriesOfParent'));
+        return compact('initialProducts', 'namesubcategories', 'nameparentcategories', 'averageRatings', 'unreadNotifications', 'discountPercent', 'allParentCategories', 'allChildCategoriesOfParent', 'featuredProducts', 'newProducts', 'discountedProducts');
+    }
+
+    public function index()
+    {
+        $data = $this->getProductData();
+        return view('customer.product.home', $data);
+    }
+
+    public function allProducts()
+    {
+        $data = $this->getProductData();
+        return view('customer.product.allproducts', $data);
     }
 
     public function navindex()
