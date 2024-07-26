@@ -68,51 +68,6 @@ class AdminController extends Controller
 
         return view('admin.product.edit', compact('product', 'colors', 'sizes', 'combinations', 'inventories'));
     }
-    public function updateProduct(Request $request, $id)
-    {
-        $request->validate([
-            'image.*' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-        ]);
-        $product = Product::findOrFail($id);
-        $product->name = $request->name;
-        $product->description = $request->description;
-        $product->prev_price = $product->price;
-        $product->price = $request->price;
-        $product->featured = $request->has('featured') ? 1 : 0;
-        $product->new = $request->has('new') ? 1 : 0;
-        $product->save();
-
-
-        $destinationPath = config('utility.product_image_path');
-        $images = $request->file('images');
-        if ($images && is_array($images)) {
-            foreach ($images as $key => $image) {
-                if ($image) {
-                    $imageName = time() . '_' . $key . '.' . $image->getClientOriginalExtension();
-                    $image->storeAs($destinationPath, $imageName);
-
-                    // Save the image details in the images table
-                    $imageRecord = new Images();
-                    $imageRecord->product_id = $product->id;
-                    $imageRecord->path = $imageName;
-                    $imageRecord->save();
-                }
-            }
-        }
-
-        foreach ($request->inventories as $inventoryData) {
-            Inventory::updateOrCreate(
-                [
-                    'product_id' => $product->id,
-                    'size_id' => $inventoryData['size_id'],
-                    'color_id' => $inventoryData['color_id'],
-                ],
-                ['quantity' => $inventoryData['quantity']]
-            );
-        }
-
-        return redirect()->back()->with('success', 'Product updated successfully', 2000);
-    }
 
     public function deleteProduct($id)
     {

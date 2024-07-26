@@ -25,7 +25,7 @@
                                     {{ session('error') }}
                                 </div>
                             @endif
-                            <h3>Product Details</h3>
+                            <h3 class="bg-gray rounded p-2">Product Details</h3>
                             <hr>
                             <form action="{{ route('admin.product.update', $product->id) }}" method="POST"
                                 enctype="multipart/form-data">
@@ -82,14 +82,15 @@
                                 <hr>
                                 <div class="row">
                                     @foreach ($product->images as $image)
-                                        <div class="col-md-4 mb-3 d-flex justify-content-center">
+                                        <div class="col-md-1 mb-3 d-flex justify-content-center">
                                             <div class="image-container">
-                                                <img src="{{ asset('storage/images/' . $image->path) }}" class="img-fluid "
-                                                    alt="{{ $product->name }}">
+                                                <img src="{{ asset('storage/images/' . $image->path) }}"
+                                                    class="img-fluid w-48 h-48" alt="{{ $product->name }}">
                                             </div>
                                         </div>
                                     @endforeach
                                 </div>
+
 
                                 <div class="mb-4 px-2">
                                     <label for="image" class="block text-sm font-medium text-gray-700">Add More
@@ -99,24 +100,29 @@
                                             class="mt-1 p-2 w-full border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-indigo-200 focus:border-indigo-500"
                                             accept="image/*" multiple>
                                     </div>
-
                                 </div>
 
 
-                                <h3 style="cursor: pointer;" id="toggleInventory">Inventory Details</h3>
+                                <h3 style="cursor: pointer;" id="toggleInventory"
+                                    class="flex items-center justify-between bg-gray rounded p-2 cursor-pointer w-1/4">
+                                    <span>Inventory Details</span>
+                                    <i class="fas fa-chevron-down"></i>
+                                </h3>
+
                                 <hr>
 
                                 <div id="inventoryDetails" style="display: none;">
-                                    <hr>
+
                                     <table class="table table-bordered">
                                         <thead>
                                             <tr>
-                                                <th>Size</th>
-                                                <th>Color</th>
-                                                <th style="width: 120px;">Quantity</th>
+                                                <th class="py-2">Size</th>
+                                                <th class="py-2">Color</th>
+                                                <th class="py-2" style="width: 120px;">Quantity</th>
+
                                             </tr>
                                         </thead>
-                                        <tbody>
+                                        <tbody class="divide-y divide-transparent">
                                             @foreach ($sizes as $size)
                                                 @foreach ($colors as $color)
                                                     @php
@@ -125,10 +131,10 @@
                                                             ->where('color_id', $color->id)
                                                             ->first();
                                                     @endphp
-                                                    <tr>
-                                                        <td>{{ $size->name }}</td>
-                                                        <td>{{ $color->name }}</td>
-                                                        <td style="width: 120px;">
+                                                    <tr class="@if ($loop->index % 2 == 0) bg-red-500 @endif">
+                                                        <td class="py-1">{{ $size->name }}</td>
+                                                        <td class="py-1">{{ $color->name }}</td>
+                                                        <td class="py-1" style="width: 120px; ">
                                                             <input type="number"
                                                                 name="inventories[{{ $size->id }}_{{ $color->id }}][quantity]"
                                                                 class="form-control"
@@ -144,6 +150,9 @@
                                                 @endforeach
                                             @endforeach
                                         </tbody>
+
+
+
                                     </table>
                                 </div>
 
@@ -164,6 +173,7 @@
             $('#toggleInventory').click(function() {
                 $('#inventoryDetails').toggle();
             });
+            $('#successAlert').fadeOut(2000);
         });
 
         document.getElementById('addMore').addEventListener('click', function() {
@@ -172,32 +182,8 @@
                 '<input type="file" name="images[]" class="mt-1 p-2 w-full border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-indigo-200 focus:border-indigo-500">';
             document.getElementById('imageInputs').appendChild(div);
         });
+        // $(document).ready(function() {
 
-
-        function openModal(btn) {
-            var target = $(btn).data('target');
-            $(target).modal('show');
-        }
-        $(document).ready(function() {
-            $('#successAlert').fadeOut(2000);
-        });
+        // });
     </script>
 @stop
-
-{{-- @section('js')
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>
-        $(document).ready(function() {
-            let imageCounter = 0;
-
-            $('#addMoreImages').click(function() {
-                imageCounter++;
-                $('#additionalImageInputs').append(
-                    `<div class="mt-2">
-                        <input type="file" name="images[]" class="form-control">
-                    </div>`
-                );
-            });
-        });
-    </script>
-@stop --}}
