@@ -8,7 +8,7 @@
     </x-slot>
 
     <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+        <div class="w-3/4 max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
                     <hr>
@@ -79,7 +79,7 @@
                             <div id="imageInputs">
                                 <input type="file" name="images[]" id="image"
                                     class="mt-1 p-2 w-full border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-indigo-200 focus:border-indigo-500">
-                                @error('image')
+                                @error('images.*')
                                     <span class="text-red-500">{{ $message }}</span>
                                 @enderror
                             </div>
@@ -87,6 +87,7 @@
                                 class="mt-2 px-3 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600">
                                 <i class="fas fa-plus"></i></button>
                         </div>
+
                         <button type="submit"
                             class="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-indigo-600 focus:outline-none focus:bg-indigo-600">Add</button>
                     </form>

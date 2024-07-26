@@ -14,6 +14,7 @@ use App\Models\EmailTemplate;
 use App\Models\Color;
 use App\Models\Inventory;
 use App\Models\Size;
+use App\Models\Images;
 use Illuminate\Support\Facades\Notification;
 use App\Notifications\OrderConfirmed;
 use Illuminate\Support\Facades\Log;
@@ -69,6 +70,9 @@ class AdminController extends Controller
     }
     public function updateProduct(Request $request, $id)
     {
+        $request->validate([
+            'image.*' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        ]);
         $product = Product::findOrFail($id);
         $product->name = $request->name;
         $product->description = $request->description;
@@ -77,6 +81,24 @@ class AdminController extends Controller
         $product->featured = $request->has('featured') ? 1 : 0;
         $product->new = $request->has('new') ? 1 : 0;
         $product->save();
+
+
+        $destinationPath = config('utility.product_image_path');
+        $images = $request->file('images');
+        if ($images && is_array($images)) {
+            foreach ($images as $key => $image) {
+                if ($image) {
+                    $imageName = time() . '_' . $key . '.' . $image->getClientOriginalExtension();
+                    $image->storeAs($destinationPath, $imageName);
+
+                    // Save the image details in the images table
+                    $imageRecord = new Images();
+                    $imageRecord->product_id = $product->id;
+                    $imageRecord->path = $imageName;
+                    $imageRecord->save();
+                }
+            }
+        }
 
         foreach ($request->inventories as $inventoryData) {
             Inventory::updateOrCreate(
@@ -89,7 +111,7 @@ class AdminController extends Controller
             );
         }
 
-        return redirect()->route('admin.products')->with('success', 'Product updated successfully');
+        return redirect()->back()->with('success', 'Product updated successfully', 2000);
     }
 
     public function deleteProduct($id)

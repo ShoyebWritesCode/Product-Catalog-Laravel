@@ -14,6 +14,11 @@
                 <div class="col-lg-12">
                     <div class="card">
                         <div class="card-body">
+                            @if (session('success'))
+                                <div class="alert alert-success mb-4 duration-300" role="alert" id="successAlert">
+                                    {{ session('success') }}
+                                </div>
+                            @endif
 
                             @if (session('error'))
                                 <div class="alert alert-danger" role="alert">
@@ -71,6 +76,33 @@
                                         <span class="text-danger">{{ $message }}</span>
                                     @enderror
                                 </div>
+
+                                <!-- Images Display -->
+                                <h3>Images</h3>
+                                <hr>
+                                <div class="row">
+                                    @foreach ($product->images as $image)
+                                        <div class="col-md-4 mb-3 d-flex justify-content-center">
+                                            <div class="image-container">
+                                                <img src="{{ asset('storage/images/' . $image->path) }}" class="img-fluid "
+                                                    alt="{{ $product->name }}">
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                </div>
+
+                                <div class="mb-4 px-2">
+                                    <label for="image" class="block text-sm font-medium text-gray-700">Add More
+                                        Images:</label>
+                                    <div id="imageInputs">
+                                        <input type="file" name="images[]" id="image"
+                                            class="mt-1 p-2 w-full border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-indigo-200 focus:border-indigo-500">
+                                    </div>
+                                    <button type="button" id="addMore">
+                                        <i class="fas fa-plus"></i></button>
+                                </div>
+
+
                                 <h3 style="cursor: pointer;" id="toggleInventory">Inventory Details</h3>
                                 <hr>
 
@@ -123,8 +155,6 @@
             </div>
         </div>
     </div>
-
-
 @stop
 
 @section('js')
@@ -135,5 +165,39 @@
                 $('#inventoryDetails').toggle();
             });
         });
+
+        document.getElementById('addMore').addEventListener('click', function() {
+            var div = document.createElement('div');
+            div.innerHTML =
+                '<input type="file" name="images[]" class="mt-1 p-2 w-full border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-indigo-200 focus:border-indigo-500">';
+            document.getElementById('imageInputs').appendChild(div);
+        });
+
+
+        function openModal(btn) {
+            var target = $(btn).data('target');
+            $(target).modal('show');
+        }
+        $(document).ready(function() {
+            $('#successAlert').fadeOut(2000);
+        });
     </script>
 @stop
+
+{{-- @section('js')
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            let imageCounter = 0;
+
+            $('#addMoreImages').click(function() {
+                imageCounter++;
+                $('#additionalImageInputs').append(
+                    `<div class="mt-2">
+                        <input type="file" name="images[]" class="form-control">
+                    </div>`
+                );
+            });
+        });
+    </script>
+@stop --}}

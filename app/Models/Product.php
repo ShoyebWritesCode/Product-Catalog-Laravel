@@ -43,4 +43,9 @@ class Product extends Model
     {
         return $this->inventory()->sum('quantity');
     }
+
+    public function images()
+    {
+        return $this->hasMany(Images::class);
+    }
 }

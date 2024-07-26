@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Product;
 use App\Models\Catagory;
 use App\Models\Mapping;
+use App\Models\Images;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -58,50 +59,41 @@ class ProductController extends Controller
             'name' => 'required|string|max:255',
             'description' => 'required|string|max:255',
             'price' => 'required|numeric',
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'image.*' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             // 'subcategory_of' => 'nullable|string|exists:catagories,name',
         ]);
 
-        if ($request->hasFile('image')) {
-            $destinationPath = config('utility.product_image_path');
-            $image = $request->file('image');
-            $imageName = time() . '.' . $image->getClientOriginalExtension();
-            $image->storeAs($destinationPath, $imageName);
 
-            $product = new Product();
-            $product->name = $request->name;
-            $product->description = $request->description;
-            $product->price = $request->price;
-            $product->image = $imageName;
+        $product = new Product();
+        $product->name = $request->name;
+        $product->description = $request->description;
+        $product->price = $request->price;
+        $product->save();
 
-            if ($request->hasFile('image1')) {
-                $destinationPath = config('utility.product_image_path');
-                $image1 = $request->file('image1');
-                $imageName1 = time() . '1.' . $image1->getClientOriginalExtension();
-                $image1->storeAs($destinationPath, $imageName1);
-                $product->image1 = $imageName1;
+        if ($request->has('subcategories')) {
+            foreach ($request->subcategories as $subcategoryId) {
+                $mapping = new Mapping();
+                $mapping->product_id = $product->id;
+                $mapping->catagory_id = $subcategoryId;
+                $mapping->save();
             }
+        }
 
-            if ($request->hasFile('image2')) {
-                $destinationPath = config('utility.product_image_path');
-                $image2 = $request->file('image2');
-                $imageName2 = time() . '2.' . $image2->getClientOriginalExtension();
-                $image1->storeAs($destinationPath, $imageName2);
-                $product->image2 = $imageName2;
-            }
+        $destinationPath = config('utility.product_image_path');
+        $images = $request->file('images');
+        if ($images && is_array($images)) {
+            foreach ($images as $key => $image) {
+                if ($image) {
+                    $imageName = time() . '_' . $key . '.' . $image->getClientOriginalExtension();
+                    $image->storeAs($destinationPath, $imageName);
 
-            $product->save();
-
-            // Loop through subcategories and save mappings
-            if ($request->has('subcategories')) {
-                foreach ($request->subcategories as $subcategoryId) {
-                    $mapping = new Mapping();
-                    $mapping->product_id = $product->id;
-                    $mapping->catagory_id = $subcategoryId;
-                    $mapping->save();
+                    // Save the image details in the images table
+                    $imageRecord = new Images();
+                    $imageRecord->product_id = $product->id;
+                    $imageRecord->path = $imageName;
+                    $imageRecord->save();
                 }
             }
-
             session()->flash('success', 'Product created successfully');
             return redirect()->route('admin.products')->with('success', 'Product created successfully');
         } else {
