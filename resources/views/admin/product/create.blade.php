@@ -75,18 +75,15 @@
                             </div>
                         </div>
                         <div class="mb-4 px-2">
-                            <label for="image" class="block text-sm font-medium text-gray-700">Images:</label>
-                            <div id="imageInputs">
-                                <input type="file" name="images[]" id="image"
-                                    class="mt-1 p-2 w-full border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-indigo-200 focus:border-indigo-500">
-                                @error('images.*')
-                                    <span class="text-red-500">{{ $message }}</span>
-                                @enderror
-                            </div>
-                            <button type="button" id="addMore"
-                                class="mt-2 px-3 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600">
-                                <i class="fas fa-plus"></i></button>
+                            <label for="images" class="block text-sm font-medium text-gray-700">Images:</label>
+                            <input type="file" name="images[]" id="images"
+                                class="mt-1 p-2 w-full border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-indigo-200 focus:border-indigo-500"
+                                accept="image/*" multiple>
+                            @error('images.*')
+                                <span class="text-red-500">{{ $message }}</span>
+                            @enderror
                         </div>
+
 
                         <button type="submit"
                             class="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-indigo-600 focus:outline-none focus:bg-indigo-600">Add</button>

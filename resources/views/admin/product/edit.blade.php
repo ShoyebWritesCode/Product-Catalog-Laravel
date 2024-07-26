@@ -95,11 +95,11 @@
                                     <label for="image" class="block text-sm font-medium text-gray-700">Add More
                                         Images:</label>
                                     <div id="imageInputs">
-                                        <input type="file" name="images[]" id="image"
-                                            class="mt-1 p-2 w-full border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-indigo-200 focus:border-indigo-500">
+                                        <input type="file" name="images[]" id="images"
+                                            class="mt-1 p-2 w-full border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-indigo-200 focus:border-indigo-500"
+                                            accept="image/*" multiple>
                                     </div>
-                                    <button type="button" id="addMore">
-                                        <i class="fas fa-plus"></i></button>
+
                                 </div>
 
 
