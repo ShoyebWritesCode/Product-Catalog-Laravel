@@ -30,6 +30,8 @@
                     <tr>
                         <th>ID</th>
                         <th>Name</th>
+                        <th>Featured</th>
+                        <th>New</th>
                         <th>Price</th>
                         <th>Inventory</th>
                         <th>Actions</th>
@@ -40,6 +42,21 @@
                         <tr>
                             <td>{{ $product->id }}</td>
                             <td>{{ $product->name }}</td>
+                            <td>
+                                @if ($product->featured)
+                                    <i class="fas fa-check text-success fa-lg"></i>
+                                @else
+                                    <i class="fas fa-times text-danger fa-lg"></i>
+                                @endif
+                            </td>
+                            <td>
+                                @if ($product->new)
+                                    <i class="fas fa-check text-success fa-lg"></i>
+                                @else
+                                    <i class="fas fa-times text-danger fa-lg"></i>
+                                @endif
+                            </td>
+
                             <td>{{ $product->price }}</td>
                             <td>
                                 <a href="#" class="">
