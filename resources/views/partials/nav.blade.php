@@ -16,14 +16,14 @@
                         class="text-white hover:text-gray-600 no-underline font-bold">
                         {{ $category->name }}
                     </a>
-                    <ul class="dropdown-menu">
+                    {{-- <ul class="dropdown-menu">
                         <li><a class="dropdown-item" href="#"> Submenu item 1</a></li>
                         <li><a class="dropdown-item" href="#"> Submenu item 2 </a></li>
                         <li><a class="dropdown-item" href="#"> Submenu item 3 </a></li>
-                    </ul>
+                    </ul> --}}
                 </ul>
                 <div class="absolute left-0 hidden group-hover:block bg-white shadow-lg rounded  w-32">
-                    <ul class="grid grid-cols-1 gap-2 py-2">
+                    <ul class="grid grid-cols-1 gap-2 p-2 space-y-1 mb-0">
                         @foreach ($allChildCategoriesOfParent[$category->id] as $childCategory)
                             <li>
                                 <a href="#"

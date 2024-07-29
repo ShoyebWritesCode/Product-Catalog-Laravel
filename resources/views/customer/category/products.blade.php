@@ -5,7 +5,7 @@
     <x-slot name="header">
         <div class="flex justify-between items-center">
             <a href="{{ route('customer.product.home') }}" class="no-underline">
-                <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+                <h2 class="font-semibold text-xl text-white leading-tight">
                     {{ __('Product Catalogue') }}
                 </h2>
             </a>
@@ -16,19 +16,19 @@
                             class="text-gray-800 hover:text-gray-600 no-underline font-bold">
                             {{ $category->name }}
                         </a> --}}
-                        <ul class="nav-item dropdown">
+                        <ul class="nav-item dropdown mt-2">
                             <a href="{{ route('customer.category.products', $category->id) }}"
-                                class="text-gray-800 hover:text-gray-600 no-underline font-bold">
+                                class="text-white hover:text-gray-600 no-underline font-bold">
                                 {{ $category->name }}
                             </a>
-                            <ul class="dropdown-menu">
+                            {{-- <ul class="dropdown-menu">
                                 <li><a class="dropdown-item" href="#"> Submenu item 1</a></li>
                                 <li><a class="dropdown-item" href="#"> Submenu item 2 </a></li>
                                 <li><a class="dropdown-item" href="#"> Submenu item 3 </a></li>
-                            </ul>
+                            </ul> --}}
                         </ul>
                         <div class="absolute left-0 hidden group-hover:block bg-white shadow-lg rounded w-32">
-                            <ul class="grid grid-cols-1 gap-2 py-2">
+                            <ul class="grid grid-cols-1 gap-2 p-2 space-y-1 mb-0">
                                 @foreach ($allChildCategoriesOfParent[$category->id] as $childCategory)
                                     <li>
                                         <a href="#"
@@ -88,6 +88,81 @@
                         @else
                             <span class="dropdown-item">No unread notifications</span>
                         @endif
+                    </div>
+
+                </div>
+                <div class="hidden sm:flex sm:items-center sm:ms-6">
+                    <x-dropdown align="right" width="48">
+                        <x-slot name="trigger">
+                            <button
+                                class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
+                                <div>{{ Auth::user()->name }}</div>
+
+                                <div class="ms-1">
+                                    <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg"
+                                        viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd"
+                                            d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                                            clip-rule="evenodd" />
+                                    </svg>
+                                </div>
+                            </button>
+                        </x-slot>
+
+                        <x-slot name="content">
+                            <x-dropdown-link :href="route('profile.edit')">
+                                {{ __('Profile') }}
+                            </x-dropdown-link>
+
+                            <x-dropdown-link :href="route('customer.order.history')">
+                                {{ __('Order History') }}
+                            </x-dropdown-link>
+
+
+                            <!-- Authentication -->
+                            <form method="POST" action="{{ route('logout') }}">
+                                @csrf
+
+                                <x-dropdown-link :href="route('logout')"
+                                    onclick="event.preventDefault();
+                                                        this.closest('form').submit();">
+                                    {{ __('Log Out') }}
+                                </x-dropdown-link>
+                            </form>
+                        </x-slot>
+                    </x-dropdown>
+                </div>
+
+                <div :class="{ 'block': open, 'hidden': !open }" class="hidden sm:hidden">
+                    <div class="pt-2 pb-3 space-y-1">
+                        <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
+                            {{ __('Dashboard') }}
+                        </x-responsive-nav-link>
+                    </div>
+
+                    <!-- Responsive Settings Options -->
+                    <div class="pt-4 pb-1 border-t border-gray-200">
+                        <div class="px-4">
+                            <div class="font-medium text-base text-gray-800">{{ Auth::user()->name }}</div>
+                            <div class="font-medium text-sm text-gray-500">{{ Auth::user()->email }}</div>
+                        </div>
+
+                        <div class="mt-3 space-y-1">
+                            <x-responsive-nav-link :href="route('profile.edit')">
+                                {{ __('Profile') }}
+                            </x-responsive-nav-link>
+
+                            <!-- Authentication -->
+                            <form method="POST" action="{{ route('logout') }}">
+                                @csrf
+
+                                <x-responsive-nav-link :href="route('logout')"
+                                    onclick="event.preventDefault();
+                                                        this.closest('form').submit();">
+                                    {{ __('Log Out') }}
+                                </x-responsive-nav-link>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -176,7 +251,14 @@
                 <div class="ml-4 mt-1">
                 </div>
 
-                <div class="w-4/5" id="">
+                <div class="w-4/5 mx-auto mt-2">
+                    <!-- Image Placeholder -->
+                    <div class="h-48 bg-gray-300 rounded-lg mb-4">
+                        <img src="{{ asset('storage/images/1717666228.png') }}" alt="Placeholder"
+                            class="w-full h-full object-cover rounded-lg">
+                    </div>
+
+                    <!-- Products Section -->
                     <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                         <div class="p-6 text-gray-900">
                             <div class="flex items-center justify-between mb-4">
@@ -188,10 +270,8 @@
                                         class="border rounded px-2 py-1 text-gray-700 ">
                                         <option value="" disabled {{ request('sort') ? '' : 'selected' }}>Select
                                         </option>
-
                                         <option value="name" {{ request('sort') == 'name' ? 'selected' : '' }}>
-                                            Name(A-Z)
-                                        </option>
+                                            Name(A-Z)</option>
                                         <option value="price" {{ request('sort') == 'price' ? 'selected' : '' }}>
                                             Price(Low-High)</option>
                                     </select>
@@ -226,6 +306,7 @@
                         </div>
                     </div>
                 </div>
+
             </div>
         </div>
 
