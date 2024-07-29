@@ -1,6 +1,6 @@
 <div class="flex justify-between items-center">
     <a href="{{ route('customer.product.home') }}" class="no-underline">
-        <h1 class="font-semibold text-xl text-gray-800 leading-tight">
+        <h1 class="font-semibold text-xl text-white leading-tight">
             {{ __('Product Catalogue') }}
         </h1>
     </a>
@@ -13,7 +13,7 @@
                 </a> --}}
                 <ul class="nav-item dropdown">
                     <a href="{{ route('customer.category.products', $category->id) }}"
-                        class="text-gray-800 hover:text-gray-600 no-underline font-bold">
+                        class="text-white hover:text-gray-600 no-underline font-bold">
                         {{ $category->name }}
                     </a>
                     <ul class="dropdown-menu">
