@@ -131,7 +131,7 @@
                                                             ->where('color_id', $color->id)
                                                             ->first();
                                                     @endphp
-                                                    <tr class="@if ($loop->index % 2 == 0) bg-red-500 @endif">
+                                                    <tr class="@if ($loop->index % 2 == 0) bg-secondary @endif">
                                                         <td class="py-1">{{ $size->name }}</td>
                                                         <td class="py-1">{{ $color->name }}</td>
                                                         <td class="py-1" style="width: 120px; ">

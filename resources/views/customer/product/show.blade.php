@@ -64,18 +64,12 @@
                                 <!-- Additional required wrapper -->
                                 <div class="swiper-wrapper">
                                     <!-- Slides -->
-                                    <div class="swiper-slide">
-                                        <img src="{{ asset('storage/images/' . $product->image) }}"
-                                            alt="{{ $product->name }}" class="object-cover rounded-md">
-                                    </div>
-                                    <div class="swiper-slide">
-                                        <img src="{{ asset('storage/images/' . $product->image1) }}"
-                                            alt="{{ $product->name }}" class="object-cover rounded-md">
-                                    </div>
-                                    <div class="swiper-slide">
-                                        <img src="{{ asset('storage/images/' . $product->image2) }}"
-                                            alt="{{ $product->name }}" class="object-cover rounded-md">
-                                    </div>
+                                    @foreach ($product->images as $image)
+                                        <div class="swiper-slide">
+                                            <img src="{{ asset('storage/images/' . $image->path) }}"
+                                                alt="{{ $product->name }}" class="object-cover rounded-md">
+                                        </div>
+                                    @endforeach
                                 </div>
                                 <!-- If we need pagination -->
                                 <div class="swiper-pagination"></div>

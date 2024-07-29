@@ -10,7 +10,7 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
-                    <div class="flex items-center justify-between mb-4">
+                    <div class="flex items-center justify-between mb-0">
                         <h1 class="text-2xl font-semibold">New Products</h1>
                         <div class="">
                             <form action="#" method="GET">
@@ -28,7 +28,7 @@
                     </div>
 
 
-                    <hr class="mb-4">
+                    <hr class="mb-0">
                     @if (session('success'))
                         <div class="alert alert-success mb-4" role="alert">
                             {{ session('success') }}

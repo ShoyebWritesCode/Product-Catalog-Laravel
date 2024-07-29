@@ -1,6 +1,6 @@
 @foreach ($products as $product)
     <div class="bg-white border border-gray-300 rounded-lg p-4 w-48 flex flex-col relative">
-        <img src="{{ asset('storage/images/' . $product->image) }}" alt="{{ $product->name }}"
+        <img src="{{ asset('storage/images/' . $product->images->first()->path) }}" alt="{{ $product->name }}"
             class="w-full h-32 object-cover rounded-md mb-2" loading="lazy">
         <a href="{{ route('customer.product.show', $product->id) }}"
             class="text-lg font-semibold text-center text-blue-500 hover:text-blue-700 mb-2">

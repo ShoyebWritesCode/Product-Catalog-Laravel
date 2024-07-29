@@ -8,12 +8,12 @@
         @include('partials.nav')
     </x-slot>
 
-    <div class="py-3">
+    <div class="py-3 mt-2 bg-gray-150">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+            <div class="bg-gray-200 overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
-                    <div class="flex items-center justify-between mb-4">
-                        <h1 class="text-2xl font-semibold">Featured Products</h1>
+                    <div class="flex items-center justify-between mb-0">
+                        <h1 class="text-2xl font-semibold mb-0">Featured Products</h1>
                     </div>
                     @include('partials.featured')
                     <div class="flex justify-center mt-4">
@@ -29,12 +29,12 @@
         </div>
     </div>
 
-    <div class="py-3">
+    <div class="py-3 bg-gray-150">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+            <div class="bg-gray-200 overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
-                    <div class="flex items-center justify-between mb-4">
-                        <h1 class="text-2xl font-semibold">New Products</h1>
+                    <div class="flex items-center justify-between mb-0">
+                        <h1 class="text-2xl font-semibold mb-0">New Products</h1>
                     </div>
                     @include('partials.featured', ['featuredProducts' => $newProducts])
                     <div class="flex justify-center mt-4">
@@ -50,12 +50,12 @@
         </div>
     </div>
 
-    <div class="py-3">
+    <div class="py-3 bg-gray-150">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+            <div class="bg-gray-200 overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
-                    <div class="flex items-center justify-between mb-4">
-                        <h1 class="text-2xl font-semibold">All Products</h1>
+                    <div class="flex items-center justify-between mb-0">
+                        <h1 class="text-2xl font-semibold mb-0">All Products</h1>
                     </div>
                     @include('partials.featured', ['featuredProducts' => $initialProducts])
                     <div class="flex justify-center mt-4">
