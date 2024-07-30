@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Customer;
 
 use App\Http\Controllers\Controller;
+use App\Models\Banner;
 use App\Models\Product;
 use App\Models\Review;
 use App\Models\Catagory;
@@ -291,6 +292,8 @@ class CustomerProductController extends Controller
             'path' => LengthAwarePaginator::resolveCurrentPath(),
         ]);
 
+        // $banners = Banner::all();
+
         return view('customer.category.products', [
             'countProducts' => count($Products),
             'Products' => $paginator,
@@ -301,6 +304,7 @@ class CustomerProductController extends Controller
             'discountPercent' => $discountPercent,
             'allParentCategories' => $allParentCategories,
             'allChildCategoriesOfParent' => $allChildCategoriesOfParent,
+            // 'banners' => $banners,
         ]);
     }
 

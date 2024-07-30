@@ -1,6 +1,7 @@
 <x-app-layout>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/14.7.0/nouislider.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/14.7.0/nouislider.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-element-bundle.min.js"></script>
     @vite(['resources/scss/product.scss'])
     <x-slot name="header">
         <div class="flex justify-between items-center">
@@ -27,7 +28,7 @@
                                 <li><a class="dropdown-item" href="#"> Submenu item 3 </a></li>
                             </ul> --}}
                         </ul>
-                        <div class="absolute left-0 hidden group-hover:block bg-white shadow-lg rounded w-32">
+                        <div class="absolute left-0 hidden group-hover:block bg-white shadow-lg rounded w-32 z-2">
                             <ul class="grid grid-cols-1 gap-2 p-2 space-y-1 mb-0">
                                 @foreach ($allChildCategoriesOfParent[$category->id] as $childCategory)
                                     <li>
@@ -177,7 +178,7 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="flex">
                 <div class="w-1/5 pr-4 mt-1">
-                    <div class="bg-white rounded-lg shadow-sm p-4 mb-4">
+                    <div class="bg-gray-100 shadow-sm p-4 mb-4">
                         <form action="{{ route('customer.category.products', $selectedCategory->id) }}" method="GET">
                             <div class="flex items-center justify-between mb-4">
                                 <h1 class="text-xl font-semibold mb-0">Filters</h1>
@@ -251,15 +252,22 @@
                 <div class="ml-4 mt-1">
                 </div>
 
-                <div class="w-4/5 mx-auto mt-2">
-                    <!-- Image Placeholder -->
-                    <div class="h-48 bg-gray-300 rounded-lg mb-4">
-                        <img src="{{ asset('storage/images/1717666228.png') }}" alt="Placeholder"
-                            class="w-full h-full object-cover rounded-lg">
-                    </div>
+                <div class="w-4/5 mx-auto mt-2 ">
+                    @if ($selectedCategory->banners->count() === 0)
+                        <hr class="opacity-0 mb-0 mt-0">
+                    @else
+                        <swiper-container class="h-[200px] mb-2" autoplay="true" autoplay-delay="5000" loop>
+                            @foreach ($selectedCategory->banners as $banner)
+                                <swiper-slide>
+                                    <img src="{{ asset('storage/images/' . $banner->banner) }}"
+                                        alt="{{ $selectedCategory->name }}" class="w-full h-full object-cover">
+                                </swiper-slide>
+                            @endforeach
+                        </swiper-container>
+                    @endif
 
                     <!-- Products Section -->
-                    <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                    <div class="bg-gray-100 overflow-hidden">
                         <div class="p-6 text-gray-900">
                             <div class="flex items-center justify-between mb-4">
                                 <h1 class="text-2xl font-semibold">{{ $selectedCategory->name }} Products
