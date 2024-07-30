@@ -37,7 +37,7 @@
             <i class="fas fa-shopping-cart text-2xl"></i>
             <span
                 class="bg-white text-gray-800 rounded-full min-w-4 h-4 flex items-center justify-center absolute top-0 right-0 -mt-1 -mr-1 text-xs px-1 py-1">
-                {{ $numberOfItems + 100 }}
+                {{ $numberOfItems }}
             </span>
         </a>
 
