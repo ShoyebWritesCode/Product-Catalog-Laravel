@@ -79,6 +79,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/history/{order}', [OrderController::class, 'orderdetail'])->name('customer.order.orderdetail');
     Route::get('/order/cancel/{order}', [OrderController::class, 'cancel'])->name('customer.order.cancel');
     Route::get('category/products/{category}/filter', [CustomerProductController::class, 'categoryProducts'])->name('customer.category.products');
+    Route::get('category/products/{childCategory}', [CustomerProductController::class, 'subcategoryProducts'])->name('customer.subcategory.products');
     Route::get('category/products/{category}/sort', [CustomerProductController::class, 'sortProducts'])->name('customer.products.sort');
     Route::post('orders/save/quantities', [OrderController::class, 'saveQuantities'])->name('customer.order.saveQuantities');
     Route::get('product/inventory/quantity', [InventoryController::class, 'getInventoryQuantity'])->name('product.inventory.quantity');
