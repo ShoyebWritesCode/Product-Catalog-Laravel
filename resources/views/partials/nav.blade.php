@@ -36,7 +36,7 @@
         <a href="#" id="cartLink" class="text-gray-800 hover:text-gray-600 relative">
             <i class="fas fa-shopping-cart text-2xl"></i>
             <span
-                class="bg-red-500 text-white rounded-full min-w-4 h-4 flex items-center justify-center absolute top-0 right-0 -mt-1 -mr-1 text-xs px-1">
+                class="bg-white text-gray-800 rounded-full min-w-4 h-4 flex items-center justify-center absolute top-0 right-0 -mt-1 -mr-1 text-xs px-1 py-1">
                 {{ $numberOfItems + 100 }}
             </span>
         </a>
@@ -46,7 +46,7 @@
                 <i class="fas fa-bell text-2xl"></i>
                 @if ($unreadNotifications->count() > 0)
                     <span
-                        class="bg-red-500 text-white rounded-full min-w-4 h-4 flex items-center justify-center absolute top-0 right-0 -mt-1 -mr-1 text-xs px-1">
+                        class="bg-white text-gray-800 rounded-full min-w-4 h-4 flex items-center justify-center absolute top-0 right-0 -mt-1 -mr-1 text-xs px-1 py-1">
                         {{ $unreadNotifications->count() }}
                     </span>
                 @endif

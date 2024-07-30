@@ -6,6 +6,9 @@
             class="text-lg font-semibold text-center text-blue-500 hover:text-blue-700 mb-2">
             {{ $product->name }}
         </a>
+        <p class="text-sm text-center mb-2 text-gray-400">
+            {{ Str::limit($product->description, 20, '...') }}
+        </p>
         <div class="text-center mb-2">
             <p class="text-sm text-red-600">{{ $product->price }} BDT</p>
             @if (isset($product->prev_price) && $product->prev_price > $product->price)
