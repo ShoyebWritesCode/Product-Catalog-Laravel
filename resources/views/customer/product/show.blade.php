@@ -27,22 +27,55 @@
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900">
-                    <div class="bg-white border border-gray-300 rounded-lg p-4 flex">
+            <div class="bg-gray-100 overflow-hidden ">
+                <div class="p-4 text-gray-900">
+                    <div class="bg-gray-100 border border-orange-300  p-4 flex shadow-md">
                         <div class="flex-grow">
                             <h1 class="text-2xl font-bold mb-2">{{ $product->name }}</h1>
                             <p class="text-lg mb-2">{{ $product->description }}</p>
-                            <p class="text-lg text-red-600 mb-2">{{ $product->price }} BDT</p>
-                            <p class="text-sm text-yellow-600">
-                                Rating:
-                                {{ isset($averageRatings[$product->id]) ? number_format($averageRatings[$product->id], 2) : 'No Ratings' }}
-                            </p>
+
+                            <div class="text-lg text-center text-gray-400 flex flex-col items-center">
+                                <span class="text-lg text-orange-600 mb-2">{{ $product->price }} BDT</span>
+
+                                @if (isset($product->prev_price) && $product->prev_price > $product->price)
+                                    <del class="mr-2">{{ number_format($product->prev_price, 2) }} BDT</del>
+                                    <span class="text-green-600">
+                                        -{{ number_format((($product->prev_price - $product->price) / $product->prev_price) * 100, 2) }}%
+                                    </span>
+                                @endif
+
+                                <span class="text-sm text-yellow-600 mt-2">
+                                    @if (isset($averageRatings[$product->id]))
+                                        @php
+                                            $rating = $averageRatings[$product->id];
+                                            $fullStars = floor($rating);
+                                            $halfStar = $rating - $fullStars >= 0.5 ? 1 : 0;
+                                            $emptyStars = 5 - ($fullStars + $halfStar);
+                                        @endphp
+
+                                        @for ($i = 0; $i < $fullStars; $i++)
+                                            <i class="fas fa-star text-yellow-500 text-2xl"></i>
+                                        @endfor
+
+                                        @for ($i = 0; $i < $halfStar; $i++)
+                                            <i class="fas fa-star-half-alt text-yellow-500 text-2xl"></i>
+                                        @endfor
+
+                                        @for ($i = 0; $i < $emptyStars; $i++)
+                                            <i class="far fa-star text-yellow-500 text-2xl"></i>
+                                        @endfor
+                                    @else
+                                        No Ratings
+                                    @endif
+                                </span>
+                            </div>
+
+
                             <div class="flex justify-center mt-2">
                                 @if (isset($nameparentcategories[$product->id]))
                                     @foreach ($nameparentcategories[$product->id] as $subcategory)
-                                        <div class="border border-green-600 rounded-md px-2 mx-1">
-                                            <p class="text-sm text-green-600">{{ $subcategory }}</p>
+                                        <div class="border border-orange-600  px-2 mx-1">
+                                            <p class="text-sm text-orange-600 m-1">{{ $subcategory }}</p>
                                         </div>
                                     @endforeach
                                 @endif
@@ -50,8 +83,8 @@
                             <div class="flex justify-center mt-2">
                                 @if (isset($namesubcategories[$product->id]))
                                     @foreach ($namesubcategories[$product->id] as $subcategory)
-                                        <div class="border border-green-600 rounded-md px-2 mx-1">
-                                            <p class="text-sm text-green-600">{{ $subcategory }}</p>
+                                        <div class="border border-orange-600 px-2 mx-1">
+                                            <p class="text-sm text-orange-600 m-1">{{ $subcategory }}</p>
                                         </div>
                                     @endforeach
                                 @endif
@@ -60,14 +93,14 @@
                         <div class="ml-4 p-4">
                             {{-- <img src="{{ asset('storage/images/' . $product->image) }}" alt="{{ $product->name }}" class="w-80 h-64 object-cover rounded-md"> --}}
                             <!-- Slider main container -->
-                            <div class="swiper">
+                            <div class="swiper shadow-sm">
                                 <!-- Additional required wrapper -->
                                 <div class="swiper-wrapper">
                                     <!-- Slides -->
                                     @foreach ($product->images as $image)
-                                        <div class="swiper-slide">
+                                        <div class="swiper-slide ">
                                             <img src="{{ asset('storage/images/' . $image->path) }}"
-                                                alt="{{ $product->name }}" class="object-cover rounded-md">
+                                                alt="{{ $product->name }}" class="object-cover ">
                                         </div>
                                     @endforeach
                                 </div>
@@ -149,7 +182,7 @@
                             <div class="mb-6">
                                 <h3 class="text-xl font-semibold mb-2">Existing Reviews</h3>
                                 @foreach ($reviews as $review)
-                                    <div class="bg-gray-100 p-4 rounded-lg mb-4">
+                                    <div class="bg-gray-100 p-4 shadow-lg mb-4">
                                         <p class="text-lg font-semibold">
                                             @if ($review->user_id == null)
                                                 Anonymous
