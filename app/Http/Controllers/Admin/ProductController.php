@@ -183,13 +183,15 @@ class ProductController extends Controller
     private function updateSpecifications(array $product_attributes, $productId)
     {
         foreach ($product_attributes as $attributeData) {
-            ProductAttribute::updateOrCreate(
-                [
-                    'product_id' => $productId,
-                    'attribute_id' => $attributeData['attribute_id'],
-                ],
-                ['value' => $attributeData['value']]
-            );
+            if (!is_null($attributeData['value'])) {
+                ProductAttribute::updateOrCreate(
+                    [
+                        'product_id' => $productId,
+                        'attribute_id' => $attributeData['attribute_id'],
+                    ],
+                    ['value' => $attributeData['value']]
+                );
+            }
         }
     }
 

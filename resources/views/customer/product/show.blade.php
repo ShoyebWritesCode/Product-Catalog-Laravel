@@ -178,7 +178,6 @@
                         </div>
 
                         <div id="specifications" class="tab-content hidden">
-                            <h2 class="text-2xl font-bold mb-4">Specifications</h2>
                             @if ($product->attCount() == 0)
                                 <p>This product does not have any specifications.</p>
                             @else
@@ -204,7 +203,6 @@
 
                         <div id="reviews" class="tab-content">
                             @if ($reviews->isNotEmpty())
-                                <h2 class="text-2xl font-bold mb-4">Reviews & Ratings</h2>
 
                                 <div class="mb-6">
                                     <h3 class="text-xl font-semibold mb-2">Existing Reviews</h3>
@@ -219,7 +217,30 @@
                                             </p>
 
                                             <p class="text-sm text-gray-600">{{ $review->comment }}</p>
-                                            <p class="text-sm">Rating: {{ $review->rating }}/5</p>
+                                            <span class="text-sm text-yellow-600 mt-2">
+                                                @if (isset($review->rating))
+                                                    @php
+                                                        $rating = $review->rating;
+                                                        $fullStars = floor($rating);
+                                                        $halfStar = $rating - $fullStars >= 0.5 ? 1 : 0;
+                                                        $emptyStars = 5 - ($fullStars + $halfStar);
+                                                    @endphp
+
+                                                    @for ($i = 0; $i < $fullStars; $i++)
+                                                        <i class="fas fa-star text-yellow-500 text-xl"></i>
+                                                    @endfor
+
+                                                    @for ($i = 0; $i < $halfStar; $i++)
+                                                        <i class="fas fa-star-half-alt text-yellow-500 text-xl"></i>
+                                                    @endfor
+
+                                                    @for ($i = 0; $i < $emptyStars; $i++)
+                                                        <i class="far fa-star text-yellow-500 text-xl"></i>
+                                                    @endfor
+                                                @else
+                                                    No Ratings
+                                                @endif
+                                            </span>
                                             <p class="text-xs text-gray-500">Posted on:
                                                 {{ $review->created_at->format('Y-m-d') }}</p>
                                         </div>
