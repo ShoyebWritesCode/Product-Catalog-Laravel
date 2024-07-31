@@ -46,7 +46,7 @@
                                             <i class="far fa-star text-yellow-500 text-2xl"></i>
                                         @endfor
                                         <span class="text-lg text-gray-900 onhover: cursor-pointer"
-                                            onclick="showTab('reviews')">({{ $product->reviewCount() }})</span>
+                                            onclick="scrollToReviews()">({{ $product->reviewCount() }})</span>
                                     @else
                                         No Ratings
                                     @endif
@@ -160,7 +160,8 @@
 
                     <div class="mt-8">
                         <!-- Tab Navigation -->
-                        <div class="flex space-x-4 mb-4">
+                        <div class="flex space-x-4 mb-0">
+
                             <button id="detailsTab" class="tab-button" onclick="showTab('details')">Details</button>
                             <button id="specificationsTab" class="tab-button"
                                 onclick="showTab('specifications')">Specifications</button>
@@ -168,6 +169,7 @@
                                 onclick="showTab('reviews')">Reviews</button>
 
                         </div>
+                        <hr class=" border-2 border-orange-600 mt-0">
 
                         <!-- Tab Content -->
                         <div id="details" class="tab-content hidden">
@@ -217,7 +219,7 @@
                             @endphp
 
                             <div class="mb-4 w-full flex justify-between items-center">
-                                <div>
+                                <div class="w-1/4">
                                     <h2 class="text-2xl font-bold mb-4">Average customer rating</h2>
                                     <p class="text-4xl font-bold mb-2">{{ $averageRating }} / 5</p>
                                     <p class="text-gray-500 mb-4">{{ $totalReviews }}
@@ -252,12 +254,19 @@
                                                     style="width: {{ $ratingDistribution[$star] > 0 ? ($ratingDistribution[$star] / $totalReviews) * 100 : 0 }}%;">
                                                 </div>
                                             </div>
-                                            <div class="w-12 text-right ml-4">{{ $ratingDistribution[$star] }}
-                                                ({{ $totalReviews > 0 ? round(($ratingDistribution[$star] / $totalReviews) * 100, 2) : 0 }}%)
+                                            <div class="flex items-center ml-4"> <!-- Added flex here -->
+                                                <div class="w-12 text-right">{{ $ratingDistribution[$star] }}</div>
+                                                <div class="text-right ml-1">
+                                                    <!-- Optional: Adjust margin for spacing -->
+                                                    ({{ $totalReviews > 0 ? round(($ratingDistribution[$star] / $totalReviews) * 100, 2) : 0 }}%)
+                                                </div>
                                             </div>
                                         </div>
                                     @endforeach
                                 </div>
+                                <div class="w-1/10">
+                                </div>
+
                             </div>
 
 
@@ -363,6 +372,16 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     @vite(['resources/js/custom/show.js'])
     <script>
+        function scrollToReviews() {
+            const reviews = showTab('reviews');
+            const reviewsSection = document.getElementById('reviews');
+            reviewsSection.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+            });
+        }
+
+
         function showTab(tabName) {
             const tabContents = document.querySelectorAll('.tab-content');
             tabContents.forEach(content => {
