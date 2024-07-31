@@ -8,7 +8,8 @@
             <div class="flex space-x-2 mb-3 mt-0" id="featuredProducts">
                 @foreach ($featuredProducts as $product)
                     <div class="h-[350px] min-w-[200px] bg-white  shadow-md p-0 mt-2">
-                        <a href="{{ route('customer.product.show', $product->id) }}" class="no-underline">
+                        <a href="{{ route('customer.product.show', ['product' => $product->id, 'slug' => $product->slug]) }}"
+                            class="no-underline">
                             <img src="{{ asset('storage/images/' . $product->images->first()->path) }}"
                                 alt="{{ $product->name }}" class="w-full h-40 object-cover  mb-2" loading="lazy">
 

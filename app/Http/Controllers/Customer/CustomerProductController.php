@@ -166,8 +166,12 @@ class CustomerProductController extends Controller
 
 
 
-    public function show(Product $product)
+    public function show(Product $product, $slug = null)
     {
+
+        if ($slug && $product->slug !== $slug) {
+            abort(404);
+        }
 
         $subcategories = [];
         $namesubcategories = [];

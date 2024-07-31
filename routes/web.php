@@ -59,7 +59,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/products/notifications/mark-as-read/{id}', [NotificationController::class, 'markAsReadCus'])->name('customer.notifications.markAsRead');
     Route::get('/products/fetch', [CustomerProductController::class, 'fetchProducts'])->name('customer.product.fetch');
     Route::get('/products/search', [CustomerProductController::class, 'search'])->name('customer.product.search');
-    Route::get('/products/{product}', [CustomerProductController::class, 'show'])->name('customer.product.show');
+    Route::get('/products/{product}/{slug?}', [CustomerProductController::class, 'show'])->name('customer.product.show');
     Route::post('/products/{product}/reviews', [ReviewController::class, 'store'])->name('customer.product.reviews');
     Route::get('/orders', [OrderController::class, 'index'])->name('customer.order.home');
     Route::get('/orders/shipping', [OrderController::class, 'shipping'])->name('customer.order.shipping');
