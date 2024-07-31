@@ -1,25 +1,6 @@
 <x-app-layout>
     @vite(['resources/scss/show.scss'])
     <x-slot name="header">
-        {{-- <div class="flex justify-between items-center">
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                <h1 class="text-2xl font-bold mb-2">{{ $product->name }}</h1>
-            </h2>
-            <div class="flex-1 text-center">
-                <a href="{{ route('customer.product.home') }}" class="text-blue-500 hover:text-blue-700 mx-4">
-                    {{ __('Product') }}
-                </a>
-            </div>
-            <a href="{{ route('customer.order.home') }}" class="text-gray-800 hover:text-gray-600 relative">
-                <i class="fas fa-shopping-cart text-xl"></i>
-                <span
-                    class="bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center absolute top-0 right-0 -mt-1 -mr-1 text-xs">
-                    {{ $numberOfItems }} </span>
-            </a>
-
-
-        </div> --}}
-
         @include('partials.nav')
     </x-slot>
 
@@ -176,76 +157,105 @@
                     @endif
 
                     <div class="mt-8">
-                        @if ($reviews->isNotEmpty())
-                            <h2 class="text-2xl font-bold mb-4">Reviews & Ratings</h2>
+                        <!-- Tab Navigation -->
+                        <div class="flex space-x-4 mb-4">
+                            <button id="detailsTab" class="tab-button" onclick="showTab('details')">Details</button>
+                            <button id="specificationsTab" class="tab-button"
+                                onclick="showTab('specifications')">Specifications</button>
+                            <button id="reviewsTab" class="tab-button active"
+                                onclick="showTab('reviews')">Reviews</button>
 
-                            <div class="mb-6">
-                                <h3 class="text-xl font-semibold mb-2">Existing Reviews</h3>
-                                @foreach ($reviews as $review)
-                                    <div class="bg-gray-100 p-4 shadow-lg mb-4">
-                                        <p class="text-lg font-semibold">
-                                            @if ($review->user_id == null)
-                                                Anonymous
-                                            @else
-                                                {{ $review->user->name }}
-                                            @endif
-                                        </p>
+                        </div>
 
-                                        <p class="text-sm text-gray-600">{{ $review->comment }}</p>
-                                        <p class="text-sm">Rating: {{ $review->rating }}/5</p>
-                                        <p class="text-xs text-gray-500">Posted on:
-                                            {{ $review->created_at->format('Y-m-d') }}</p>
+                        <!-- Tab Content -->
+                        <div id="details" class="tab-content hidden">
+                            @if ($product->Detailes == null)
+                                <p>This product does not have any details.</p>
+                            @else
+                                {!! $product->Detailes !!}
+                            @endif
+
+                        </div>
+
+                        <div id="specifications" class="tab-content hidden">
+                            <h2 class="text-2xl font-bold mb-4">Specifications</h2>
+                            <p>This section contains specifications of the product. You can include dimensions, weight,
+                                and other relevant information.</p>
+                        </div>
+
+                        <div id="reviews" class="tab-content">
+                            @if ($reviews->isNotEmpty())
+                                <h2 class="text-2xl font-bold mb-4">Reviews & Ratings</h2>
+
+                                <div class="mb-6">
+                                    <h3 class="text-xl font-semibold mb-2">Existing Reviews</h3>
+                                    @foreach ($reviews as $review)
+                                        <div class="bg-gray-100 p-4 shadow-lg mb-4">
+                                            <p class="text-lg font-semibold">
+                                                @if ($review->user_id == null)
+                                                    Anonymous
+                                                @else
+                                                    {{ $review->user->name }}
+                                                @endif
+                                            </p>
+
+                                            <p class="text-sm text-gray-600">{{ $review->comment }}</p>
+                                            <p class="text-sm">Rating: {{ $review->rating }}/5</p>
+                                            <p class="text-xs text-gray-500">Posted on:
+                                                {{ $review->created_at->format('Y-m-d') }}</p>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            @endif
+
+                            @php
+                                $lastReviewTime = Session::get("last_review_time_product_$product->id");
+                            @endphp
+
+                            @if (!$lastReviewTime || now()->diffInMinutes($lastReviewTime) >= 1)
+                                <h3 class="text-xl font-semibold mb-2">Add Your Review</h3>
+                                <form action="{{ route('customer.product.reviews', $product->id) }}" method="POST">
+                                    @csrf
+                                    <div class="mb-4">
+                                        <label for="comment"
+                                            class="block text-sm font-medium text-gray-700">Comment:</label>
+                                        <textarea name="comment" id="comment"
+                                            class="mt-1 p-2 w-full border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-indigo-200 focus:border-indigo-500"></textarea>
+                                        @error('comment')
+                                            <span class="text-red-500">{{ $message }}</span>
+                                        @enderror
                                     </div>
-                                @endforeach
-                            </div>
-                        @endif
+                                    <div class="mb-4">
+                                        <label for="rating"
+                                            class="block text-sm font-medium text-gray-700">Rating:</label>
+                                        <select name="rating" id="rating"
+                                            class="mt-1 p-2 w-full border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-indigo-200 focus:border-indigo-500">
+                                            <option value="1">1</option>
+                                            <option value="2">2</option>
+                                            <option value="3">3</option>
+                                            <option value="4">4</option>
+                                            <option value="5">5</option>
+                                        </select>
+                                        @error('rating')
+                                            <span class="text-red-500">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+                                    <div class="mb-4">
+                                        <input type="checkbox" name="anonymous" id="anonymous" class="mr-2">
+                                        <label for="anonymous" class="text-sm font-medium text-gray-700">Post as
+                                            Anonymous</label>
+                                    </div>
+                                    <button type="submit"
+                                        class="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-indigo-600 focus:outline-none focus:bg-indigo-600">Submit
+                                        Review</button>
+                                </form>
+                            @else
+                                <p class="text-red-500">You can only submit a review once every hour.</p>
+                            @endif
+                        </div>
 
-                        @php
-                            $lastReviewTime = Session::get("last_review_time_product_$product->id");
-                        @endphp
 
-
-                        @if (!$lastReviewTime || now()->diffInMinutes($lastReviewTime) >= 1)
-                            <h3 class="text-xl font-semibold mb-2">Add Your Review</h3>
-                            <form action="{{ route('customer.product.reviews', $product->id) }}" method="POST">
-                                @csrf
-                                <div class="mb-4">
-                                    <label for="comment"
-                                        class="block text-sm font-medium text-gray-700">Comment:</label>
-                                    <textarea name="comment" id="comment"
-                                        class="mt-1 p-2 w-full border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-indigo-200 focus:border-indigo-500"></textarea>
-                                    @error('comment')
-                                        <span class="text-red-500">{{ $message }}</span>
-                                    @enderror
-                                </div>
-                                <div class="mb-4">
-                                    <label for="rating"
-                                        class="block text-sm font-medium text-gray-700">Rating:</label>
-                                    <select name="rating" id="rating"
-                                        class="mt-1 p-2 w-full border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-indigo-200 focus:border-indigo-500">
-                                        <option value="1">1</option>
-                                        <option value="2">2</option>
-                                        <option value="3">3</option>
-                                        <option value="4">4</option>
-                                        <option value="5">5</option>
-                                    </select>
-                                    @error('rating')
-                                        <span class="text-red-500">{{ $message }}</span>
-                                    @enderror
-                                </div>
-                                <div class="mb-4">
-                                    <input type="checkbox" name="anonymous" id="anonymous" class="mr-2">
-                                    <label for="anonymous" class="text-sm font-medium text-gray-700">Post as
-                                        Anonymous</label>
-                                </div>
-                                <button type="submit"
-                                    class="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-indigo-600 focus:outline-none focus:bg-indigo-600">Submit
-                                    Review</button>
-                            </form>
                     </div>
-                @else
-                    <p class="text-red-500">You can only submit a review once every hour.</p>
-                    @endif
                 </div>
             </div>
         </div>
@@ -254,6 +264,23 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     @vite(['resources/js/custom/show.js'])
     <script>
+        function showTab(tabName) {
+            const tabContents = document.querySelectorAll('.tab-content');
+            tabContents.forEach(content => {
+                content.classList.add('hidden');
+            });
+
+            const tabButtons = document.querySelectorAll('.tab-button');
+            tabButtons.forEach(button => {
+                button.classList.remove('active');
+            });
+
+            document.getElementById(tabName).classList.remove('hidden');
+
+            document.getElementById(tabName + 'Tab').classList.add('active');
+        }
+        showTab('details');
+
         document.addEventListener('DOMContentLoaded', function() {
             const sizeInputs = document.querySelectorAll('.size-option-input');
             const colorInputs = document.querySelectorAll('.color-option-input');
