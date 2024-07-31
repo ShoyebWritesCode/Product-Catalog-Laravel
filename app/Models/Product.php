@@ -12,7 +12,7 @@ class Product extends Model
     use SoftDeletes;
 
     protected $table = 'products';
-    protected $fillable = ['name', 'description', 'price', 'image', 'image1', 'image2', 'catagory_id'];
+    protected $fillable = ['name', 'description', 'price', 'image', 'image1', 'image2', 'catagory_id', 'inventory'];
 
     public function subcatagory()
     {
@@ -32,5 +32,20 @@ class Product extends Model
     public function mappings()
     {
         return $this->hasMany(Mapping::class);
+    }
+
+    public function inventory()
+    {
+        return $this->hasMany(Inventory::class);
+    }
+
+    public function totalQuantity()
+    {
+        return $this->inventory()->sum('quantity');
+    }
+
+    public function images()
+    {
+        return $this->hasMany(Images::class);
     }
 }

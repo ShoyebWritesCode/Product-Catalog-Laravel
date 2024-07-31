@@ -20,7 +20,9 @@ use App\Http\Controllers\NotificationController as ControllersNotificationContro
 use App\Http\Controllers\ChartController;
 use App\Models\Address;
 use App\Http\Controllers\AddressController;
+use App\Http\Controllers\InventoryController;
 use App\Http\Controllers\PaymentHistoryController;
+use App\Models\Inventory;
 
 /*
 |--------------------------------------------------------------------------
@@ -50,6 +52,10 @@ Route::middleware('auth')->group(function () {
 
 
     Route::get('/products', [CustomerProductController::class, 'index'])->name('customer.product.home');
+    Route::get('/products/all', [CustomerProductController::class, 'allProducts'])->name('customer.product.all');
+    Route::get('/products/featured', [CustomerProductController::class, 'featuredProducts'])->name('customer.product.featured');
+    Route::get('/products/new', [CustomerProductController::class, 'newProducts'])->name('customer.product.new');
+    Route::get('/navbar', [CustomerProductController::class, 'navindex'])->name('customer.navbar');
     Route::post('/products/notifications/mark-as-read/{id}', [NotificationController::class, 'markAsReadCus'])->name('customer.notifications.markAsRead');
     Route::get('/products/fetch', [CustomerProductController::class, 'fetchProducts'])->name('customer.product.fetch');
     Route::get('/products/search', [CustomerProductController::class, 'search'])->name('customer.product.search');
@@ -72,9 +78,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/history', [OrderController::class, 'history'])->name('customer.order.history');
     Route::get('/history/{order}', [OrderController::class, 'orderdetail'])->name('customer.order.orderdetail');
     Route::get('/order/cancel/{order}', [OrderController::class, 'cancel'])->name('customer.order.cancel');
-    // Route::get('/email', [EmailController::class, 'sendEmail'])->name('email.send');
-    // Route::get('/order/cart', [OrderController::class, 'itemCount'])->name('customer.order.cart');
-
+    Route::get('category/products/{category}/filter', [CustomerProductController::class, 'categoryProducts'])->name('customer.category.products');
+    Route::get('category/products/{category}/sort', [CustomerProductController::class, 'sortProducts'])->name('customer.products.sort');
+    Route::post('orders/save/quantities', [OrderController::class, 'saveQuantities'])->name('customer.order.saveQuantities');
+    Route::get('product/inventory/quantity', [InventoryController::class, 'getInventoryQuantity'])->name('product.inventory.quantity');
 });
 
 Route::middleware(['auth:admin'])->group(function () {
@@ -93,7 +100,7 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::get('admin/admin', [AdminController::class, 'index'])->name('admin.admin');
     Route::get('admin/admin/products', [AdminController::class, 'products'])->name('admin.products');
     Route::get('/admin/admin/product/edit/{id}', [AdminController::class, 'edit'])->name('admin.product.edit');
-    Route::put('/admin/admin/product/update/{id}', [AdminController::class, 'updateProduct'])->name('admin.product.update');
+    Route::put('/admin/admin/product/update/{id}', [ProductController::class, 'updateProduct'])->name('admin.product.update');
     Route::delete('/admin/admin/product/update/{id}', [AdminController::class, 'deleteProduct'])->name('admin.product.delete');
     Route::get('admin/admin/users', [AdminController::class, 'users'])->name('admin.users');
     Route::get('admin/admin/categories', [AdminController::class, 'categories'])->name('admin.categories');
@@ -118,8 +125,12 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::post('admin/admin/templates/store', [EmailTemplateController::class, 'store'])->name('admin.templates.store');
     Route::post('admin/admin/templates/placeholders', [EmailTemplateController::class, 'addPlaceholder'])->name('admin.placeholders.add');
     Route::get('admin/admin/payment-history', [PaymentHistoryController::class, 'index'])->name('admin.payment-history');
-
     Route::get('admin/admin/charts', [ChartController::class, 'index'])->name('admin.charts.index');
+
+    Route::get('admin/admin/colors', [InventoryController::class, 'colorsIndex'])->name('admin.colors');
+    Route::post('admin/admin/colors/create', [InventoryController::class, 'colorCreate'])->name('admin.color.create');
+    Route::get('admin/admin/sizes', [InventoryController::class, 'sizesIndex'])->name('admin.sizes');
+    Route::post('admin/admin/sizes/create', [InventoryController::class, 'sizeCreate'])->name('admin.size.create');
 });
 
 require __DIR__ . '/auth.php';

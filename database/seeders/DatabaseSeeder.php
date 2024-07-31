@@ -14,20 +14,21 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        $this->call(AdminSeeder::class);
-        $this->call(UserSeed::class);
-        $this->call(ProductSeeder::class);
-        $this->call([
-            TemplateSeeder::class,
-        ]);
-        $this->call([
-            CategorySeeder::class,
-        ]);
-        $this->call([
-            MappingSeeder::class,
-        ]);
-        $this->call([
-            PlaceholderSeeder::class,
-        ]);
+        // $this->call(AdminSeeder::class);
+        // $this->call(UserSeed::class);
+        // $this->call(ProductSeeder::class);
+        $this->call(ImageSeeder::class);
+        // $this->call([
+        //     TemplateSeeder::class,
+        // ]);
+        // $this->call([
+        //     CategorySeeder::class,
+        // ]);
+        // $this->call([
+        //     MappingSeeder::class,
+        // ]);
+        // $this->call([
+        //     PlaceholderSeeder::class,
+        // ]);
     }
 }

@@ -4,9 +4,12 @@ namespace App\Http\Controllers\Customer;
 
 use App\Http\Controllers\Controller;
 use App\Models\Product;
+use App\Models\Catagory;
 use App\Models\Admin;
 use App\Models\OrderItems;
 use App\Models\Order;
+use App\Models\Color;
+use App\Models\Size;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Log;
@@ -17,6 +20,7 @@ use App\Helpers\MailHelper;
 use App\Notifications\OrderPlaced;
 use Illuminate\Support\Facades\Notification;
 use App\Http\Controllers\AddressController;
+use App\Models\Inventory;
 use Stripe;
 use App\Models\PaymentHistory;
 
@@ -52,8 +56,21 @@ class OrderController extends Controller
     public function index()
     {
         $data = $this->getOrderData();
+        $data['order']->total = 0;
+        $data['order']->save();
 
-        return view('customer.order.home', $data);
+        $allParentCategories = [];
+
+
+        $categories = Catagory::all()->keyBy('id');
+        $allParentCategories = Catagory::where('parent_id', null)->get();
+        foreach ($allParentCategories as $parentCategory) {
+            $allChildCategoriesOfParent[$parentCategory->id] = Catagory::where('parent_id', $parentCategory->id)->get();
+        }
+        $unreadNotifications = auth()->user()->unreadNotifications;
+
+
+        return view('customer.order.home', $data, compact('allParentCategories', 'allChildCategoriesOfParent', 'unreadNotifications'));
     }
 
     public function popup()
@@ -92,12 +109,35 @@ class OrderController extends Controller
     {
 
         $data = $this->getOrderData();
-        return view('customer.order.checkout', $data);
+        $addr = $data['order']->city;
+        $shippingCost = 0;
+
+        if ($addr === "Dhaka") {
+            $shippingCost = 50;
+        } else {
+            $shippingCost = 100;
+        }
+
+        $data['order']->total += $shippingCost;
+        $data['order']->save();
+
+        // return response()->json($data);
+        $allParentCategories = [];
+
+
+        $categories = Catagory::all()->keyBy('id');
+        $allParentCategories = Catagory::where('parent_id', null)->get();
+        foreach ($allParentCategories as $parentCategory) {
+            $allChildCategoriesOfParent[$parentCategory->id] = Catagory::where('parent_id', $parentCategory->id)->get();
+        }
+        $unreadNotifications = auth()->user()->unreadNotifications;
+
+        return view('customer.order.checkout', $data, compact('shippingCost', 'allParentCategories', 'allChildCategoriesOfParent', 'unreadNotifications'));
     }
 
 
 
-    public function add(Product $product)
+    public function add(Request $request, Product $product)
     {
         // $num = 0;
         $user = auth()->user();
@@ -114,26 +154,57 @@ class OrderController extends Controller
             $order->save();
         }
 
-        $orderItem = new OrderItems();
-        $orderItem->order_id = $order->id;
-        $orderItem->product_id = $product->id;
-        $orderItem->product_name = $product->name;
-        $orderItem->product_price = $product->price;
-        $orderItem->image = $product->image;
-        $orderItem->save();
+        $orderItem = OrderItems::where('order_id', $order->id)
+            ->where('product_id', $product->id)
+            ->where('size_id', $request->size)
+            ->where('color_id', $request->color)
+            ->first();
 
-        $order->total += $orderItem->product_price;
+        if (!$orderItem) {
+            $orderItem = new OrderItems();
+            $orderItem->order_id = $order->id;
+            $orderItem->product_id = $product->id;
+            $orderItem->product_name = $product->name;
+            $orderItem->product_price = $product->price;
+            $orderItem->image = $product->image;
+            $orderItem->size_id = $request->size;
+            $orderItem->color_id = $request->color;
+            $orderItem->save();
+            $message = 'Added to cart successfully!';
+        } else {
+            $message = 'Item already in cart!';
+        }
+
+
+        // $order->total += $orderItem->product_price;
         $order->save();
 
-        $message = 'Added to cart successfully!';
         return response()->json(['success' => true, 'message' => $message]);
     }
+
+    public function saveQuantities(Request $request)
+    {
+        $orderItems = $request->input('order_items', []);
+
+        foreach ($orderItems as $orderItemData) {
+            $orderItem = OrderItems::find($orderItemData['itemId']);
+
+            if ($orderItem) {
+                $orderItem->quantity = $orderItemData['quantity'];
+                $orderItem->save();
+                $orderItem->order->total += $orderItem->product_price * $orderItemData['quantity'];
+                $orderItem->order->save();
+            }
+        }
+        return response()->json(['message' => 'Quantities updated successfully', 'data' => $orderItems]);
+    }
+
 
     public function remove($id)
     {
         $orderItem = OrderItems::find($id);
         $order = Order::find($orderItem->order_id);
-        $order->total -= $orderItem->product_price;
+        $order->total -= $orderItem->product_price * $orderItem->quantity;
         $order->save();
         $orderItem->delete();
 
@@ -146,6 +217,24 @@ class OrderController extends Controller
         $order = Order::where('user_id', $user->id)->where('status', 0)->first();
         $order->status = 1;
         $order->save();
+        $orderItems = OrderItems::where('order_id', $order->id)->get();
+
+        foreach ($orderItems as $item) {
+            $product = Product::find($item->product_id);
+            // $product->inventory -= $item->quantity;
+            // $product->save();
+            $color = Color::find($item->color_id);
+            $size = Size::find($item->size_id);
+
+            $inventory = Inventory::where('product_id', $product->id)
+                ->where('color_id', $color->id)
+                ->where('size_id', $size->id)
+                ->first();
+
+            $inventory->quantity -= $item->quantity;
+            $inventory->save();
+        }
+
 
         $name = auth()->user()->name;
         $email = auth()->user()->email;
@@ -168,7 +257,7 @@ class OrderController extends Controller
         Notification::send($admins, new OrderPlaced($order));
 
         session()->flash('success', 'Order placed successfully. Check your email for confirmation');
-        return redirect()->route('customer.order.home')->with('success', 'Order placed successfully. Check your email for confirmation');
+        return redirect()->route('customer.product.home')->with('success', 'Order placed successfully. Check your email for confirmation');
     }
 
     public function reorder(Order $order)
@@ -242,6 +331,7 @@ class OrderController extends Controller
         $order->billing_address = $request->address;
         $order->bolling_phone = $request->phone;
         $order->save();
+
         session()->flash('success', 'Shipping and Billing details saved successfully');
         return redirect()->route('customer.order.checkoutpage')->with('success', 'Shipping and Billing details saved successfully');
     }
@@ -261,8 +351,17 @@ class OrderController extends Controller
         $refundorders = Order::where('user_id', $user->id)
             ->whereNotNull('refund')
             ->get();
+        $allParentCategories = [];
 
-        return view('customer.order.history', compact('pendingorders', 'completedorders', 'refundorders'));
+
+        $categories = Catagory::all()->keyBy('id');
+        $allParentCategories = Catagory::where('parent_id', null)->get();
+        foreach ($allParentCategories as $parentCategory) {
+            $allChildCategoriesOfParent[$parentCategory->id] = Catagory::where('parent_id', $parentCategory->id)->get();
+        }
+        $unreadNotifications = auth()->user()->unreadNotifications;
+
+        return view('customer.order.history', compact('pendingorders', 'completedorders', 'refundorders', 'allParentCategories', 'allChildCategoriesOfParent', 'unreadNotifications'));
     }
 
     public function orderdetail(Order $order)

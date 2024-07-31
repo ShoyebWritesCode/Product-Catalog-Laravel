@@ -11,6 +11,10 @@ use App\Models\Order;
 use App\Models\OrderItems;
 use App\Models\PaymentHistory;
 use App\Models\EmailTemplate;
+use App\Models\Color;
+use App\Models\Inventory;
+use App\Models\Size;
+use App\Models\Images;
 use Illuminate\Support\Facades\Notification;
 use App\Notifications\OrderConfirmed;
 use Illuminate\Support\Facades\Log;
@@ -28,10 +32,12 @@ class AdminController extends Controller
         $totalTemplates = EmailTemplate::count();
         $totalPayments = PaymentHistory::count();
         $totalRefundRequests = Order::where('refund', 0)->count();
+        $totalColors = Color::count();
+        $totalSizes = Size::count();
 
 
         $unreadNotifications = auth()->user()->unreadNotifications;
-        return view('admin.admin', compact('totalUsers', 'totalCategories', 'totalReviews', 'totalProducts', 'totalPendingOrders', 'totalCompletedOrders', 'totalTemplates', 'unreadNotifications', 'totalPayments', 'totalRefundRequests'));
+        return view('admin.admin', compact('totalUsers', 'totalCategories', 'totalReviews', 'totalProducts', 'totalPendingOrders', 'totalCompletedOrders', 'totalTemplates', 'unreadNotifications', 'totalPayments', 'totalRefundRequests', 'totalColors', 'totalSizes'));
     }
 
     public function products()
@@ -44,19 +50,23 @@ class AdminController extends Controller
     public function edit($id)
     {
         $product = Product::findOrFail($id);
-        return view('admin.product.edit', compact('product'));
-    }
-    public function updateProduct(Request $request, $id)
-    {
-        $product = Product::findOrFail($id);
-        $product->name = $request->name;
-        $product->description = $request->description;
-        $product->prev_price = $product->price;
-        $product->price = $request->price;
+        $colors = Color::all();
+        $sizes = Size::all();
+        $inventories = Inventory::where('product_id', $id)->get();
+        $combinations = [];
+        foreach ($sizes as $size) {
+            foreach ($colors as $color) {
+                $combinations[] = [
+                    'size_id' => $size->id,
+                    'size_name' => $size->name,
+                    'color_id' => $color->id,
+                    'color_name' => $color->name,
+                ];
+            }
+        }
 
-        $product->save();
 
-        return redirect()->route('admin.products')->with('success', 'Product updated successfully');
+        return view('admin.product.edit', compact('product', 'colors', 'sizes', 'combinations', 'inventories'));
     }
 
     public function deleteProduct($id)

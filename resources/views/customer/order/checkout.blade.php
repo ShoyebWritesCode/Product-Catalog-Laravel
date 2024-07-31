@@ -1,6 +1,6 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="flex justify-between items-center">
+        {{-- <div class="flex justify-between items-center">
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
                 <h1 class="text-2xl font-bold mb-2">{{ 'My Order' }}</h1>
             </h2>
@@ -16,7 +16,8 @@
                     {{ $numberOfItems }}
                 </span>
             </a>
-        </div>
+        </div> --}}
+        @include('partials.nav')
     </x-slot>
 
     <div class="py-12">
@@ -35,7 +36,11 @@
                                 <tr>
                                     <th class="px-4 py-2 border text-center">Image</th>
                                     <th class="px-4 py-2 border text-center">Name</th>
+                                    <th class="px-4 py-2 border text-center">Size</th>
+                                    <th class="px-4 py-2 border text-center">Color</th>
                                     <th class="px-4 py-2 border text-center">Price</th>
+                                    <th class="px-4 py-2 border text-center">Quantity</th>
+                                    <th class="px-4 py-2 border text-center">Total</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -49,14 +54,38 @@
                                             </div>
                                         </td>
                                         <td class="border px-4 py-2 text-center">{{ $item->product_name }}</td>
+                                        <td class="border px-4 py-2 text-center">{{ $item->size->name }}</td>
+                                        <td class="border px-4 py-2 text-center">{{ $item->color->name }}</td>
                                         <td class="border px-4 py-2 text-center text-red-600">
                                             {{ $item->product_price }} BDT</td>
+                                        <td class="border px-4 py-2 text-center">{{ $item->quantity }}</td>
+                                        <td class="border px-4 py-2 text-center">
+                                            {{ $item->quantity * $item->product_price }} BDT</td>
                                     </tr>
                                 @endforeach
                             </tbody>
                         </table>
-                        <div class="mt-4 flex justify-between items-center">
-                            <span class="text-lg font-bold">Total: {{ $order->total }} BDT</span>
+                        <div class="mt-1 flex justify-between items-center">
+                            <span class="text-lg font-bold opacity-0"></span>
+                            <br>
+                            <br>
+                            <span class="text-lg font-bold text-gray-300">Product Total:
+                                {{ $order->total - $shippingCost }}
+                                BDT</span>
+                        </div>
+                        <div class="mt-1 flex justify-between items-center">
+                            <span class="text-lg font-bold opacity-0"></span>
+                            <br>
+                            <br>
+                            <span class="text-lg font-bold text-red-300">Shipping Cost: {{ $shippingCost }}
+                                BDT</span>
+                        </div>
+                        <div class="mt-1 flex justify-between items-center">
+                            <span class="text-lg font-bold opacity-0"></span>
+                            <br>
+                            <br>
+                            <span class="text-lg font-bold text-green-300">Grand Total: {{ $order->total }}
+                                BDT</span>
                         </div>
                     </div>
                     <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6 grid grid-cols-2 gap-6">

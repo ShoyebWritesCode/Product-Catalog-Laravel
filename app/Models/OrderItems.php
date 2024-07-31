@@ -10,15 +10,11 @@ class OrderItems extends Model
 {
     use HasFactory;
     protected $table = 'orderItems';
-    protected $fillable = ['order_id', 'product_id'];
+    protected $fillable = ['order_id', 'product_id', 'quantity'];
 
     public function order()
     {
         return $this->belongsTo(Order::class, 'order_id');
-    }
-    public function product()
-    {
-        return $this->belongsTo(Product::class, 'product_id');
     }
 
     public function topSellingProductsQuantity()
@@ -75,5 +71,20 @@ class OrderItems extends Model
             ->orderBy('total_price', 'desc')
             ->take(5)
             ->get();
+    }
+
+    public function product()
+    {
+        return $this->belongsTo(Product::class, 'product_id');
+    }
+
+    public function size()
+    {
+        return $this->belongsTo(Size::class, 'size_id');
+    }
+
+    public function color()
+    {
+        return $this->belongsTo(Color::class, 'color_id');
     }
 }
