@@ -107,6 +107,8 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::get('admin/admin/categories', [AdminController::class, 'categories'])->name('admin.categories');
     Route::get('admin/admin/categories/edit/{id}', [AdminController::class, 'categoryEdit'])->name('admin.category.edit');
     Route::put('/admin/admin/categories/update/{id}', [AdminController::class, 'updateCategory'])->name('admin.category.update');
+    Route::get('/admin/admin/attributes', [AdminController::class, 'attributes'])->name('admin.attributes');
+    Route::post('/admin/admin/attributes/save', [AdminController::class, 'attributesStore'])->name('admin.attributes.store');
     Route::get('admin/admin/reviews', [AdminController::class, 'reviews'])->name('admin.reviews');
     Route::get('admin/admin/pendingorders', [AdminController::class, 'pendingorders'])->name('admin.pendingorders');
     Route::post('admin/admin/pendingorders/{order}', [AdminController::class, 'update'])->name('admin.pendingorders.update');
