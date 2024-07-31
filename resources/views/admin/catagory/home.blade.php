@@ -21,7 +21,9 @@
                 <div class="p-6 text-gray-900">
                     <div class="flex items-center justify-between mb-4">
                         <h1 class="text-2xl font-semibold">List Category</h1>
-                        <a href="{{ route('admin.catagory.create') }}" class="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-indigo-600 focus:outline-none focus:bg-indigo-600">Add a new Category</a>
+                        <a href="{{ route('admin.catagory.create') }}"
+                            class="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-indigo-600 focus:outline-none focus:bg-indigo-600">Add
+                            a new Category</a>
                     </div>
                     <hr class="mb-4">
                     @if (session('success'))
@@ -42,7 +44,8 @@
                             <tbody>
                                 @foreach ($categories as $index => $category)
                                     <tr>
-                                        <td class="py-2 px-4 border-b border-gray-300 text-center">{{ $index + 1 }}</td>
+                                        <td class="py-2 px-4 border-b border-gray-300 text-center">{{ $index + 1 }}
+                                        </td>
                                         <td class="py-2 px-4 border-b border-gray-300">{{ $category->name }}</td>
                                         <td class="py-2 px-4 border-b border-gray-300">
                                             @foreach ($subcategories as $subcategory)

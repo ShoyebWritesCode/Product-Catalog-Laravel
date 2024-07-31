@@ -79,6 +79,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/history/{order}', [OrderController::class, 'orderdetail'])->name('customer.order.orderdetail');
     Route::get('/order/cancel/{order}', [OrderController::class, 'cancel'])->name('customer.order.cancel');
     Route::get('category/products/{category}/filter', [CustomerProductController::class, 'categoryProducts'])->name('customer.category.products');
+    Route::get('category/products/{childCategory}', [CustomerProductController::class, 'subcategoryProducts'])->name('customer.subcategory.products');
     Route::get('category/products/{category}/sort', [CustomerProductController::class, 'sortProducts'])->name('customer.products.sort');
     Route::post('orders/save/quantities', [OrderController::class, 'saveQuantities'])->name('customer.order.saveQuantities');
     Route::get('product/inventory/quantity', [InventoryController::class, 'getInventoryQuantity'])->name('product.inventory.quantity');
@@ -104,6 +105,8 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::delete('/admin/admin/product/update/{id}', [AdminController::class, 'deleteProduct'])->name('admin.product.delete');
     Route::get('admin/admin/users', [AdminController::class, 'users'])->name('admin.users');
     Route::get('admin/admin/categories', [AdminController::class, 'categories'])->name('admin.categories');
+    Route::get('admin/admin/categories/edit/{id}', [AdminController::class, 'categoryEdit'])->name('admin.category.edit');
+    Route::put('/admin/admin/categories/update/{id}', [AdminController::class, 'updateCategory'])->name('admin.category.update');
     Route::get('admin/admin/reviews', [AdminController::class, 'reviews'])->name('admin.reviews');
     Route::get('admin/admin/pendingorders', [AdminController::class, 'pendingorders'])->name('admin.pendingorders');
     Route::post('admin/admin/pendingorders/{order}', [AdminController::class, 'update'])->name('admin.pendingorders.update');

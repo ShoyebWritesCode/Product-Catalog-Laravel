@@ -20,4 +20,9 @@ class Catagory extends Model
     {
         return $this->where('parent_id', $id)->get();
     }
+
+    public function banners()
+    {
+        return $this->hasMany(Banner::class);
+    }
 }

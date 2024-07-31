@@ -13,6 +13,7 @@ use App\Models\PaymentHistory;
 use App\Models\EmailTemplate;
 use App\Models\Color;
 use App\Models\Inventory;
+use App\Models\Banner;
 use App\Models\Size;
 use App\Models\Images;
 use Illuminate\Support\Facades\Notification;
@@ -181,5 +182,37 @@ class AdminController extends Controller
         } else {
             return redirect()->back()->with('success', 'Order status updated successfully');
         }
+    }
+
+    public function categoryEdit($id)
+    {
+        $category = Catagory::findOrFail($id);
+        return view('admin.catagory.edit', compact('category'));
+    }
+
+    public function updateCategory(Request $request, $id)
+    {
+        $destinationPath = config('utility.product_image_path');
+        $images = $request->file('images');
+
+        if ($images && is_array($images)) {
+            foreach ($images as $key => $image) {
+                if ($image) {
+                    $imageName = time() . '_' . $key . '.' . $image->getClientOriginalExtension();
+                    $image->storeAs($destinationPath, $imageName);
+
+                    $imageRecord = new Banner();
+                    $imageRecord->catagory_id = $id;
+                    $imageRecord->banner = $imageName;
+                    $imageRecord->save();
+                }
+            }
+        } else {
+            // session()->flash('error', 'Image upload failed');
+            return redirect()->route('admin.category.edit');
+            // ->with('error', 'Image upload failed');
+        }
+
+        return redirect()->back()->with('success', 'Category updated successfully');
     }
 }

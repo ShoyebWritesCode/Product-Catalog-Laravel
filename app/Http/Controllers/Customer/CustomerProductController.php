@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Customer;
 
 use App\Http\Controllers\Controller;
+use App\Models\Banner;
 use App\Models\Product;
 use App\Models\Review;
 use App\Models\Catagory;
@@ -291,6 +292,8 @@ class CustomerProductController extends Controller
             'path' => LengthAwarePaginator::resolveCurrentPath(),
         ]);
 
+        // $banners = Banner::all();
+
         return view('customer.category.products', [
             'countProducts' => count($Products),
             'Products' => $paginator,
@@ -301,6 +304,7 @@ class CustomerProductController extends Controller
             'discountPercent' => $discountPercent,
             'allParentCategories' => $allParentCategories,
             'allChildCategoriesOfParent' => $allChildCategoriesOfParent,
+            // 'banners' => $banners,
         ]);
     }
 
@@ -348,6 +352,81 @@ class CustomerProductController extends Controller
             'allParentCategories' => $allParentCategories,
             'allChildCategoriesOfParent' => $allChildCategoriesOfParent,
             'unreadNotifications' => $unreadNotifications,
+        ]);
+    }
+
+    public function subcategoryProducts(Request $request, Catagory $childCategory)
+    {
+
+        $childCategory = Catagory::where('id', $childCategory->id)->first();
+        $minPrice = $request->input('min_price');
+        $maxPrice = $request->input('max_price');
+        $color = $request->input('color');
+
+        $selectedCategory = $childCategory;
+
+        $Products = Product::whereHas('mappings', function ($query) use ($childCategory) {
+            $query->where('catagory_id', $childCategory->id);
+        });
+
+        if ($minPrice) {
+            $Products->where('price', '>=', $minPrice);
+        }
+
+        if ($maxPrice) {
+            $Products->where('price', '<=', $maxPrice);
+        }
+
+        if ($color) {
+            $Products->where('color', $color);
+        }
+
+        $Products = $Products->get();
+
+        $subcategories = [];
+        $namesubcategories = [];
+        $nameparentcategories = [];
+        $averageRatings = [];
+        $discountPercent = [];
+        foreach ($Products as $product) {
+            $averageRatings[$product->id] = Review::where('product_id', $product->id)->avg('rating');
+
+            if ($product->prev_price && $product->price < $product->prev_price) {
+                $discountPercent[$product->id] = (($product->prev_price - $product->price) / $product->prev_price) * 100;
+                $discountPercent[$product->id] = round($discountPercent[$product->id], 2);
+            } else {
+                $discountPercent[$product->id] = null;
+            }
+        }
+
+        $unreadNotifications = auth()->user()->unreadNotifications;
+
+        $allParentCategories = Catagory::where('parent_id', null)->get();
+        $allChildCategoriesOfParent = [];
+        foreach ($allParentCategories as $parentCategory) {
+            $allChildCategoriesOfParent[$parentCategory->id] = Catagory::where('parent_id', $parentCategory->id)->get();
+        }
+
+        $collection = new Collection($Products);
+        $perPage = 12;
+        $currentPage = LengthAwarePaginator::resolveCurrentPage();
+        $currentPageItems = $collection->slice(($currentPage - 1) * $perPage, $perPage)->all();
+        $paginator = new LengthAwarePaginator($currentPageItems, $collection->count(), $perPage, $currentPage, [
+            'path' => LengthAwarePaginator::resolveCurrentPath(),
+        ]);
+
+
+        return view('customer.category.products', [
+            'countProducts' => count($Products),
+            'Products' => $paginator,
+            'selectedCategory' => $selectedCategory,
+            'namesubcategories' => $namesubcategories,
+            'averageRatings' => $averageRatings,
+            'unreadNotifications' => $unreadNotifications,
+            'discountPercent' => $discountPercent,
+            'allParentCategories' => $allParentCategories,
+            'allChildCategoriesOfParent' => $allChildCategoriesOfParent,
+            // 'banners' => $banners,
         ]);
     }
 }
