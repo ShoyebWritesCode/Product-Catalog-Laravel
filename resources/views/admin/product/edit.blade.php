@@ -3,8 +3,7 @@
 @section('title', 'Edit Product')
 
 @section('content_header')
-    <h1>Edit Product</h1>
-    <a href="{{ route('admin.products') }}" class="btn btn-danger">Back</a>
+    <a href="{{ route('admin.products') }}" class="btn btn-danger ml-2">Back</a>
 @stop
 
 @section('content')
