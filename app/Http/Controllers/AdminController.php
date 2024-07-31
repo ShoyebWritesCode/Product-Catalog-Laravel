@@ -55,6 +55,7 @@ class AdminController extends Controller
         $product = Product::findOrFail($id);
         $colors = Color::all();
         $sizes = Size::all();
+        $attributes = Attribute::all();
         $inventories = Inventory::where('product_id', $id)->get();
         $combinations = [];
         foreach ($sizes as $size) {
@@ -69,7 +70,7 @@ class AdminController extends Controller
         }
 
 
-        return view('admin.product.edit', compact('product', 'colors', 'sizes', 'combinations', 'inventories'));
+        return view('admin.product.edit', compact('product', 'colors', 'sizes', 'combinations', 'inventories', 'attributes'));
     }
 
     public function deleteProduct($id)

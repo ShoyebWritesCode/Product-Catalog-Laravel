@@ -117,6 +117,56 @@
                                 </div>
 
 
+                                <h3 style="cursor: pointer;" id="toggleAttributes"
+                                    class="flex items-center justify-between bg-gray rounded p-2 cursor-pointer w-1/4">
+                                    <span>Specifications</span>
+                                    <i class="fas fa-chevron-down"></i>
+                                </h3>
+
+                                <hr>
+
+                                <div id="attributeDetails" style="display: none;">
+
+                                    <table class="table table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th class="py-2">Attribute</th>
+                                                <th class="py-2 " style="width: 240px;">Value</th>
+
+                                            </tr>
+                                        </thead>
+                                        <tbody class="divide-y divide-transparent">
+
+                                            @foreach ($attributes as $attribute)
+                                                <tr>
+                                                    <td>{{ $attribute->name }}</td>
+                                                    <td>
+                                                        @php
+                                                            $productId = $product->id;
+                                                            $attributeId = $attribute->id;
+                                                            $productAttribute = $product->attributes
+                                                                ->where('id', $attribute->id)
+                                                                ->first();
+                                                            $oldValue = $productAttribute
+                                                                ? $productAttribute->value
+                                                                : '';
+                                                        @endphp
+                                                        <input type="text"
+                                                            name="product_attributes[{{ $attributeId }}][{{ $productId }}][value]"
+                                                            value="{{ old('product_attributes.' . $attributeId . '_' . $productId . '.value', $oldValue) }}"
+                                                            class="form-control">
+                                                    </td>
+
+                                                </tr>
+                                            @endforeach
+
+                                        </tbody>
+
+
+
+                                    </table>
+                                </div>
+
                                 <h3 style="cursor: pointer;" id="toggleInventory"
                                     class="flex items-center justify-between bg-gray rounded p-2 cursor-pointer w-1/4">
                                     <span>Inventory Details</span>
@@ -188,6 +238,9 @@
         $(document).ready(function() {
             $('#toggleInventory').click(function() {
                 $('#inventoryDetails').toggle();
+            });
+            $('#toggleAttributes').click(function() {
+                $('#attributeDetails').toggle();
             });
             $('#successAlert').fadeOut(2000);
         });
