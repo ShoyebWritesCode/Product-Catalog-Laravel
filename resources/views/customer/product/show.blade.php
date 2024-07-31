@@ -6,8 +6,8 @@
 
     <div id="successMessage" class="alert alert-success mb-4" role="alert" style="display: none;"></div>
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+    <div class="py-0">
+        <div class="max-w-7xl ">
             <div class="bg-gray-100 overflow-hidden ">
                 <div class="p-4 text-gray-900">
                     <div class="bg-gray-100 border border-orange-300  p-4 flex shadow-md">
@@ -15,7 +15,7 @@
                             <h1 class="text-2xl font-bold mb-2">{{ $product->name }}</h1>
                             <p class="text-lg mb-2">{{ $product->description }}</p>
 
-                            <div class="text-lg text-center text-gray-400 flex flex-col items-center">
+                            <div class="text-lg  text-gray-400 flex flex-col">
                                 <span class="text-lg text-orange-600 mb-2">{{ $product->price }} BDT</span>
 
                                 @if (isset($product->prev_price) && $product->prev_price > $product->price)
@@ -54,7 +54,7 @@
                             </div>
 
 
-                            <div class="flex justify-center mt-2">
+                            {{-- <div class="flex justify-center mt-2">
                                 @if (isset($nameparentcategories[$product->id]))
                                     @foreach ($nameparentcategories[$product->id] as $subcategory)
                                         <div class="border border-orange-600  px-2 mx-1">
@@ -71,7 +71,7 @@
                                         </div>
                                     @endforeach
                                 @endif
-                            </div>
+                            </div> --}}
                         </div>
                         <div class="ml-4 p-4">
                             {{-- <img src="{{ asset('storage/images/' . $product->image) }}" alt="{{ $product->name }}" class="w-80 h-64 object-cover rounded-md"> --}}
@@ -160,16 +160,18 @@
 
                     <div class="mt-8">
                         <!-- Tab Navigation -->
-                        <div class="flex space-x-4 mb-0">
+                        <hr class=" border-2 border-orange-600 mt-0 mb-0">
+                        <div class="flex space-x-1 mb-0">
 
-                            <button id="detailsTab" class="tab-button" onclick="showTab('details')">Details</button>
-                            <button id="specificationsTab" class="tab-button"
+                            <button id="detailsTab" class="tab-button bg-white"
+                                onclick="showTab('details')">Details</button>
+                            <button id="specificationsTab" class="tab-button bg-white"
                                 onclick="showTab('specifications')">Specifications</button>
-                            <button id="reviewsTab" class="tab-button active"
+                            <button id="reviewsTab" class="tab-button active bg-white"
                                 onclick="showTab('reviews')">Reviews</button>
 
                         </div>
-                        <hr class=" border-2 border-orange-600 mt-0">
+
 
                         <!-- Tab Content -->
                         <div id="details" class="tab-content hidden">
