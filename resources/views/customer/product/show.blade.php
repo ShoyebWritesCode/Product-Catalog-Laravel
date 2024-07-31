@@ -179,8 +179,27 @@
 
                         <div id="specifications" class="tab-content hidden">
                             <h2 class="text-2xl font-bold mb-4">Specifications</h2>
-                            <p>This section contains specifications of the product. You can include dimensions, weight,
-                                and other relevant information.</p>
+                            @if ($product->attCount() == 0)
+                                <p>This product does not have any specifications.</p>
+                            @else
+                                <table class="w-full">
+                                    <thead>
+                                        <tr>
+                                            <th class="border border-gray-300 p-2">Attribute</th>
+                                            <th class="border border-gray-300 p-2">Value</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($product->attributes as $attribute)
+                                            <tr>
+                                                <td class="border border-gray-300 p-2">{{ $attribute->name->name }}
+                                                </td>
+                                                <td class="border border-gray-300 p-2">{{ $attribute->value }}</td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            @endif
                         </div>
 
                         <div id="reviews" class="tab-content">

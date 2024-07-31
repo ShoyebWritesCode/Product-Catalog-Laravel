@@ -14,7 +14,7 @@
                                 alt="{{ $product->name }}" class="w-full h-40 object-cover  mb-2" loading="lazy">
 
                             <p
-                                class="text-lg text-center mb-2 text-lg font-semibold text-gray-900 hover:text-blue-700  no-underline">
+                                class="text-lg text-center mb-2 font-semibold text-gray-900 hover:text-blue-700  no-underline">
                                 {{ $product->name }}
                             </p>
 
