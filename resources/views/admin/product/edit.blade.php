@@ -131,7 +131,7 @@
                                         <thead>
                                             <tr>
                                                 <th class="py-2">Attribute</th>
-                                                <th class="py-2 " style="width: 240px;">Value</th>
+                                                <th class="py-2 w-1/2">Value</th>
 
                                             </tr>
                                         </thead>
@@ -145,7 +145,7 @@
                                                             $productId = $product->id;
                                                             $attributeId = $attribute->id;
                                                             $productAttribute = $product->attributes
-                                                                ->where('id', $attribute->id)
+                                                                ->where('attribute_id', $attribute->id)
                                                                 ->first();
                                                             $oldValue = $productAttribute
                                                                 ? $productAttribute->value
