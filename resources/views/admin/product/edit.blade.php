@@ -152,9 +152,12 @@
                                                                 : '';
                                                         @endphp
                                                         <input type="text"
-                                                            name="product_attributes[{{ $attributeId }}][{{ $productId }}][value]"
+                                                            name="product_attributes[{{ $attributeId }}_{{ $productId }}][value]"
                                                             value="{{ old('product_attributes.' . $attributeId . '_' . $productId . '.value', $oldValue) }}"
                                                             class="form-control">
+                                                        <input type="hidden"
+                                                            name="product_attributes[{{ $attributeId }}_{{ $productId }}][attribute_id]"
+                                                            value="{{ $attribute->id }}">
                                                     </td>
 
                                                 </tr>

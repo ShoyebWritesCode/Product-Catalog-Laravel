@@ -8,6 +8,7 @@ use App\Models\Catagory;
 use App\Models\Mapping;
 use App\Models\Images;
 use App\Models\Inventory;
+use App\Models\ProductAttribute;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -80,6 +81,8 @@ class ProductController extends Controller
         $this->handleImageUpload($request, $product->id);
 
         $this->updateInventories($request->inventories, $product->id);
+
+        $this->updateSpecifications($request->product_attributes, $product->id);
 
         return redirect()->back()->with('success', 'Product updated successfully');
     }
@@ -173,6 +176,19 @@ class ProductController extends Controller
                     'color_id' => $inventoryData['color_id'],
                 ],
                 ['quantity' => $inventoryData['quantity']]
+            );
+        }
+    }
+
+    private function updateSpecifications(array $product_attributes, $productId)
+    {
+        foreach ($product_attributes as $attributeData) {
+            ProductAttribute::updateOrCreate(
+                [
+                    'product_id' => $productId,
+                    'attribute_id' => $attributeData['attribute_id'],
+                ],
+                ['value' => $attributeData['value']]
             );
         }
     }
