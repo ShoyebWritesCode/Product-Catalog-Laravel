@@ -45,6 +45,8 @@
                                         @for ($i = 0; $i < $emptyStars; $i++)
                                             <i class="far fa-star text-yellow-500 text-2xl"></i>
                                         @endfor
+                                        <span class="text-lg text-gray-900 onhover: cursor-pointer"
+                                            onclick="showTab('reviews')">({{ $product->reviewCount() }})</span>
                                     @else
                                         No Ratings
                                     @endif
@@ -181,11 +183,11 @@
                             @if ($product->attCount() == 0)
                                 <p>This product does not have any specifications.</p>
                             @else
-                                <table class="w-full">
+                                <table class="w-3/4">
                                     <thead>
                                         <tr>
-                                            <th class="border border-gray-300 p-2">Attribute</th>
-                                            <th class="border border-gray-300 p-2">Value</th>
+                                            <th class="border border-gray-300 p-2 w-1/3">Attribute</th>
+                                            <th class="border border-gray-300 p-2 w-2/3">Value</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -198,12 +200,68 @@
                                         @endforeach
                                     </tbody>
                                 </table>
+
                             @endif
                         </div>
 
                         <div id="reviews" class="tab-content">
-                            @if ($reviews->isNotEmpty())
+                            @php
+                                $totalReviews = $reviews->count();
+                                $totalRating = $reviews->sum('rating');
+                                $averageRating = $totalReviews > 0 ? round($totalRating / $totalReviews, 2) : 0;
+                                $ratingDistribution = array_fill(1, 5, 0);
 
+                                foreach ($reviews as $review) {
+                                    $ratingDistribution[$review->rating]++;
+                                }
+                            @endphp
+
+                            <div class="mb-4 w-full flex justify-between items-center">
+                                <div>
+                                    <h2 class="text-2xl font-bold mb-4">Average customer rating</h2>
+                                    <p class="text-4xl font-bold mb-2">{{ $averageRating }} / 5</p>
+                                    <p class="text-gray-500 mb-4">{{ $totalReviews }}
+                                        review{{ $totalReviews != 1 ? 's' : '' }}</p>
+                                    @php
+                                        $rating = $averageRating;
+                                        $fullStars = floor($rating);
+                                        $halfStar = $rating - $fullStars >= 0.5 ? 1 : 0;
+                                        $emptyStars = 5 - ($fullStars + $halfStar);
+                                    @endphp
+
+                                    @for ($i = 0; $i < $fullStars; $i++)
+                                        <i class="fas fa-star text-yellow-500 text-2xl"></i>
+                                    @endfor
+
+                                    @for ($i = 0; $i < $halfStar; $i++)
+                                        <i class="fas fa-star-half-alt text-yellow-500 text-2xl"></i>
+                                    @endfor
+
+                                    @for ($i = 0; $i < $emptyStars; $i++)
+                                        <i class="far fa-star text-yellow-500 text-2xl"></i>
+                                    @endfor
+                                </div>
+
+                                <div class="w-1/2 pr-6 pt-4">
+                                    @foreach ([5, 4, 3, 2, 1] as $star)
+                                        <div class="flex items-center mb-2">
+                                            <div class="w-20 text-right mr-4">{{ $star }}
+                                                star{{ $star > 1 ? 's' : '' }}</div>
+                                            <div class="w-full bg-gray-200 rounded-full h-4">
+                                                <div class="bg-yellow-500 h-4 rounded-full"
+                                                    style="width: {{ $ratingDistribution[$star] > 0 ? ($ratingDistribution[$star] / $totalReviews) * 100 : 0 }}%;">
+                                                </div>
+                                            </div>
+                                            <div class="w-12 text-right ml-4">{{ $ratingDistribution[$star] }}
+                                                ({{ $totalReviews > 0 ? round(($ratingDistribution[$star] / $totalReviews) * 100, 2) : 0 }}%)
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            </div>
+
+
+                            @if ($reviews->isNotEmpty())
                                 <div class="mb-6">
                                     <h3 class="text-xl font-semibold mb-2">Existing Reviews</h3>
                                     @foreach ($reviews as $review)
@@ -293,6 +351,7 @@
                                 <p class="text-red-500">You can only submit a review once every hour.</p>
                             @endif
                         </div>
+
 
 
                     </div>

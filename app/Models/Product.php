@@ -29,6 +29,11 @@ class Product extends Model
         return $this->hasMany(Review::class);
     }
 
+    public function reviewCount()
+    {
+        return $this->reviews()->count();
+    }
+
     public function mappings()
     {
         return $this->hasMany(Mapping::class);
