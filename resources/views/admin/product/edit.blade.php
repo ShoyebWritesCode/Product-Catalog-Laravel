@@ -76,6 +76,13 @@
                                     @enderror
                                 </div>
                                 <div class="mb-4">
+                                    <label for="details" class="form-label">Details:</label>
+                                    <textarea name="details" id="details" class="form-control">{{ old('details', $product->Detailes) }}</textarea>
+                                    @error('details')
+                                        <span class="text-danger">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                                <div class="mb-4">
                                     <label for="price" class="form-label">Price:</label>
                                     <input type="text" name="price" id="price" class="form-control"
                                         value="{{ old('price', $product->price) }}">
@@ -175,7 +182,9 @@
 
 @section('js')
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.ckeditor.com/4.16.0/standard/ckeditor.js"></script>
     <script>
+        CKEDITOR.replace('details');
         $(document).ready(function() {
             $('#toggleInventory').click(function() {
                 $('#inventoryDetails').toggle();

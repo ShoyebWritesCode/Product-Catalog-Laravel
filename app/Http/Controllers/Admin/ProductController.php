@@ -151,6 +151,7 @@ class ProductController extends Controller
     {
         $product->name = $request->name;
         $product->description = $request->description;
+        $product->Detailes = $request->details;
         if ($request->price != $product->price) {
             $product->prev_price = $product->price;
             $product->price = $request->price;
