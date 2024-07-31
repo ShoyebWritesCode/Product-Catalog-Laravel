@@ -61,6 +61,14 @@
                                     @enderror
                                 </div>
                                 <div class="mb-4">
+                                    <label for="slug" class="form-label">Slug:</label>
+                                    <input type="text" name="slug" id="slug" class="form-control"
+                                        value="{{ old('slug', $product->slug) }}">
+                                    @error('slug')
+                                        <span class="text-danger">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                                <div class="mb-4">
                                     <label for="description" class="form-label">Description:</label>
                                     <input type="text" name="description" id="description" class="form-control"
                                         value="{{ old('description', $product->description) }}">

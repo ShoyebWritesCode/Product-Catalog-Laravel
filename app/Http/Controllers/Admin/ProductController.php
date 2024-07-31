@@ -151,10 +151,14 @@ class ProductController extends Controller
     {
         $product->name = $request->name;
         $product->description = $request->description;
-        $product->prev_price = $product->price; // Assuming this is intentional
-        $product->price = $request->price;
+        if ($request->price != $product->price) {
+            $product->prev_price = $product->price;
+            $product->price = $request->price;
+        }
+        $product->slug = $request->slug;
         $product->featured = $request->has('featured') ? 1 : 0;
         $product->new = $request->has('new') ? 1 : 0;
+
         $product->save();
     }
 
