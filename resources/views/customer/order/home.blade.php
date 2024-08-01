@@ -199,10 +199,11 @@
                                         <td class="border px-2 py-1 text-center">{{ $item->color->name }}</td>
                                         <td class="border px-2 py-1 text-center text-green-600">
                                             @if ($item->prev_price && $item->prev_price > $item->product_price)
-                                                <del class="text-red-400 mr-2">{{ $item->prev_price }} BDT</del>
+                                                <del class="text-red-400 mr-2">{{ number_format($item->prev_price, 2) }}
+                                                    BDT</del>
                                             @endif
                                             <br>
-                                            {{ $item->product_price }} BDT
+                                            {{ number_format($item->product_price, 2) }} BDT
                                         </td>
                                         <td class="border px-2 py-1 text-center">
                                             <input type="number" class="quantity-input" name="quantity[]"
@@ -228,10 +229,11 @@
                                 <span class="text-sm font-bold text-green-500"></span>
                             </div>
                             <div class="flex flex-col items-end mt-2">
-                                <span id="prevTotal" class="text-lg font-bold mb-1">Product Total: 0 BDT</span>
-                                <span id="discountAmount" class="text-lg font-bold mb-1">Discount: 0 BDT</span>
-                                <span id="productTotal" class="text-lg font-bold mb-1">OrderTotal: 0 BDT</span>
-                                <span id="discount" class="text-sm font-bold text-green-500">Discount: 0 BDT</span>
+                                <span id="prevTotal" class="text-lg  mb-1">Product Total: 0 BDT</span>
+                                <span id="discountAmount" class="text-lg">Discount: 0 BDT</span>
+                                <span id="discount" class="text-xs  text-green-500">Discount: 0 BDT</span>
+                                <span id="productTotal" class="text-lg mb-1">OrderTotal: 0 BDT</span>
+
                             </div>
 
                         </div>
@@ -258,9 +260,9 @@
     </div>
 
 
-    <div class="fixed inset-20 bg-gray-500 bg-opacity-50 rounded-lg shadow-lg p-2 w-1/10 hidden" id="orderPopup">
+    <div class="fixed inset-x-0 top-20 bg-gray-500 bg-opacity-50  shadow-lg p-2 w-1/10 h-full hidden" id="orderPopup">
         <button id="closePopup" class="float-right text-gray-700">&times;</button>
-        <div id="popupContent" class="flex justify-between space-x-4"></div>
+        <div id="popupContent" class="flex justify-between space-x-4 mt-16 ml-8"></div>
     </div>
 
 
@@ -268,6 +270,19 @@
 </x-app-layout>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
+    document.getElementById('notificationDropdown').addEventListener('click', function(event) {
+        event.preventDefault();
+        document.getElementById('notificationDropdownContent').classList.toggle('hidden');
+    });
+
+    document.addEventListener('click', function(event) {
+        const dropdown = document.getElementById('notificationDropdownContent');
+        if (!event.target.closest('#notificationDropdown') && !event.target.closest(
+                '#notificationDropdownContent')) {
+            dropdown.classList.add('hidden');
+        }
+    });
+
     $(document).ready(function() {
 
         // Initialize an array to store itemId-quantity pairs
@@ -360,7 +375,7 @@
                 const quantity = parseInt(input.value);
                 total += price * quantity;
             });
-            productTotalElement.textContent = `Order Total:  ${total} BDT`;
+            productTotalElement.textContent = `Order Total:  ${total.toFixed(2)} BDT`;
             updateDiscount(total);
             updatePrevTotal(total);
         };
@@ -377,8 +392,8 @@
             });
             discount = ((prevTotal - total) / prevTotal) * 100;
             if (discount > 0) {
-                discountElement.textContent = `(Save: ${discount.toFixed(2)} %)`;
-                discountTotalElement.textContent = `Discount: ${prevTotal - total} BDT`;
+                discountElement.textContent = `You saved ${discount.toFixed(2)} %`;
+                discountTotalElement.textContent = `Discount: ${(prevTotal - total).toFixed(2)} BDT`;
             } else {
                 discountElement.textContent = '';
                 discountTotalElement.textContent = '';
@@ -395,7 +410,7 @@
                 prevTotal += prevPrice * quantity;
             });
             if (prevTotal - total > 0) {
-                prevTotalElement.textContent = `Product Total: ${prevTotal} BDT`;
+                prevTotalElement.textContent = `Product Total: ${prevTotal.toFixed(2)} BDT`;
             } else {
                 prevTotalElement.textContent = '';
             }

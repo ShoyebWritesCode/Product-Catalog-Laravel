@@ -19,7 +19,14 @@
                             </div>
                         </td>
                         <td class="border px-4 py-2 text-center">{{ $item->product_name }}</td>
-                        <td class="border px-4 py-2 text-center text-red-600">{{ $item->product_price }} BDT</td>
+                        <td class="border px-4 py-2 text-center text-green-600">
+                            @if ($item->prev_price && $item->prev_price > $item->product_price)
+                                <del class="text-red-400 mr-2">{{ number_format($item->prev_price, 2) }}
+                                    BDT</del>
+                            @endif
+                            <br>
+                            {{ number_format($item->product_price, 2) }} BDT
+                        </td>
                     </tr>
                 @endforeach
             </tbody>
