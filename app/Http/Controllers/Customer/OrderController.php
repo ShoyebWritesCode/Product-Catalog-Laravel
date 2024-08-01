@@ -166,7 +166,7 @@ class OrderController extends Controller
             $orderItem->product_id = $product->id;
             $orderItem->product_name = $product->name;
             $orderItem->product_price = $product->price;
-            $orderItem->image = $product->image;
+            $orderItem->image = $product->images->first()->path;
             $orderItem->size_id = $request->size;
             $orderItem->color_id = $request->color;
             $orderItem->save();

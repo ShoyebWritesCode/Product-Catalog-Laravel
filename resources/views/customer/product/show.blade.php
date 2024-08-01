@@ -10,61 +10,88 @@
         <div class="max-w-7xl ">
             <div class="bg-gray-100 overflow-hidden ">
                 <div class="p-4 text-gray-900">
-                    <div class="bg-gray-100 border border-orange-300 p-4 flex shadow-md">
-                        <div class="flex-grow">
-                            <h1 class="text-2xl font-bold mb-2">{{ $product->name }}</h1>
-                            <p class="text-lg mb-2">{{ $product->description }}</p>
+                    <div class="bg-gray-100 border border-orange-300 p-4 flex shadow-md flex-col">
+                        <div class="flex-grow flex">
+                            <div class="w-1/2 pr-4">
 
-                            <div class="text-lg text-gray-400 flex flex-col">
-                                <span class="text-lg text-orange-600 mb-2">{{ $product->price }} BDT</span>
+                                <h1 class="text-2xl font-bold mb-2">{{ $product->name }}</h1>
+                                <p class="text-lg mb-2">{{ $product->description }}</p>
 
-                                @if (isset($product->prev_price) && $product->prev_price > $product->price)
-                                    <div class="flex items-center">
-                                        <del class="mr-2">{{ number_format($product->prev_price, 2) }} BDT</del>
-                                        <span class="text-green-600">
-                                            -{{ number_format((($product->prev_price - $product->price) / $product->prev_price) * 100, 2) }}%
-                                        </span>
-                                    </div>
-                                @endif
+                                <div class="text-lg text-gray-400 flex flex-col">
+                                    <span class="text-lg text-orange-600 mb-2">{{ $product->price }} BDT</span>
 
-
-                                <span class="text-sm text-yellow-600 mt-2">
-                                    @if (isset($averageRatings[$product->id]))
-                                        @php
-                                            $rating = $averageRatings[$product->id];
-                                            $fullStars = floor($rating);
-                                            $halfStar = $rating - $fullStars >= 0.5 ? 1 : 0;
-                                            $emptyStars = 5 - ($fullStars + $halfStar);
-                                        @endphp
-
-                                        @for ($i = 0; $i < $fullStars; $i++)
-                                            <i class="fas fa-star text-yellow-500 text-2xl"></i>
-                                        @endfor
-
-                                        @for ($i = 0; $i < $halfStar; $i++)
-                                            <i class="fas fa-star-half-alt text-yellow-500 text-2xl"></i>
-                                        @endfor
-
-                                        @for ($i = 0; $i < $emptyStars; $i++)
-                                            <i class="far fa-star text-yellow-500 text-2xl"></i>
-                                        @endfor
-                                        <span class="text-lg text-gray-900 cursor-pointer"
-                                            onclick="scrollToReviews()">({{ $product->reviewCount() }})</span>
-                                    @else
-                                        No Ratings
+                                    @if (isset($product->prev_price) && $product->prev_price > $product->price)
+                                        <div class="flex items-center">
+                                            <del class="mr-2">{{ number_format($product->prev_price, 2) }} BDT</del>
+                                            <span class="text-green-600">
+                                                -{{ number_format((($product->prev_price - $product->price) / $product->prev_price) * 100, 2) }}%
+                                            </span>
+                                        </div>
                                     @endif
-                                </span>
-                            </div>
 
+
+                                    <span class="text-sm text-yellow-600 mt-2">
+                                        @if (isset($averageRatings[$product->id]))
+                                            @php
+                                                $rating = $averageRatings[$product->id];
+                                                $fullStars = floor($rating);
+                                                $halfStar = $rating - $fullStars >= 0.5 ? 1 : 0;
+                                                $emptyStars = 5 - ($fullStars + $halfStar);
+                                            @endphp
+
+                                            @for ($i = 0; $i < $fullStars; $i++)
+                                                <i class="fas fa-star text-yellow-500 text-2xl"></i>
+                                            @endfor
+
+                                            @for ($i = 0; $i < $halfStar; $i++)
+                                                <i class="fas fa-star-half-alt text-yellow-500 text-2xl"></i>
+                                            @endfor
+
+                                            @for ($i = 0; $i < $emptyStars; $i++)
+                                                <i class="far fa-star text-yellow-500 text-2xl"></i>
+                                            @endfor
+                                            <span class="text-lg text-gray-900 cursor-pointer"
+                                                onclick="scrollToReviews()">({{ $product->reviewCount() }})</span>
+                                        @else
+                                            No Ratings
+                                        @endif
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="w-3/4">
+                                <!-- Slider main container -->
+                                <div class="swiper shadow-sm">
+                                    <!-- Additional required wrapper -->
+                                    <div class="swiper-wrapper">
+                                        <!-- Slides -->
+                                        @foreach ($product->images as $image)
+                                            <div class="swiper-slide ">
+                                                <img src="{{ asset('storage/images/' . $image->path) }}"
+                                                    alt="{{ $product->name }}" class="object-cover">
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                    <!-- If we need pagination -->
+                                    <div class="swiper-pagination"></div>
+
+                                    <!-- If we need navigation buttons -->
+                                    <div class="swiper-button-prev"></div>
+                                    <div class="swiper-button-next"></div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="bg-gray-100 p- w-full">
                             @if ($product->totalQuantity() > 0)
-                                <div class="flex flex-col mt-4">
+                                <div class="flex flex-col w-full mt-4">
                                     <form id="addToCartForm" action="{{ route('customer.order.add', $product->id) }}"
                                         method="POST" class="w-full">
                                         @csrf
 
-                                        <div class="flex flex-col mb-4">
+                                        <div class="flex flex-col mb-0">
                                             <!-- Select Size -->
-                                            <div class="mb-4">
+                                            <div class="mb-2">
                                                 <label class="block text-gray-700 text-sm font-bold mb-2">Size:</label>
                                                 <div class="flex items-center">
                                                     @foreach ($sizes as $size)
@@ -72,26 +99,46 @@
                                                             name="size" value="{{ $size->id }}"
                                                             class="hidden size-option-input">
                                                         <label for="size_{{ $size->id }}"
-                                                            class="size-option bg-gray-200 text-gray-800 font-semibold py-2 px-4 rounded cursor-pointer mr-2 hover:bg-gray-300">
+                                                            class="size-option bg-gray-200 text-gray-800 font-semibold py-1 px-3 shadow-sm cursor-pointer mr-2 hover:bg-gray-300">
                                                             {{ $size->name }}
                                                         </label>
                                                     @endforeach
                                                 </div>
                                             </div>
 
-                                            <!-- Select Color -->
-                                            <div>
-                                                <label class="block text-gray-700 text-sm font-bold mb-2">Color:</label>
-                                                <div class="flex items-center">
-                                                    @foreach ($colors as $color)
-                                                        <input type="radio" id="color_{{ $color->id }}"
-                                                            name="color" value="{{ $color->id }}"
-                                                            class="hidden color-option-input">
-                                                        <label for="color_{{ $color->id }}"
-                                                            class="color-option bg-{{ $color->description }}-500 text-gray-800 font-semibold py-2 px-4 rounded cursor-pointer mr-2 hover:bg-gray-300">
-                                                            {{ $color->name }}
-                                                        </label>
-                                                    @endforeach
+                                            <!-- Select Color and Add to Cart Button -->
+                                            <div class="flex items-center justify-between">
+                                                <div class="flex-grow">
+                                                    <label
+                                                        class="block text-gray-700 text-sm font-bold mb-2">Color:</label>
+                                                    <div class="flex items-center">
+                                                        @foreach ($colors as $color)
+                                                            <input type="radio" id="color_{{ $color->id }}"
+                                                                name="color" value="{{ $color->id }}"
+                                                                class="hidden color-option-input">
+                                                            <label for="color_{{ $color->id }}"
+                                                                class="color-option bg-{{ $color->description }}-500 text-gray-800 font-semibold py-1 px-3 shadow-sm cursor-pointer mr-2 hover:bg-gray-300">
+                                                                {{ $color->name }}
+                                                            </label>
+                                                        @endforeach
+                                                    </div>
+                                                </div>
+
+                                                <div class="mr-4">
+                                                    <div class="stock">
+
+                                                    </div>
+
+                                                    <button type="submit" id="CartButton"
+                                                        class="bg-red-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                                                        style="display: none;">
+                                                        Add to Cart
+                                                    </button>
+                                                    <button type="button" id="OutOfStockButton"
+                                                        class="bg-gray-400 text-white font-bold py-2 px-4 rounded"
+                                                        disabled style="display: none;">
+                                                        Out of Stock
+                                                    </button>
                                                 </div>
                                             </div>
                                         </div>
@@ -104,87 +151,10 @@
                             @endif
                         </div>
 
-                        <div class="ml-4 p-4">
-                            <!-- Slider main container -->
-                            <div class="swiper shadow-sm">
-                                <!-- Additional required wrapper -->
-                                <div class="swiper-wrapper">
-                                    <!-- Slides -->
-                                    @foreach ($product->images as $image)
-                                        <div class="swiper-slide">
-                                            <img src="{{ asset('storage/images/' . $image->path) }}"
-                                                alt="{{ $product->name }}" class="object-cover">
-                                        </div>
-                                    @endforeach
-                                </div>
-                                <!-- If we need pagination -->
-                                <div class="swiper-pagination"></div>
 
-                                <!-- If we need navigation buttons -->
-                                <div class="swiper-button-prev"></div>
-                                <div class="swiper-button-next"></div>
-                            </div>
-                        </div>
                     </div>
 
-
-
-                    @if ($product->totalQuantity() > 0)
-                        <div class="flex flex-col mt-4">
-                            <form id="addToCartForm" action="{{ route('customer.order.add', $product->id) }}"
-                                method="POST" class="w-full ">
-                                @csrf
-
-                                <!-- Select Size and Color in the same line -->
-                                <div class="flex mb-4">
-                                    <!-- Select Size -->
-                                    {{-- <div class="mr-48">
-                                        <label class="block text-gray-700 text-sm font-bold mb-2">Size:</label>
-                                        <div class="flex items-center">
-                                            @foreach ($sizes as $size)
-                                                <input type="radio" id="size_{{ $size->id }}" name="size"
-                                                    value="{{ $size->id }}" class="hidden size-option-input">
-                                                <label for="size_{{ $size->id }}"
-                                                    class="size-option bg-gray-200 text-gray-800 font-semibold py-2 px-4 rounded cursor-pointer mr-2 hover:bg-gray-300">
-                                                    {{ $size->name }}
-                                                </label>
-                                            @endforeach
-                                        </div>
-                                    </div> --}}
-
-                                    <!-- Select Color -->
-                                    {{-- <div class="mr-32">
-                                        <label class="block text-gray-700 text-sm font-bold mb-2">Color:</label>
-                                        <div class="flex items-center">
-                                            @foreach ($colors as $color)
-                                                <input type="radio" id="color_{{ $color->id }}" name="color"
-                                                    value="{{ $color->id }}" class="hidden color-option-input">
-                                                <label for="color_{{ $color->id }}"
-                                                    class="color-option bg-{{ $color->description }}-500 text-gray-800 font-semibold py-2 px-4 rounded cursor-pointer mr-2 hover:bg-gray-300">
-                                                    {{ $color->name }}
-                                                </label>
-                                            @endforeach
-                                        </div>
-                                    </div> --}}
-                                    <div class="stock mt-6"></div>
-                                </div>
-                                <div class="w-1/6 self-end ml-auto">
-                                    <button type="submit"
-                                        class="bg-red-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                                        id="CartButton">
-                                        Add to Cart
-                                    </button>
-                                </div>
-
-                            </form>
-                        </div>
-                    @else
-                        <div class="stock">
-                            <p class="text-red-500 text-center mt-4">Out of Stock</p>
-                        </div>
-                    @endif
-
-                    <div class="mt-8">
+                    <div class="mt-4">
                         <!-- Tab Navigation -->
                         <hr class=" border-2 border-orange-600 mt-0 mb-0">
                         <div class="flex space-x-1 mb-0">
@@ -448,8 +418,7 @@
             function updateInventory() {
                 const selectedSize = document.querySelector('input[name="size"]:checked');
                 const selectedColor = document.querySelector('input[name="color"]:checked');
-                const productId =
-                    {{ $product->id }};
+                const productId = {{ $product->id }};
 
                 if (selectedSize && selectedColor) {
                     const sizeId = selectedSize.value;
@@ -464,18 +433,17 @@
                             if (data.success) {
                                 console.log('Inventory Quantity:', data.quantity);
                                 if (data.quantity > 0) {
-                                    document.querySelector('.stock').innerHTML =
-                                        `<p class="text-green-500">In Stock</p>`;
                                     document.getElementById('CartButton').style.display = 'block';
+                                    document.getElementById('OutOfStockButton').style.display = 'none';
                                 } else {
-                                    document.querySelector('.stock').innerHTML =
-                                        `<p class="text-red-500">Out of Stock</p>`;
                                     document.getElementById('CartButton').style.display = 'none';
+                                    document.getElementById('OutOfStockButton').style.display = 'block';
                                 }
                             } else {
                                 document.querySelector('.stock').innerHTML =
                                     `<p class="text-red-500">Out of Stock</p>`;
                                 document.getElementById('CartButton').style.display = 'none';
+                                document.getElementById('OutOfStockButton').style.display = 'block';
                             }
                         })
                         .catch(error => {
