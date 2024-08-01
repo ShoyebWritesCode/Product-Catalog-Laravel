@@ -1,6 +1,6 @@
 @if ($order && $orderItems->isNotEmpty())
-    <div class="bg-white border border-gray-300 rounded-lg p-4 mb-2">
-        <h3 class="text-2xl font-bold mb-2">Order #{{ $order->id }}</h3>
+    <div class="bg-white border border-gray-300 rounded-lg p-4 mb-0">
+        <h3 class="text-xl font-bold mb-2">Order #{{ $order->id }}</h3>
         <table class="min-w-full bg-white border">
             <thead>
                 <tr>
@@ -24,7 +24,7 @@
                 @endforeach
             </tbody>
         </table>
-        <div class="mt-4 flex justify-between items-center">
+        <div class="mt-2 flex justify-between items-center">
             <span class="text-lg font-bold opacity-0">Total: {{ $order->total }} BDT</span>
             <a href="{{ route('customer.order.home') }}">
                 <button type="submit" class="bg-red-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">

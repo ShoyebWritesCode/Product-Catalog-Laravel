@@ -1,5 +1,6 @@
 <x-app-layout>
     @vite(['resources/scss/show.scss'])
+    @vite(['resources/scss/product.scss'])
     <x-slot name="header">
         @include('partials.nav')
     </x-slot>
