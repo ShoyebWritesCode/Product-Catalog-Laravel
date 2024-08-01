@@ -222,10 +222,23 @@
 
                             </tbody>
                         </table>
+                        <div class="mt-2 flex justify-between items-center">
+                            <div class="flex items-center opacity-0">
+                                <span class="text-lg font-bold mr-4">Product Total: 0 BDT</span>
+                                <span class="text-sm font-bold text-green-500"></span>
+                            </div>
+                            <div class="flex flex-col items-end mt-2">
+                                <span id="prevTotal" class="text-lg font-bold mb-1">Product Total: 0 BDT</span>
+                                <span id="discountAmount" class="text-lg font-bold mb-1">Discount: 0 BDT</span>
+                                <span id="productTotal" class="text-lg font-bold mb-1">OrderTotal: 0 BDT</span>
+                                <span id="discount" class="text-sm font-bold text-green-500">Discount: 0 BDT</span>
+                            </div>
+
+                        </div>
                         <div class="mt-4 flex justify-between items-center">
                             <div class="flex items-center">
-                                <span id="productTotal" class="text-lg font-bold mr-4">Product Total: 0 BDT</span>
-                                <span id="discount" class="text-sm font-bold text-green-500"></span>
+                                <span class="text-lg font-bold mr-4 opacity-0">Product Total: 0 BDT</span>
+                                <span class="text-sm font-bold text-green-500"></span>
                             </div>
                             <a href="#" id="checkoutButton" class="no-underline text-gray-100">
                                 <button type="button"
@@ -336,6 +349,8 @@
         const quantityInputs = document.querySelectorAll('.quantity-input');
         const productTotalElement = document.getElementById('productTotal');
         const discountElement = document.getElementById('discount');
+        const prevTotalElement = document.getElementById('prevTotal');
+        const discountTotalElement = document.getElementById('discountAmount');
 
         const updateTotal = () => {
             let total = 0;
@@ -345,8 +360,9 @@
                 const quantity = parseInt(input.value);
                 total += price * quantity;
             });
-            productTotalElement.textContent = `Product Total: ${total} BDT`;
+            productTotalElement.textContent = `Order Total:  ${total} BDT`;
             updateDiscount(total);
+            updatePrevTotal(total);
         };
 
         const updateDiscount = (total) => {
@@ -362,10 +378,27 @@
             discount = ((prevTotal - total) / prevTotal) * 100;
             if (discount > 0) {
                 discountElement.textContent = `(Save: ${discount.toFixed(2)} %)`;
+                discountTotalElement.textContent = `Discount: ${prevTotal - total} BDT`;
             } else {
                 discountElement.textContent = '';
+                discountTotalElement.textContent = '';
             }
 
+        };
+
+        const updatePrevTotal = (total) => {
+            let prevTotal = 0;
+            quantityInputs.forEach(input => {
+                const row = input.closest('tr');
+                const prevPrice = parseFloat(row.getAttribute('data-prev-price'));
+                const quantity = parseInt(input.value);
+                prevTotal += prevPrice * quantity;
+            });
+            if (prevTotal - total > 0) {
+                prevTotalElement.textContent = `Product Total: ${prevTotal} BDT`;
+            } else {
+                prevTotalElement.textContent = '';
+            }
         };
 
         // Initialize total and discount on page load
