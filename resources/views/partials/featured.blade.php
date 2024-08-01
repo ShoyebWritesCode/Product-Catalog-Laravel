@@ -31,7 +31,7 @@
                                 </p>
                             @endif
                             <p class="text-sm text-yellow-600 text-center">
-                                {{ isset($averageRatings[$product->id]) ? number_format($averageRatings[$product->id], 2) : 'No Ratings' }}
+                                {{ $product->averageRating() !== null ? number_format($product->averageRating(), 2) : 'No Ratings' }}
                             </p>
                         </a>
                     </div>

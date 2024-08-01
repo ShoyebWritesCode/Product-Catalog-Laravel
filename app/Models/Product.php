@@ -29,6 +29,15 @@ class Product extends Model
         return $this->hasMany(Review::class);
     }
 
+    public function averageRating()
+    {
+        if ($this->reviews()->count() == 0) {
+            return null;
+        } else {
+            return $this->reviews()->avg('rating');
+        }
+    }
+
     public function reviewCount()
     {
         return $this->reviews()->count();
