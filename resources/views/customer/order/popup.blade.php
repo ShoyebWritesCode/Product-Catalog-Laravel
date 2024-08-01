@@ -1,5 +1,5 @@
 @if ($order && $orderItems->isNotEmpty())
-    <div class="bg-white border border-gray-300 rounded-lg p-4 mb-0">
+    <div class="bg-white border border-gray-300 rounded-lg p-4 mb-0 max-w-lg mx-auto mt-8">
         <h3 class="text-xl font-bold mb-2">Order #{{ $order->id }}</h3>
         <table class="min-w-full bg-white border">
             <thead>
@@ -21,8 +21,7 @@
                         <td class="border px-4 py-2 text-center">{{ $item->product_name }}</td>
                         <td class="border px-4 py-2 text-center text-green-600">
                             @if ($item->prev_price && $item->prev_price > $item->product_price)
-                                <del class="text-red-400 mr-2">{{ number_format($item->prev_price, 2) }}
-                                    BDT</del>
+                                <del class="text-red-400 mr-2">{{ number_format($item->prev_price, 2) }} BDT</del>
                             @endif
                             <br>
                             {{ number_format($item->product_price, 2) }} BDT

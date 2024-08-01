@@ -260,7 +260,7 @@
     </div>
 
 
-    <div class="fixed inset-x-0 top-20 bg-gray-500 bg-opacity-50  shadow-lg p-2 w-1/10 h-full hidden" id="orderPopup">
+    <div class="fixed inset-x-0 top-16 bg-gray-500 bg-opacity-50  shadow-lg p-2 w-1/10 h-full hidden" id="orderPopup">
         <button id="closePopup" class="float-right text-gray-700">&times;</button>
         <div id="popupContent" class="flex justify-between space-x-4 mt-16 ml-8"></div>
     </div>
@@ -270,21 +270,7 @@
 </x-app-layout>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-    document.getElementById('notificationDropdown').addEventListener('click', function(event) {
-        event.preventDefault();
-        document.getElementById('notificationDropdownContent').classList.toggle('hidden');
-    });
-
-    document.addEventListener('click', function(event) {
-        const dropdown = document.getElementById('notificationDropdownContent');
-        if (!event.target.closest('#notificationDropdown') && !event.target.closest(
-                '#notificationDropdownContent')) {
-            dropdown.classList.add('hidden');
-        }
-    });
-
     $(document).ready(function() {
-
         // Initialize an array to store itemId-quantity pairs
         var itemQuantities = [];
 
@@ -306,26 +292,12 @@
             updateItemQuantities();
         });
 
-        // Event listener for the "Next" button click
+        // Checkout button click handler
         $('#checkoutButton').on('click', function(event) {
             event.preventDefault();
             updateItemQuantities();
-            fetch('{{ route('customer.order.shipping') }}')
-                .then(response => response.text())
-                .then(htmlContent => {
-                    $('#popupContent').html(htmlContent);
-                    $('#orderPopup').removeClass('hidden');
 
-
-                    const scripts = $('#popupContent').find('script');
-                    scripts.each(function() {
-                        eval($(this).html());
-                    });
-                })
-                .catch(error => {
-                    console.error('Error fetching content:', error);
-                });
-
+            // Save quantities first
             $.ajax({
                 url: '{{ route('customer.order.saveQuantities') }}',
                 type: 'POST',
@@ -338,28 +310,60 @@
                 }),
                 success: function(response) {
                     console.log('Response from server:', response);
-                    // alert(JSON.stringify(response));
+                    // Now fetch the shipping content
+                    fetch('{{ route('customer.order.shipping') }}')
+                        .then(response => response.text())
+                        .then(htmlContent => {
+                            $('#popupContent').html(htmlContent);
+                            $('#orderPopup').removeClass('hidden');
+
+                            // Execute any scripts in the loaded content
+                            const scripts = $('#popupContent').find('script');
+                            scripts.each(function() {
+                                eval($(this).html());
+                            });
+                        })
+                        .catch(error => {
+                            console.error('Error fetching content:', error);
+                        });
                 },
                 error: function(xhr, status, error) {
                     console.error('Error in AJAX request:', error);
                 }
             });
         });
-    });
 
+        // Cart link click handler
+        document.getElementById('cartLink').addEventListener('click', function(event) {
+            event.preventDefault();
+            fetch('{{ route('customer.order.popup') }}')
+                .then(response => response.text())
+                .then(htmlContent => {
+                    document.getElementById('orderPopup').innerHTML = htmlContent;
+                    document.getElementById('orderPopup').classList.remove('hidden');
+                })
+                .catch(error => {
+                    console.error('Error fetching content:', error);
+                });
+        });
 
-
-
-    document.getElementById('closePopup').addEventListener('click', function() {
-        document.getElementById('orderPopup').classList.add('hidden');
-    });
-
-    document.addEventListener('click', function(event) {
-        if (event.target.id === 'orderPopup') {
+        // Close popup functionality
+        document.getElementById('closePopup').addEventListener('click', function() {
             document.getElementById('orderPopup').classList.add('hidden');
-        }
+        });
+
+        // Hide popup when clicking outside of it
+        document.addEventListener('click', function(event) {
+            const orderPopup = document.getElementById('orderPopup');
+            if (event.target === orderPopup) {
+                orderPopup.classList.add('hidden');
+            }
+        });
+
+
     });
 
+    // Update totals and discounts
     document.addEventListener('DOMContentLoaded', function() {
         const quantityInputs = document.querySelectorAll('.quantity-input');
         const productTotalElement = document.getElementById('productTotal');
@@ -375,7 +379,7 @@
                 const quantity = parseInt(input.value);
                 total += price * quantity;
             });
-            productTotalElement.textContent = `Order Total:  ${total.toFixed(2)} BDT`;
+            productTotalElement.textContent = `Order Total: ${total.toFixed(2)} BDT`;
             updateDiscount(total);
             updatePrevTotal(total);
         };
@@ -386,19 +390,20 @@
             quantityInputs.forEach(input => {
                 const row = input.closest('tr');
                 const price = parseFloat(row.getAttribute('data-price'));
-                const prevPrice = parseFloat(row.getAttribute('data-prev-price')) || price;
+                const prevPrice = parseFloat(row.getAttribute('data-prev-price')) ||
+                    price;
                 const quantity = parseInt(input.value);
                 prevTotal += prevPrice * quantity;
             });
             discount = ((prevTotal - total) / prevTotal) * 100;
             if (discount > 0) {
                 discountElement.textContent = `You saved ${discount.toFixed(2)} %`;
-                discountTotalElement.textContent = `Discount: ${(prevTotal - total).toFixed(2)} BDT`;
+                discountTotalElement.textContent =
+                    `Discount: ${(prevTotal - total).toFixed(2)} BDT`;
             } else {
                 discountElement.textContent = '';
                 discountTotalElement.textContent = '';
             }
-
         };
 
         const updatePrevTotal = (total) => {
