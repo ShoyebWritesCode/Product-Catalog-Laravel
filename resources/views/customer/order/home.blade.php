@@ -1,46 +1,54 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="flex justify-between items-center">
-            {{-- <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                <h1 class="text-2xl font-bold mb-2">{{ 'My Order' }}</h1>
-            </h2>
-            <div class="flex-1 text-center">
-                <a href="{{ route('customer.product.home') }}" class="text-blue-500 hover:text-blue-700 mx-4">
-                    {{ __('Product') }}
+        <div class="flex items-center justify-between">
+            <div class="flex items-center">
+                <a href="{{ route('customer.product.home') }}" class="no-underline">
+                    {{-- <h1 class="font-semibold text-xl text-white leading-tight">
+                        {{ __('Product Catalogue') }}
+                    </h1> --}}
+                    <img src="{{ asset('storage/images/logo.png') }}" alt="logo" class="w-64 h-12">
                 </a>
+                <nav class="flex space-x-12 mt-2 ml-16">
+                    @foreach ($allParentCategories as $category)
+                        <div class="relative group">
+                            <ul class="nav-item dropdown pl-0">
+                                <a href="{{ route('customer.category.products', $category->id) }}"
+                                    class="text-white hover:text-gray-600 no-underline font-bold">
+                                    {{ $category->name }}
+                                </a>
+                            </ul>
+                            <div class="absolute left-0 hidden group-hover:block bg-white shadow-lg rounded w-32 z-2">
+                                <ul class="grid grid-cols-1 gap-2 p-2 space-y-1 mb-0">
+                                    @foreach ($allChildCategoriesOfParent[$category->id] as $childCategory)
+                                        <li>
+                                            <a href="{{ route('customer.subcategory.products', $childCategory->id) }}"
+                                                class="block px-1 py-1 text-gray-800 hover:bg-gray-100 font-semibold no-underline">
+                                                {{ $childCategory->name }}
+                                            </a>
+                                        </li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        </div>
+                    @endforeach
+                </nav>
             </div>
-            <a href="{{ route('customer.order.home') }}" class="text-gray-800 hover:text-gray-600 relative">
-                <i class="fas fa-shopping-cart text-xl"></i>
-                <span
-                    class="bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center absolute top-0 right-0 -mt-1 -mr-1 text-xs">
-                    {{ $numberOfItems }} </span> </a> --}}
-            <a href="{{ route('customer.product.home') }}" class="no-underline">
-                <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                    {{ __('Product Catalogue') }}
-                </h2>
-            </a>
 
             <div class="flex items-center space-x-4">
-
                 <a href="#" id="cartLink" class="text-gray-800 hover:text-gray-600 relative">
-                    <i class="fas fa-shopping-cart text-xl"></i>
+                    <i class="fas fa-shopping-cart text-2xl"></i>
                     <span
-                        class="bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center absolute top-0 right-0 -mt-1 -mr-1 text-xs">
+                        class="bg-white text-gray-800 rounded-full min-w-4 h-4 flex items-center justify-center absolute top-0 right-0 -mt-1 -mr-1 text-xs px-1 py-1">
                         {{ $numberOfItems }}
                     </span>
-                </a>
-                <p></p>
-                <a href="{{ route('customer.order.history') }}" id="historyLink"
-                    class="text-gray-800 hover:text-gray-600 relative">
-                    <i class="fas fa-history text-xl"></i>
                 </a>
 
                 <div class="relative">
                     <button id="notificationDropdown" class="text-gray-800 hover:text-gray-600 relative">
-                        <i class="fas fa-bell text-xl"></i>
+                        <i class="fas fa-bell text-2xl"></i>
                         @if ($unreadNotifications->count() > 0)
                             <span
-                                class="bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center absolute top-0 right-0 -mt-1 -mr-1 text-xs">
+                                class="bg-white text-gray-800 rounded-full min-w-4 h-4 flex items-center justify-center absolute top-0 right-0 -mt-1 -mr-1 text-xs px-1 py-1">
                                 {{ $unreadNotifications->count() }}
                             </span>
                         @endif
@@ -71,10 +79,6 @@
                     </div>
 
 
-
-
-
-
                 </div>
 
                 <div class="hidden sm:flex sm:items-center sm:ms-6">
@@ -100,13 +104,18 @@
                                 {{ __('Profile') }}
                             </x-dropdown-link>
 
+                            <x-dropdown-link :href="route('customer.order.history')">
+                                {{ __('Order History') }}
+                            </x-dropdown-link>
+
+
                             <!-- Authentication -->
                             <form method="POST" action="{{ route('logout') }}">
                                 @csrf
 
                                 <x-dropdown-link :href="route('logout')"
                                     onclick="event.preventDefault();
-                                                        this.closest('form').submit();">
+                                                this.closest('form').submit();">
                                     {{ __('Log Out') }}
                                 </x-dropdown-link>
                             </form>
@@ -139,20 +148,19 @@
 
                                 <x-responsive-nav-link :href="route('logout')"
                                     onclick="event.preventDefault();
-                                                        this.closest('form').submit();">
+                                                this.closest('form').submit();">
                                     {{ __('Log Out') }}
                                 </x-responsive-nav-link>
                             </form>
                         </div>
                     </div>
                 </div>
-
-
             </div>
         </div>
+
     </x-slot>
 
-    <div class="py-12">
+    <div class="py-4">
         @session('success')
             <div class="alert alert-success mb-4" role="alert">
                 {{ session('success') }}
@@ -227,12 +235,13 @@
         </div>
     </div>
 
-    <div id="orderPopup" class="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center hidden">
-        <div class="bg-white rounded-lg shadow-lg p-6 w-1/10">
-            <button id="closePopup" class="float-right text-gray-700">&times;</button>
-            <div id="popupContent" class="flex justify-between space-x-4"></div>
-        </div>
+    {{-- <div id="orderPopup"
+        class="fixed inset-0 bg-gray-800 bg-opacity-100 flex justify-center items-center hidden "> --}}
+    <div class="fixed inset-20 bg-gray-500 bg-opacity-50 rounded-lg shadow-lg p-2 w-1/10 hidden" id="orderPopup">
+        <button id="closePopup" class="float-right text-gray-700">&times;</button>
+        <div id="popupContent" class="flex justify-between space-x-4"></div>
     </div>
+    {{-- </div> --}}
 
 
 
