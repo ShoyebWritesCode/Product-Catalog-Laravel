@@ -108,8 +108,8 @@
                                             </div>
 
                                             <!-- Select Color and Add to Cart Button -->
-                                            <div class="flex items-center justify-between">
-                                                <div class="flex-grow">
+                                            <div class="flex items-center justify-between mb-2">
+                                                <div class="flex-grow w-1/2">
                                                     <label
                                                         class="block text-gray-700 text-sm font-bold mb-2">Color:</label>
                                                     <div class="flex items-center">
@@ -125,18 +125,18 @@
                                                     </div>
                                                 </div>
 
-                                                <div class="mr-4">
+                                                <div class="mr-3 mt-3 w-3/4">
                                                     <div class="stock">
 
                                                     </div>
 
                                                     <button type="submit" id="CartButton"
-                                                        class="bg-red-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                                                        class="bg-red-500 hover:bg-blue-700 text-white font-bold py-2 px-2 rounded"
                                                         style="display: none;">
                                                         Add to Cart
                                                     </button>
                                                     <button type="button" id="OutOfStockButton"
-                                                        class="bg-gray-400 text-white font-bold py-2 px-4 rounded"
+                                                        class="bg-gray-400 text-white font-bold py-2 px-2 rounded"
                                                         disabled style="display: none;">
                                                         Out of Stock
                                                     </button>

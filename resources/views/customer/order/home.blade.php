@@ -208,7 +208,7 @@
                                             <input type="number" class="quantity-input" name="quantity[]"
                                                 value="1" min="1" max="5">
                                         </td>
-                                        <td class="border px-2 py-21text-center">
+                                        <td class="border px-2 py-1 text-center">
                                             <form action="{{ route('cart.remove', $item->id) }}" method="POST">
                                                 @csrf
                                                 @method('DELETE')
