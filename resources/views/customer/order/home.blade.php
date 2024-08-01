@@ -185,7 +185,8 @@
                             </thead>
                             <tbody>
                                 @foreach ($orderItems as $item)
-                                    <tr data-item-id="{{ $item->id }}" data-price="{{ $item->product_price }}">
+                                    <tr data-item-id="{{ $item->id }}" data-price="{{ $item->product_price }}"
+                                        data-prev-price="{{ $item->prev_price ?? $item->product_price }}">
                                         <td class="border px-4 py-2 text-center">
                                             <div class="flex justify-center space-x-2">
                                                 <img src="{{ asset('storage/images/' . $item->image) }}"
@@ -222,7 +223,10 @@
                             </tbody>
                         </table>
                         <div class="mt-4 flex justify-between items-center">
-                            <span id="productTotal" class="text-lg font-bold">Product Total: 0 BDT</span>
+                            <div class="flex items-center">
+                                <span id="productTotal" class="text-lg font-bold mr-4">Product Total: 0 BDT</span>
+                                <span id="discount" class="text-sm font-bold text-green-500"></span>
+                            </div>
                             <a href="#" id="checkoutButton" class="no-underline text-gray-100">
                                 <button type="button"
                                     class="bg-red-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
@@ -230,6 +234,7 @@
                                 </button>
                             </a>
                         </div>
+
 
                     </div>
                 @else
@@ -239,13 +244,11 @@
         </div>
     </div>
 
-    {{-- <div id="orderPopup"
-        class="fixed inset-0 bg-gray-800 bg-opacity-100 flex justify-center items-center hidden "> --}}
+
     <div class="fixed inset-20 bg-gray-500 bg-opacity-50 rounded-lg shadow-lg p-2 w-1/10 hidden" id="orderPopup">
         <button id="closePopup" class="float-right text-gray-700">&times;</button>
         <div id="popupContent" class="flex justify-between space-x-4"></div>
     </div>
-    {{-- </div> --}}
 
 
 
@@ -332,6 +335,8 @@
     document.addEventListener('DOMContentLoaded', function() {
         const quantityInputs = document.querySelectorAll('.quantity-input');
         const productTotalElement = document.getElementById('productTotal');
+        const discountElement = document.getElementById('discount');
+
         const updateTotal = () => {
             let total = 0;
             quantityInputs.forEach(input => {
@@ -341,9 +346,29 @@
                 total += price * quantity;
             });
             productTotalElement.textContent = `Product Total: ${total} BDT`;
+            updateDiscount(total);
         };
 
-        // Initialize total on page load
+        const updateDiscount = (total) => {
+            let discount = 0;
+            let prevTotal = 0;
+            quantityInputs.forEach(input => {
+                const row = input.closest('tr');
+                const price = parseFloat(row.getAttribute('data-price'));
+                const prevPrice = parseFloat(row.getAttribute('data-prev-price')) || price;
+                const quantity = parseInt(input.value);
+                prevTotal += prevPrice * quantity;
+            });
+            discount = ((prevTotal - total) / prevTotal) * 100;
+            if (discount > 0) {
+                discountElement.textContent = `(Save: ${discount.toFixed(2)} %)`;
+            } else {
+                discountElement.textContent = '';
+            }
+
+        };
+
+        // Initialize total and discount on page load
         updateTotal();
 
         // Add event listeners to each quantity input
