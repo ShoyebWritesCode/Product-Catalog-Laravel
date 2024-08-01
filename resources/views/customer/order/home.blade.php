@@ -264,6 +264,11 @@
         <button id="closePopup" class="float-right text-gray-700">&times;</button>
         <div id="popupContent" class="flex justify-between space-x-4 mt-16 ml-8"></div>
     </div>
+    <div class="fixed inset-x-0 top-16 bg-gray-500 bg-opacity-50  shadow-lg p-2 w-1/10 h-full hidden"
+        id="orderPopup1">
+        <button id="closePopup" class="float-right text-gray-700">&times;</button>
+        <div id="popupContent" class="flex justify-between space-x-4 mt-16 ml-8"></div>
+    </div>
 
 
 
@@ -292,12 +297,10 @@
             updateItemQuantities();
         });
 
-        // Checkout button click handler
         $('#checkoutButton').on('click', function(event) {
             event.preventDefault();
             updateItemQuantities();
 
-            // Save quantities first
             $.ajax({
                 url: '{{ route('customer.order.saveQuantities') }}',
                 type: 'POST',
@@ -315,7 +318,7 @@
                         .then(response => response.text())
                         .then(htmlContent => {
                             $('#popupContent').html(htmlContent);
-                            $('#orderPopup').removeClass('hidden');
+                            $('#orderPopup1').removeClass('hidden');
 
                             // Execute any scripts in the loaded content
                             const scripts = $('#popupContent').find('script');
@@ -333,19 +336,23 @@
             });
         });
 
-        // Cart link click handler
-        document.getElementById('cartLink').addEventListener('click', function(event) {
+        $('#cartLink').on('click', function(event) {
             event.preventDefault();
-            fetch('{{ route('customer.order.popup') }}')
-                .then(response => response.text())
-                .then(htmlContent => {
-                    document.getElementById('orderPopup').innerHTML = htmlContent;
-                    document.getElementById('orderPopup').classList.remove('hidden');
-                })
-                .catch(error => {
+
+            $.ajax({
+                url: '{{ route('customer.order.popup') }}',
+                type: 'GET',
+                success: function(response) {
+                    $('#orderPopup').html(response);
+                    $('#orderPopup').removeClass(
+                        'hidden');
+                },
+                error: function(xhr, status, error) {
                     console.error('Error fetching content:', error);
-                });
+                }
+            });
         });
+
 
         // Close popup functionality
         document.getElementById('closePopup').addEventListener('click', function() {
@@ -355,6 +362,13 @@
         // Hide popup when clicking outside of it
         document.addEventListener('click', function(event) {
             const orderPopup = document.getElementById('orderPopup');
+            if (event.target === orderPopup) {
+                orderPopup.classList.add('hidden');
+            }
+        });
+
+        document.addEventListener('click', function(event) {
+            const orderPopup = document.getElementById('orderPopup1');
             if (event.target === orderPopup) {
                 orderPopup.classList.add('hidden');
             }
