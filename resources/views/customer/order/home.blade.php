@@ -267,7 +267,7 @@
     <div class="fixed inset-x-0 top-16 bg-gray-500 bg-opacity-50  shadow-lg p-2 w-1/10 h-full hidden"
         id="orderPopup1">
         <button id="closePopup" class="float-right text-gray-700">&times;</button>
-        <div id="popupContent" class="flex justify-between space-x-4 mt-16 ml-8"></div>
+        <div id="popupContent1" class="flex justify-between space-x-4 mt-16 ml-8"></div>
     </div>
 
 
@@ -317,11 +317,11 @@
                     fetch('{{ route('customer.order.shipping') }}')
                         .then(response => response.text())
                         .then(htmlContent => {
-                            $('#popupContent').html(htmlContent);
+                            $('#popupContent1').html(htmlContent);
                             $('#orderPopup1').removeClass('hidden');
 
                             // Execute any scripts in the loaded content
-                            const scripts = $('#popupContent').find('script');
+                            const scripts = $('#popupContent1').find('script');
                             scripts.each(function() {
                                 eval($(this).html());
                             });
@@ -375,6 +375,19 @@
         });
 
 
+    });
+
+    document.getElementById('notificationDropdown').addEventListener('click', function(event) {
+        event.preventDefault();
+        document.getElementById('notificationDropdownContent').classList.toggle('hidden');
+    });
+
+    document.addEventListener('click', function(event) {
+        const dropdown = document.getElementById('notificationDropdownContent');
+        if (!event.target.closest('#notificationDropdown') && !event.target.closest(
+                '#notificationDropdownContent')) {
+            dropdown.classList.add('hidden');
+        }
     });
 
     // Update totals and discounts
