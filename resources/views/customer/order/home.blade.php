@@ -167,20 +167,20 @@
             </div>
         @endsession
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
+            <div class="bg-gray-100 overflow-hidden shadow-lg p-2">
                 @if ($order)
-                    <div class="bg-white border border-gray-300 rounded-lg p-4 mb-4">
+                    <div class="bg-gray-100  p-4 mb-2">
                         <h3 class="text-2xl font-bold mb-2">Order #{{ $order->id }}</h3>
-                        <table class="min-w-full bg-white border" id="orderItemsTable">
+                        <table class="min-w-full bg-gray-100 shadow-sm " id="orderItemsTable">
                             <thead>
                                 <tr>
-                                    <th class="px-4 py-2 border text-center">Image</th>
-                                    <th class="px-4 py-2 border text-center">Name</th>
-                                    <th class="px-4 py-2 border text-center">Size</th>
-                                    <th class="px-4 py-2 border text-center">Color</th>
-                                    <th class="px-4 py-2 border text-center">Price</th>
-                                    <th class="px-4 py-2 border text-center">Quantity</th>
-                                    <th class="px-4 py-2 border text-center">Remove</th>
+                                    <th class="px-2 py-1  text-center">Image</th>
+                                    <th class="px-2 py-1  text-center">Name</th>
+                                    <th class="px-2 py-1 text-center">Size</th>
+                                    <th class="px-2 py-1  text-center">Color</th>
+                                    <th class="px-2 py-1  text-center">Price</th>
+                                    <th class="px-2 py-1  text-center">Quantity</th>
+                                    <th class="px-2 py-1  text-center">Remove</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -194,10 +194,10 @@
                                                     class="w-16 h-16 object-cover rounded-md">
                                             </div>
                                         </td>
-                                        <td class="border px-4 py-2 text-center">{{ $item->product_name }}</td>
-                                        <td class="border px-4 py-2 text-center">{{ $item->size->name }}</td>
-                                        <td class="border px-4 py-2 text-center">{{ $item->color->name }}</td>
-                                        <td class="border px-4 py-2 text-center text-green-600">
+                                        <td class="border px-2 py-1 text-center">{{ $item->product_name }}</td>
+                                        <td class="border px-2 py-1 text-center">{{ $item->size->name }}</td>
+                                        <td class="border px-2 py-1 text-center">{{ $item->color->name }}</td>
+                                        <td class="border px-2 py-1 text-center text-green-600">
                                             @if ($item->prev_price && $item->prev_price > $item->product_price)
                                                 <del class="text-red-400 mr-2">{{ $item->prev_price }} BDT</del>
                                             @endif
@@ -208,7 +208,7 @@
                                             <input type="number" class="quantity-input" name="quantity[]"
                                                 value="1" min="1" max="5">
                                         </td>
-                                        <td class="border px-4 py-2 text-center">
+                                        <td class="border px-2 py-21text-center">
                                             <form action="{{ route('cart.remove', $item->id) }}" method="POST">
                                                 @csrf
                                                 @method('DELETE')
