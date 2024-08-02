@@ -36,7 +36,7 @@
                                                         class="mr-2"
                                                         {{ request('child_category') == $childCategory->id ? 'checked' : '' }}>
                                                     <label for="category_{{ $childCategory->id }}"
-                                                        class="block px-1 py-1 text-gray-800 hover:bg-gray-100 no-underline">{{ $childCategory->name }}</label>
+                                                        class="block px-1 py-1 text-gray-800 hover:bg-gray-100 no-underline lext-sm">{{ $childCategory->name }}</label>
                                                 </li>
                                             @endforeach
                                         @else
@@ -76,7 +76,7 @@
                                                             class="w-6 h-6 bg-{{ $color }}-500 rounded-full mr-2 cursor-pointer">
                                                         </div>
                                                         <label for="color_{{ $color }}"
-                                                            class="text-gray-800">{{ ucfirst($color) }}</label>
+                                                            class="text-gray-800 text-sm">{{ ucfirst($color) }}</label>
                                                     </div>
                                                 </li>
                                             @endforeach
