@@ -173,27 +173,26 @@
                     <div class="bg-gray-100  p-4 mb-2">
                         <h3 class="text-2xl font-bold mb-2">Order #{{ $order->id }}</h3>
                         <table class="min-w-full bg-gray-100 shadow-sm " id="orderItemsTable">
-                            <thead>
+                            <thead class="bg-[#f8f9fa]">
                                 <tr>
-                                    <th class="px-2 py-1 border text-center">Image</th>
-                                    <th class="px-2 py-1 border text-center">Name</th>
-                                    <th class="px-2 py-1 border text-center">Size</th>
-                                    <th class="px-2 py-1 border text-center">Color</th>
-                                    <th class="px-2 py-1 border text-center">Price</th>
-                                    <th class="px-2 py-1 border text-center">Quantity</th>
-                                    <th class="px-2 py-1 border text-center">Remove</th>
+                                    <th class="px-2 py-1 border-b text-center">Image</th>
+                                    <th class="px-2 py-1 border-b text-center">Name</th>
+                                    <th class="px-2 py-1 border-b text-center">Size</th>
+                                    <th class="px-2 py-1 border-b text-center">Color</th>
+                                    <th class="px-2 py-1 border-b text-center">Price</th>
+                                    <th class="px-2 py-1 border-b text-center">Quantity</th>
+                                    <th class="px-2 py-1 border-b text-center">Remove</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach ($orderItems as $item)
                                     <tr data-item-id="{{ $item->id }}" data-price="{{ $item->product_price }}"
                                         data-prev-price="{{ $item->prev_price ?? $item->product_price }}"
-                                        class="hover:bg-orange-300">
+                                        class="hover:bg-orange-300 bg-white">
                                         <td class="border-b px-4 py-2 text-center">
                                             <div class="flex justify-center space-x-2">
                                                 <img src="{{ asset('storage/images/' . $item->image) }}"
-                                                    alt="{{ $item->product_name }}"
-                                                    class="w-16 h-16 object-cover rounded-md">
+                                                    alt="{{ $item->product_name }}" class="w-16 h-8 object-cover ">
                                             </div>
                                         </td>
                                         <td class="border-b px-2 py-1 text-center">{{ $item->product_name }}</td>
@@ -231,15 +230,15 @@
                                 <span class="text-sm font-bold text-green-500"></span>
                             </div>
                             <div class="flex flex-col items-end mt-2">
-                                <span id="prevTotal" class="text-lg  mb-1">Product Total: 0 BDT</span>
-                                <span id="discountAmount" class="text-lg">Discount: 0 BDT</span>
+                                <span id="prevTotal" class="text-md  mb-1">Product Total: 0 BDT</span>
+                                <span id="discountAmount" class="text-md">Discount: 0 BDT</span>
                                 <span id="discount" class="text-xs  text-green-500">Discount: 0 BDT</span>
-                                <span id="productTotal" class="text-lg mb-1">OrderTotal: 0 BDT</span>
+                                <span id="productTotal" class="text-md mb-1">OrderTotal: 0 BDT</span>
 
                             </div>
 
                         </div>
-                        <div class="mt-4 flex justify-between items-center">
+                        <div class="mt-2 flex justify-between items-center">
                             <div class="flex items-center">
                                 <span class="text-lg font-bold mr-4 opacity-0">Product Total: 0 BDT</span>
                                 <span class="text-sm font-bold text-green-500"></span>

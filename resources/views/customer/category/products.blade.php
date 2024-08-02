@@ -6,11 +6,11 @@
     <x-slot name="header">
         @include('partials.nav')
     </x-slot>
-    <div class="py-12">
+    <div class="py-4">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="flex">
                 <div class="w-1/5 pr-4 mt-1">
-                    <div class="bg-gray-100 shadow-sm p-4 mb-4">
+                    <div class="shadow-sm p-4 mb-4 bg-white">
                         <form
                             action="{{ isset($allChildCategoriesOfParent[$selectedCategory->id]) ? route('customer.category.products', $selectedCategory->id) : route('customer.subcategory.products', $selectedCategory->id) }}"
                             method="GET">
@@ -110,7 +110,7 @@
                     @endif
 
                     <!-- Products Section -->
-                    <div class="bg-gray-100 overflow-hidden">
+                    <div class="bg-white shadow-md overflow-hidden">
                         <div class="p-6 text-gray-900">
                             <div class="flex items-center justify-between mb-4">
                                 <h1 class="text-2xl font-semibold">{{ $selectedCategory->name }} Products
@@ -152,7 +152,7 @@
                                 </div>
                             @endif
                             <div class="mt-4">
-                                {{ $Products->links() }}
+                                {{ $Products->links('pagination::bootstrap-5') }}
                             </div>
                         </div>
                     </div>

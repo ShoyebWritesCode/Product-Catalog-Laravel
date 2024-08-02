@@ -1,6 +1,6 @@
 @if ($order && $orderItems->isNotEmpty())
     <div class="bg-white border border-gray-300 rounded-lg p-2 mb-2 max-w-sm mx-auto mt-12">
-        <button id="closePopup1" class="float-right text-red-700 text-2xl">&times;</button>
+        <button id="closePopup" class="float-right text-red-700 text-2xl">&times;</button>
         <h3 class="text-lg font-bold mb-1">Order #{{ $order->id }}</h3>
         <table class="min-w-full bg-white border border-collapse">
             <thead>
@@ -46,7 +46,7 @@
 @endif
 
 <script>
-    document.getElementById('closePopup1').addEventListener('click', function() {
+    document.getElementById('closePopup').addEventListener('click', function() {
         document.getElementById('orderPopup').classList.add('hidden');
     });
 </script>
