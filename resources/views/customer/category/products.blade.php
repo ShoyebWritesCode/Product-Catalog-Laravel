@@ -15,7 +15,7 @@
                             action="{{ isset($allChildCategoriesOfParent[$selectedCategory->id]) ? route('customer.category.products', $selectedCategory->id) : route('customer.subcategory.products', $selectedCategory->id) }}"
                             method="GET">
                             <div class="flex items-center justify-between mb-4">
-                                <h1 class="text-xl font-semibold mb-0">Filters</h1>
+                                <h1 class="text-3xl font-semibold mb-0">Filters</h1>
                                 <button type="reset" id="resetFilters"
                                     class="bg-blue-500 text-white py-1 px-2 rounded mt-0 ml-2">
                                     <i class="fas fa-undo"></i>
@@ -25,10 +25,10 @@
                             </div>
                             @if (count($allParentCategories) > 0)
                                 <div class="mb-4">
-                                    <ul>
+                                    <ul class="p-0">
 
                                         @if (isset($allChildCategoriesOfParent[$selectedCategory->id]))
-                                            <h3 class="text-lg font-semibold mb-2">Subcategories</h3>
+                                            <h3 class="text-lg font-semibold mb-2 text-gray-400">Subcategories</h3>
                                             @foreach ($allChildCategoriesOfParent[$selectedCategory->id] as $childCategory)
                                                 <li class="flex items-center">
                                                     <input type="radio" id="category_{{ $childCategory->id }}"
@@ -50,7 +50,7 @@
 
 
                             <div class="mb-4">
-                                <h3 class="text-lg font-semibold mb-2">Price Range</h3>
+                                <h3 class="text-lg font-semibold mb-2 text-gray-400">Price Range</h3>
                                 <div class="flex items-center mb-2">
                                     <input type="text" id="min_price" name="min_price" placeholder="Min"
                                         class="w-1/3 px-2 py-1 border rounded mr-2 text-sm opacity-0"
@@ -63,10 +63,10 @@
                             </div>
 
                             <div class="mb-4">
-                                <h3 class="text-lg font-semibold mb-2">Color</h3>
+                                <h3 class="text-lg font-semibold mb-2 text-gray-400">Color</h3>
                                 <div class="flex">
                                     <div class="flex flex-col">
-                                        <ul>
+                                        <ul class="p-0">
                                             @foreach (['red', 'blue', 'green', 'gray'] as $color)
                                                 <li>
                                                     <div class="flex items-center mb-2">
