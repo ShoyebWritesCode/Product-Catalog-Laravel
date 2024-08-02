@@ -1,4 +1,5 @@
 <x-app-layout>
+    @vite(['resources/scss/product.scss'])
     <x-slot name="header">
         <div class="flex items-center justify-between">
             <div class="flex items-center">
@@ -260,14 +261,16 @@
     </div>
 
 
-    <div class="fixed inset-x-0 top-16 bg-gray-500 bg-opacity-50  shadow-lg p-2 w-1/10 h-full hidden" id="orderPopup">
+    <div id="orderPopup"
+        class="h-full w-full hidden fixed inset-x-0 top-0  bg-gray-500 bg-opacity-30 overflow-auto z-3 p-4 shadow-md">
         <button id="closePopup" class="float-right text-gray-700">&times;</button>
         <div id="popupContent" class="flex justify-between space-x-4 mt-16 ml-8"></div>
     </div>
-    <div class="fixed inset-x-0 top-16 bg-gray-500 bg-opacity-50  shadow-lg p-2 w-1/10 h-full hidden"
+    <div class="fixed inset-x-0 top-0 bg-gray-500 bg-opacity-30  shadow-lg p-2 w-1/10 overflow-auto h-full hidden"
         id="orderPopup1">
-        <button id="closePopup" class="float-right text-gray-700">&times;</button>
-        <div id="popupContent1" class="flex justify-between space-x-4 mt-16 ml-8"></div>
+        {{-- <button id="closePopup1" class="float-right text-gray-700">&times;</button> --}}
+        <div id="popupContent1" class="flex justify-between space-x-4 mt-16 ml-8">
+        </div>
     </div>
 
 
@@ -354,23 +357,22 @@
         });
 
 
-        // Close popup functionality
-        document.getElementById('closePopup').addEventListener('click', function() {
-            document.getElementById('orderPopup').classList.add('hidden');
-        });
+
 
         // Hide popup when clicking outside of it
         document.addEventListener('click', function(event) {
             const orderPopup = document.getElementById('orderPopup');
             if (event.target === orderPopup) {
                 orderPopup.classList.add('hidden');
+                console.log('Clicked outside');
             }
         });
 
         document.addEventListener('click', function(event) {
-            const orderPopup = document.getElementById('orderPopup1');
-            if (event.target === orderPopup) {
-                orderPopup.classList.add('hidden');
+            const orderPopup1 = document.getElementById('orderPopup1');
+            if (event.target === orderPopup1) {
+                orderPopup1.classList.add('hidden');
+                console.log('Clicked outside');
             }
         });
 

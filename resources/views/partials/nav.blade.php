@@ -157,6 +157,12 @@
 
 <!-- Popup Container -->
 <div id="orderPopup"
-    class="h-full w-full hidden fixed inset-x-0 top-16 t bg-gray-500 bg-opacity-50 overflow-auto z-3 p-4 shadow-md">
+    class="h-full w-full hidden fixed inset-x-0 top-0  bg-gray-500 bg-opacity-50 overflow-auto z-3 p-4 shadow-md">
     <span class="close-btn absolute top-right p-2 text-xl cursor-pointer hover:text-red-500">&times;</span>
 </div>
+
+<script>
+    document.getElementById('closePopup1').addEventListener('click', function() {
+        document.getElementById('orderPopup').classList.add('hidden');
+    });
+</script>
