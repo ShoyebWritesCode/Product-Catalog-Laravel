@@ -175,30 +175,31 @@
                         <table class="min-w-full bg-gray-100 shadow-sm " id="orderItemsTable">
                             <thead>
                                 <tr>
-                                    <th class="px-2 py-1  text-center">Image</th>
-                                    <th class="px-2 py-1  text-center">Name</th>
-                                    <th class="px-2 py-1 text-center">Size</th>
-                                    <th class="px-2 py-1  text-center">Color</th>
-                                    <th class="px-2 py-1  text-center">Price</th>
-                                    <th class="px-2 py-1  text-center">Quantity</th>
-                                    <th class="px-2 py-1  text-center">Remove</th>
+                                    <th class="px-2 py-1 border text-center">Image</th>
+                                    <th class="px-2 py-1 border text-center">Name</th>
+                                    <th class="px-2 py-1 border text-center">Size</th>
+                                    <th class="px-2 py-1 border text-center">Color</th>
+                                    <th class="px-2 py-1 border text-center">Price</th>
+                                    <th class="px-2 py-1 border text-center">Quantity</th>
+                                    <th class="px-2 py-1 border text-center">Remove</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach ($orderItems as $item)
                                     <tr data-item-id="{{ $item->id }}" data-price="{{ $item->product_price }}"
-                                        data-prev-price="{{ $item->prev_price ?? $item->product_price }}">
-                                        <td class="border px-4 py-2 text-center">
+                                        data-prev-price="{{ $item->prev_price ?? $item->product_price }}"
+                                        class="hover:bg-orange-300">
+                                        <td class="border-b px-4 py-2 text-center">
                                             <div class="flex justify-center space-x-2">
                                                 <img src="{{ asset('storage/images/' . $item->image) }}"
                                                     alt="{{ $item->product_name }}"
                                                     class="w-16 h-16 object-cover rounded-md">
                                             </div>
                                         </td>
-                                        <td class="border px-2 py-1 text-center">{{ $item->product_name }}</td>
-                                        <td class="border px-2 py-1 text-center">{{ $item->size->name }}</td>
-                                        <td class="border px-2 py-1 text-center">{{ $item->color->name }}</td>
-                                        <td class="border px-2 py-1 text-center text-green-600">
+                                        <td class="border-b px-2 py-1 text-center">{{ $item->product_name }}</td>
+                                        <td class="border-b px-2 py-1 text-center">{{ $item->size->name }}</td>
+                                        <td class="border-b px-2 py-1 text-center">{{ $item->color->name }}</td>
+                                        <td class="border-b px-2 py-1 text-center text-green-600">
                                             @if ($item->prev_price && $item->prev_price > $item->product_price)
                                                 <del class="text-red-400 mr-2">{{ number_format($item->prev_price, 2) }}
                                                     BDT</del>
@@ -206,11 +207,11 @@
                                             <br>
                                             {{ number_format($item->product_price, 2) }} BDT
                                         </td>
-                                        <td class="border px-2 py-1 text-center">
+                                        <td class="border-b px-2 py-1 text-center">
                                             <input type="number" class="quantity-input" name="quantity[]"
                                                 value="1" min="1" max="5">
                                         </td>
-                                        <td class="border px-2 py-1 text-center">
+                                        <td class="border-b px-2 py-1 text-center">
                                             <form action="{{ route('cart.remove', $item->id) }}" method="POST">
                                                 @csrf
                                                 @method('DELETE')
