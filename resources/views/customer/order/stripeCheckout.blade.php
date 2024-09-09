@@ -65,7 +65,8 @@
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <form id="payment-form" class="p-6">
+                <h1 class="text-2xl font-bold px-6 py-4">Payment Details</h1>
+                <form id="payment-form" class="px-6 py-2">
                     <div class="mb-4">
                         <label for="holder-name" class="block text-gray-700">Holder Name</label>
                         <input id="holder-name" type="text"
@@ -236,7 +237,7 @@
                     buttonText.textContent = 'Pay Now';
 
                     window.location.href =
-                    "{{ route('customer.order.orderdetail', ['order' => $order->id]) }}";
+                        "{{ route('customer.order.orderdetail', ['order' => $order->id]) }}";
 
                 }
             }
