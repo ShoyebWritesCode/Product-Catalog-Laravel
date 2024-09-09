@@ -3,7 +3,7 @@
         @include('partials.nav')
     </x-slot>
 
-    <div class="py-12">
+    <div class="py-6">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 @if ($order)
@@ -62,44 +62,44 @@
             </div>
         </div>
     </div>
-    <div class="py-12">
+    <div class="pb-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <h1 class="text-2xl font-bold px-6 py-4">Payment Details</h1>
                 <form id="payment-form" class="px-6 py-2">
-                    <div class="mb-4">
-                        <label for="holder-name" class="block text-gray-700">Holder Name</label>
-                        <input id="holder-name" type="text"
-                            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
-                            required>
-                    </div>
+                    <div class="flex space-x-4 mb-4">
+                        <div class="w-1/2">
+                            <label for="holder-name" class="block text-gray-700">Holder Name</label>
+                            <input id="card-name-element" type="text"
+                                class=" block w-full p-[6px] border-gray-300 rounded-md" required>
+                        </div>
 
-                    <div class="mb-4">
-                        <label class="block text-gray-700">Card Number</label>
-                        <div id="card-number-element" class="border p-4 rounded-md">
-                            <!-- Stripe Card Number Element -->
+                        <div class="w-1/2">
+                            <label class="block text-gray-700 ">Card Number</label>
+                            <div id="card-number-element" class="border p-2 rounded-md">
+                                <!-- Stripe Card Number Element -->
+                            </div>
                         </div>
                     </div>
 
                     <div class="flex space-x-4 mb-4">
                         <div class="w-1/2">
                             <label class="block text-gray-700">Expiration Date</label>
-                            <div id="expiry-element" class="border p-4 rounded-md">
+                            <div id="expiry-element" class="border p-2 rounded-md">
                                 <!-- Stripe Expiration Date Element -->
                             </div>
                         </div>
                         <div class="w-1/2">
                             <label class="block text-gray-700">CVC</label>
-                            <div id="cvc-element" class="border p-4 rounded-md">
+                            <div id="cvc-element" class="border p-2 rounded-md">
                                 <!-- Stripe CVC Element -->
                             </div>
                         </div>
                     </div>
 
-                    <div class="mb-4">
+                    <div class="mb-4 w-1/2">
                         <label for="zip-code" class="block text-gray-700">Zip Code</label>
-                        <input id="zip-code" type="text"
-                            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
+                        <input id="zip-code" type="text" class="block w-full p-[6px] border-gray-300 rounded-md "
                             required>
                     </div>
 
@@ -130,9 +130,7 @@
                     '::placeholder': {
                         color: '#aab7c4',
                     },
-                    padding: '10px',
-                    border: '1px solid #d1d5db',
-                    borderRadius: '0.375rem'
+                    padding: '0px',
                 },
                 invalid: {
                     color: '#e5424d',
@@ -151,9 +149,7 @@
                     '::placeholder': {
                         color: '#aab7c4',
                     },
-                    padding: '10px',
-                    border: '1px solid #d1d5db',
-                    borderRadius: '0.375rem'
+                    padding: '0px',
                 },
                 invalid: {
                     color: '#e5424d',
@@ -172,9 +168,8 @@
                     '::placeholder': {
                         color: '#aab7c4',
                     },
-                    padding: '10px',
-                    border: '1px solid #d1d5db',
-                    borderRadius: '0.375rem'
+                    padding: '8px',
+
                 },
                 invalid: {
                     color: '#e5424d',
