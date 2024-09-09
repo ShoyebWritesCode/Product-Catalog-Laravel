@@ -235,7 +235,9 @@
                     submitButton.classList.remove('bg-red-500');
                     buttonText.textContent = 'Pay Now';
 
-                    window.location.href = "{{ route('customer.order.home') }}";
+                    window.location.href =
+                    "{{ route('customer.order.orderdetail', ['order' => $order->id]) }}";
+
                 }
             }
         });
