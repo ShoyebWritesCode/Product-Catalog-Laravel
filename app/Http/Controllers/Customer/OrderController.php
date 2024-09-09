@@ -21,8 +21,9 @@ use App\Notifications\OrderPlaced;
 use Illuminate\Support\Facades\Notification;
 use App\Http\Controllers\AddressController;
 use App\Models\Inventory;
-use Stripe;
 use App\Models\PaymentHistory;
+use Stripe\Stripe;
+use Stripe\PaymentIntent;
 
 class OrderController extends Controller
 {
@@ -450,5 +451,80 @@ class OrderController extends Controller
         $order->save();
         session()->flash('success', 'Order cancelled successfully');
         return redirect()->route('customer.order.history')->with('success', 'Order cancelled successfully');
+    }
+
+    public function showPaymentForm(Order $order)
+    {
+        $data = $this->getOrderData();
+
+
+        // return response()->json($data);
+        $allParentCategories = [];
+
+
+        $categories = Catagory::all()->keyBy('id');
+        $allParentCategories = Catagory::where('parent_id', null)->get();
+        foreach ($allParentCategories as $parentCategory) {
+            $allChildCategoriesOfParent[$parentCategory->id] = Catagory::where('parent_id', $parentCategory->id)->get();
+        }
+        $unreadNotifications = auth()->user()->unreadNotifications;
+        return view('customer.order.stripeCheckout', $data, compact('order', 'allParentCategories', 'allChildCategoriesOfParent', 'unreadNotifications'));
+    }
+
+    public function createPaymentIntent(Request $request)
+    {
+        Stripe::setApiKey(env('STRIPE_SECRET'));
+
+        $orderId = $request->input('order_id'); // Assume you send the order ID in the request
+        $order = Order::findOrFail($orderId);
+
+        $paymentIntent = PaymentIntent::create([
+            'amount' => 100 * $order->total, // Amount in cents
+            'currency' => 'bdt', // Replace with your currency code
+            'payment_method_types' => ['card'],
+            'metadata' => [
+                'order_id' => $order->id,
+            ],
+        ]);
+
+        return response()->json([
+            'clientSecret' => $paymentIntent->client_secret,
+        ]);
+    }
+
+    public function handlePaymentSuccess(Request $request)
+    {
+
+        Stripe::setApiKey(env('STRIPE_SECRET'));
+        $stripe = new \Stripe\StripeClient(env('STRIPE_SECRET'));
+
+        $paymentIntent = PaymentIntent::retrieve($request->payment_intent);
+        $orderId = $paymentIntent->metadata->order_id;
+        Log::info('Order ID', ['orderId' => $orderId]);
+
+
+
+        $charges = $stripe->charges->all(['payment_intent' => $paymentIntent->id]);
+        $charge = $charges->data[0];
+
+        $order = Order::find($orderId);
+        $order->payment_method = "online";
+        $order->save();
+        Log::info('HELLIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII');
+        $this->checkout();
+        Log::info('HELLOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO');
+
+        $paymentHistory = new PaymentHistory();
+        $paymentHistory->order_id = $orderId;
+        $paymentHistory->transaction_id = $charge->id;
+        $paymentHistory->balance_transaction = $charge->balance_transaction;
+        $paymentHistory->amount_total = $charge->amount / 100;
+        $paymentHistory->payment_method = "Online Payment";
+        $paymentHistory->payment_status = $charge->status;
+        $paymentHistory->raw_response = json_encode($charge);
+        $paymentHistory->receipt_url = $charge->receipt_url;
+        $paymentHistory->save();
+
+        return redirect()->route('customer.order.home')->with('success', 'Online payment done successfully. Check your email for confirmation');
     }
 }

@@ -167,7 +167,7 @@
             console.log(orderId);
             console.log(paymentMethodInput.value);
             if (paymentMethodInput.value === 'online') {
-                form.action = "{{ route('customer.order.stripe', ':orderId') }}".replace(':orderId', orderId);
+                form.action = "{{ route('customer.native.checkout', ':orderId') }}".replace(':orderId', orderId);
             } else {
                 form.action = "{{ route('customer.order.checkout', ':orderId') }}".replace(':orderId', orderId);
                 console.log('Cash on Delivery');
