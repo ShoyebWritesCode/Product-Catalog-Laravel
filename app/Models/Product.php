@@ -29,6 +29,20 @@ class Product extends Model
         return $this->hasMany(Review::class);
     }
 
+    public function averageRating()
+    {
+        if ($this->reviews()->count() == 0) {
+            return null;
+        } else {
+            return $this->reviews()->avg('rating');
+        }
+    }
+
+    public function reviewCount()
+    {
+        return $this->reviews()->count();
+    }
+
     public function mappings()
     {
         return $this->hasMany(Mapping::class);
@@ -47,5 +61,15 @@ class Product extends Model
     public function images()
     {
         return $this->hasMany(Images::class);
+    }
+
+    public function attributes()
+    {
+        return $this->hasMany(ProductAttribute::class);
+    }
+
+    public function attCount()
+    {
+        return $this->attributes()->count();
     }
 }

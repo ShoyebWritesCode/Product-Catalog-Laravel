@@ -8,6 +8,7 @@ use App\Models\Catagory;
 use App\Models\Mapping;
 use App\Models\Images;
 use App\Models\Inventory;
+use App\Models\ProductAttribute;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -81,6 +82,8 @@ class ProductController extends Controller
 
         $this->updateInventories($request->inventories, $product->id);
 
+        $this->updateSpecifications($request->product_attributes, $product->id);
+
         return redirect()->back()->with('success', 'Product updated successfully');
     }
 
@@ -151,10 +154,15 @@ class ProductController extends Controller
     {
         $product->name = $request->name;
         $product->description = $request->description;
-        $product->prev_price = $product->price; // Assuming this is intentional
-        $product->price = $request->price;
+        $product->Detailes = $request->details;
+        if ($request->price != $product->price) {
+            $product->prev_price = $product->price;
+            $product->price = $request->price;
+        }
+        $product->slug = $request->slug;
         $product->featured = $request->has('featured') ? 1 : 0;
         $product->new = $request->has('new') ? 1 : 0;
+
         $product->save();
     }
 
@@ -169,6 +177,21 @@ class ProductController extends Controller
                 ],
                 ['quantity' => $inventoryData['quantity']]
             );
+        }
+    }
+
+    private function updateSpecifications(array $product_attributes, $productId)
+    {
+        foreach ($product_attributes as $attributeData) {
+            if (!is_null($attributeData['value'])) {
+                ProductAttribute::updateOrCreate(
+                    [
+                        'product_id' => $productId,
+                        'attribute_id' => $attributeData['attribute_id'],
+                    ],
+                    ['value' => $attributeData['value']]
+                );
+            }
         }
     }
 

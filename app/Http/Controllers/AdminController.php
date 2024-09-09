@@ -15,6 +15,7 @@ use App\Models\Color;
 use App\Models\Inventory;
 use App\Models\Banner;
 use App\Models\Size;
+use App\Models\Attribute;
 use App\Models\Images;
 use Illuminate\Support\Facades\Notification;
 use App\Notifications\OrderConfirmed;
@@ -35,10 +36,11 @@ class AdminController extends Controller
         $totalRefundRequests = Order::where('refund', 0)->count();
         $totalColors = Color::count();
         $totalSizes = Size::count();
+        $totalAttributes = Attribute::count();
 
 
         $unreadNotifications = auth()->user()->unreadNotifications;
-        return view('admin.admin', compact('totalUsers', 'totalCategories', 'totalReviews', 'totalProducts', 'totalPendingOrders', 'totalCompletedOrders', 'totalTemplates', 'unreadNotifications', 'totalPayments', 'totalRefundRequests', 'totalColors', 'totalSizes'));
+        return view('admin.admin', compact('totalUsers', 'totalCategories', 'totalReviews', 'totalProducts', 'totalPendingOrders', 'totalCompletedOrders', 'totalTemplates', 'unreadNotifications', 'totalPayments', 'totalRefundRequests', 'totalColors', 'totalSizes', 'totalAttributes'));
     }
 
     public function products()
@@ -53,6 +55,7 @@ class AdminController extends Controller
         $product = Product::findOrFail($id);
         $colors = Color::all();
         $sizes = Size::all();
+        $attributes = Attribute::all();
         $inventories = Inventory::where('product_id', $id)->get();
         $combinations = [];
         foreach ($sizes as $size) {
@@ -67,7 +70,7 @@ class AdminController extends Controller
         }
 
 
-        return view('admin.product.edit', compact('product', 'colors', 'sizes', 'combinations', 'inventories'));
+        return view('admin.product.edit', compact('product', 'colors', 'sizes', 'combinations', 'inventories', 'attributes'));
     }
 
     public function deleteProduct($id)
@@ -93,6 +96,20 @@ class AdminController extends Controller
         $categories = Catagory::whereNull('parent_id')->get();
         $subcategories = Catagory::whereNotNull('parent_id')->get();
         return view('admin.categories', compact('categories', 'subcategories'));
+    }
+
+    public function attributes()
+    {
+        $attributes = Attribute::all();
+        return view('admin.attributes.home', compact('attributes'));
+    }
+
+    public function attributesStore(Request $request)
+    {
+        $attribute = new Attribute();
+        $attribute->name = $request->name;
+        $attribute->save();
+        return redirect()->back()->with('success', 'Attribute created successfully');
     }
 
     public function reviews()

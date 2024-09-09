@@ -3,8 +3,7 @@
 @section('title', 'Edit Product')
 
 @section('content_header')
-    <h1>Edit Product</h1>
-    <a href="{{ route('admin.products') }}" class="btn btn-danger">Back</a>
+    <a href="{{ route('admin.products') }}" class="btn btn-danger ml-2">Back</a>
 @stop
 
 @section('content')
@@ -61,10 +60,25 @@
                                     @enderror
                                 </div>
                                 <div class="mb-4">
+                                    <label for="slug" class="form-label">Slug:</label>
+                                    <input type="text" name="slug" id="slug" class="form-control"
+                                        value="{{ old('slug', $product->slug) }}">
+                                    @error('slug')
+                                        <span class="text-danger">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                                <div class="mb-4">
                                     <label for="description" class="form-label">Description:</label>
                                     <input type="text" name="description" id="description" class="form-control"
                                         value="{{ old('description', $product->description) }}">
                                     @error('description')
+                                        <span class="text-danger">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                                <div class="mb-4">
+                                    <label for="details" class="form-label">Details:</label>
+                                    <textarea name="details" id="details" class="form-control">{{ old('details', $product->Detailes) }}</textarea>
+                                    @error('details')
                                         <span class="text-danger">{{ $message }}</span>
                                     @enderror
                                 </div>
@@ -102,6 +116,59 @@
                                     </div>
                                 </div>
 
+
+                                <h3 style="cursor: pointer;" id="toggleAttributes"
+                                    class="flex items-center justify-between bg-gray rounded p-2 cursor-pointer w-1/4">
+                                    <span>Specifications</span>
+                                    <i class="fas fa-chevron-down"></i>
+                                </h3>
+
+                                <hr>
+
+                                <div id="attributeDetails" style="display: none;">
+
+                                    <table class="table table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th class="py-2">Attribute</th>
+                                                <th class="py-2 w-1/2">Value</th>
+
+                                            </tr>
+                                        </thead>
+                                        <tbody class="divide-y divide-transparent">
+
+                                            @foreach ($attributes as $attribute)
+                                                <tr>
+                                                    <td>{{ $attribute->name }}</td>
+                                                    <td>
+                                                        @php
+                                                            $productId = $product->id;
+                                                            $attributeId = $attribute->id;
+                                                            $productAttribute = $product->attributes
+                                                                ->where('attribute_id', $attribute->id)
+                                                                ->first();
+                                                            $oldValue = $productAttribute
+                                                                ? $productAttribute->value
+                                                                : '';
+                                                        @endphp
+                                                        <input type="text"
+                                                            name="product_attributes[{{ $attributeId }}_{{ $productId }}][value]"
+                                                            value="{{ old('product_attributes.' . $attributeId . '_' . $productId . '.value', $oldValue) }}"
+                                                            class="form-control">
+                                                        <input type="hidden"
+                                                            name="product_attributes[{{ $attributeId }}_{{ $productId }}][attribute_id]"
+                                                            value="{{ $attribute->id }}">
+                                                    </td>
+
+                                                </tr>
+                                            @endforeach
+
+                                        </tbody>
+
+
+
+                                    </table>
+                                </div>
 
                                 <h3 style="cursor: pointer;" id="toggleInventory"
                                     class="flex items-center justify-between bg-gray rounded p-2 cursor-pointer w-1/4">
@@ -168,10 +235,15 @@
 
 @section('js')
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.ckeditor.com/4.16.2/standard/ckeditor.js"></script>
     <script>
+        CKEDITOR.replace('details');
         $(document).ready(function() {
             $('#toggleInventory').click(function() {
                 $('#inventoryDetails').toggle();
+            });
+            $('#toggleAttributes').click(function() {
+                $('#attributeDetails').toggle();
             });
             $('#successAlert').fadeOut(2000);
         });

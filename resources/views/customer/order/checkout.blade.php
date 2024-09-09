@@ -20,7 +20,7 @@
         @include('partials.nav')
     </x-slot>
 
-    <div class="py-12">
+    <div class="py-4">
         @if (session('success'))
             <div class="alert alert-success mb-4" role="alert">
                 {{ session('success') }}

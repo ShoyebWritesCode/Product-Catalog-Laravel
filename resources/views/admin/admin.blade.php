@@ -65,6 +65,14 @@
             'link_text' => 'More info',
         ])
         @include('components.index', [
+            'title' => 'Attributes',
+            'number' => $totalAttributes,
+            'icon' => 'fas fa-star',
+            'color' => 'teal',
+            'link' => route('admin.attributes'),
+            'link_text' => 'More info',
+        ])
+        @include('components.index', [
             'title' => 'Colors',
             'number' => $totalColors,
             'icon' => 'fas fa-palette',

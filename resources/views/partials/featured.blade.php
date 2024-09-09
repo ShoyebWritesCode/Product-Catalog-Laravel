@@ -8,12 +8,13 @@
             <div class="flex space-x-2 mb-3 mt-0" id="featuredProducts">
                 @foreach ($featuredProducts as $product)
                     <div class="h-[350px] min-w-[200px] bg-white  shadow-md p-0 mt-2">
-                        <a href="{{ route('customer.product.show', $product->id) }}" class="no-underline">
+                        <a href="{{ route('customer.product.show', ['product' => $product->id, 'slug' => $product->slug]) }}"
+                            class="no-underline">
                             <img src="{{ asset('storage/images/' . $product->images->first()->path) }}"
                                 alt="{{ $product->name }}" class="w-full h-40 object-cover  mb-2" loading="lazy">
 
                             <p
-                                class="text-lg text-center mb-2 text-lg font-semibold text-gray-900 hover:text-blue-700  no-underline">
+                                class="text-lg text-center mb-2 font-semibold text-gray-900 hover:text-blue-700  no-underline">
                                 {{ $product->name }}
                             </p>
 
@@ -30,7 +31,7 @@
                                 </p>
                             @endif
                             <p class="text-sm text-yellow-600 text-center">
-                                {{ isset($averageRatings[$product->id]) ? number_format($averageRatings[$product->id], 2) : 'No Ratings' }}
+                                {{ $product->averageRating() !== null ? number_format($product->averageRating(), 2) : 'No Ratings' }}
                             </p>
                         </a>
                     </div>

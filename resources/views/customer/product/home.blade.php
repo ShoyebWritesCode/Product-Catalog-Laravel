@@ -9,6 +9,11 @@
     </x-slot>
 
     <div class="py-0 mt-2 bg-gray-200">
+        @if (session('success'))
+            <div class="alert alert-success mb-4" role="alert">
+                {{ session('success') }}
+            </div>
+        @endif
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-gray-200 overflow-hidden">
                 <div class="p-2 text-gray-900">
