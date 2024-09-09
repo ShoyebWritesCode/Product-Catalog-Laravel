@@ -72,6 +72,12 @@ Route::middleware('auth')->group(function () {
     Route::delete('/orders/{id}', [OrderController::class, 'remove'])->name('cart.remove');
     Route::get('/orders/checkout', [OrderController::class, 'checkoutpage'])->name('customer.order.checkoutpage');
     Route::post('/orders/checkout/cod/{order}', [OrderController::class, 'checkout'])->name('customer.order.checkout');
+
+    Route::post('/stripe-checkout/{order}', [OrderController::class, 'showPaymentForm'])->name('customer.native.checkout');
+    Route::post('/create-payment-intent', [OrderController::class, 'createPaymentIntent'])->name('create-payment-intent');
+    Route::post('/payment-success', [OrderController::class, 'handlePaymentSuccess'])
+        ->name('handle-payment-success');
+
     Route::post('/orders/checkout/stripe/{order}', [OrderController::class, 'stripeCheckout'])->name('customer.order.stripe');
     Route::get('/orders/checkout/stripe/success', [OrderController::class, 'stripeCheckoutSuccess'])->name('stripe.checkout.success');
     Route::post('/orders/reorder/{order}', [OrderController::class, 'reorder'])->name('customer.order.reorder');

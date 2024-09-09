@@ -1,22 +1,6 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="flex justify-between items-center">
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                <h1 class="text-2xl font-bold mb-2">{{ 'My Order' }}</h1>
-            </h2>
-            <div class="flex-1 text-center">
-                <a href="{{ route('customer.product.home') }}" class="text-blue-500 hover:text-blue-700 mx-4">
-                    {{ __('Product') }}
-                </a>
-            </div>
-            <a href="{{ route('customer.order.home') }}" class="text-gray-800 hover:text-gray-600 relative">
-                <i class="fas fa-shopping-cart text-xl"></i>
-                <span
-                    class="bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center absolute top-0 right-0 -mt-1 -mr-1 text-xs">
-                    {{ $numberOfItems }}
-                </span>
-            </a>
-        </div>
+        @include('partials.nav')
     </x-slot>
 
     <div class="py-12">
