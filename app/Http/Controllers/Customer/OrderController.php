@@ -379,7 +379,16 @@ class OrderController extends Controller
     {
         $orderItems = OrderItems::where('order_id', $order->id)->get();
         $data = compact('order', 'orderItems');
-        return view('customer.order.orderdetail', $data);
+        $allParentCategories = [];
+
+
+        $categories = Catagory::all()->keyBy('id');
+        $allParentCategories = Catagory::where('parent_id', null)->get();
+        foreach ($allParentCategories as $parentCategory) {
+            $allChildCategoriesOfParent[$parentCategory->id] = Catagory::where('parent_id', $parentCategory->id)->get();
+        }
+        $unreadNotifications = auth()->user()->unreadNotifications;
+        return view('customer.order.orderdetail', $data, compact('allParentCategories', 'allChildCategoriesOfParent', 'unreadNotifications'));
     }
 
     public function stripeCheckout(Request $request, Order $order)
