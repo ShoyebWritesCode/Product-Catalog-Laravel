@@ -58,38 +58,135 @@
                 @else
                     <p class="text-center text-gray-600">You have no open orders.</p>
                 @endif
-                <div class="p-6 bg-white border-b border-gray-200">
-                    <form id="payment-form">
-                        <div id="card-element" class="my-4">
-                            <!-- Stripe Elements will insert the card input form here -->
-                        </div>
-                        <button id="submit-button"
-                            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded relative flex items-center justify-center">
-                            <span id="button-text">Pay Now</span>
-                        </button>
 
-
-
-                        <div id="payment-message" class="mt-4 text-red-500"></div>
-                    </form>
-                </div>
             </div>
         </div>
+    </div>
+    <div class="py-12">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                <form id="payment-form" class="p-6">
+                    <div class="mb-4">
+                        <label for="holder-name" class="block text-gray-700">Holder Name</label>
+                        <input id="holder-name" type="text"
+                            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
+                            required>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="block text-gray-700">Card Number</label>
+                        <div id="card-number-element" class="border p-4 rounded-md">
+                            <!-- Stripe Card Number Element -->
+                        </div>
+                    </div>
+
+                    <div class="flex space-x-4 mb-4">
+                        <div class="w-1/2">
+                            <label class="block text-gray-700">Expiration Date</label>
+                            <div id="expiry-element" class="border p-4 rounded-md">
+                                <!-- Stripe Expiration Date Element -->
+                            </div>
+                        </div>
+                        <div class="w-1/2">
+                            <label class="block text-gray-700">CVC</label>
+                            <div id="cvc-element" class="border p-4 rounded-md">
+                                <!-- Stripe CVC Element -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="zip-code" class="block text-gray-700">Zip Code</label>
+                        <input id="zip-code" type="text"
+                            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
+                            required>
+                    </div>
+
+                    <button id="submit-button"
+                        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded relative flex items-center justify-center">
+                        <span id="button-text">Pay Now</span>
+                    </button>
+
+                    <div id="payment-message" class="mt-4 text-red-500"></div>
+                </form>
+            </div>
+        </div>
+
     </div>
 
     <script src="https://js.stripe.com/v3/"></script>
     <script>
         const stripe = Stripe("{{ env('STRIPE_KEY') }}");
         const elements = stripe.elements();
-        const cardElement = elements.create('card');
-        cardElement.mount('#card-element');
+
+        // Create and mount individual Stripe Elements
+        const cardNumberElement = elements.create('cardNumber', {
+            style: {
+                base: {
+                    color: '#000',
+                    fontSize: '16px',
+                    fontFamily: '"Source Code Pro", monospace',
+                    '::placeholder': {
+                        color: '#aab7c4',
+                    },
+                    padding: '10px',
+                    border: '1px solid #d1d5db',
+                    borderRadius: '0.375rem'
+                },
+                invalid: {
+                    color: '#e5424d',
+                    iconColor: '#e5424d',
+                },
+            },
+        });
+        cardNumberElement.mount('#card-number-element');
+
+        const expiryElement = elements.create('cardExpiry', {
+            style: {
+                base: {
+                    color: '#000',
+                    fontSize: '16px',
+                    fontFamily: '"Source Code Pro", monospace',
+                    '::placeholder': {
+                        color: '#aab7c4',
+                    },
+                    padding: '10px',
+                    border: '1px solid #d1d5db',
+                    borderRadius: '0.375rem'
+                },
+                invalid: {
+                    color: '#e5424d',
+                    iconColor: '#e5424d',
+                },
+            },
+        });
+        expiryElement.mount('#expiry-element');
+
+        const cvcElement = elements.create('cardCvc', {
+            style: {
+                base: {
+                    color: '#000',
+                    fontSize: '16px',
+                    fontFamily: '"Source Code Pro", monospace',
+                    '::placeholder': {
+                        color: '#aab7c4',
+                    },
+                    padding: '10px',
+                    border: '1px solid #d1d5db',
+                    borderRadius: '0.375rem'
+                },
+                invalid: {
+                    color: '#e5424d',
+                    iconColor: '#e5424d',
+                },
+            },
+        });
+        cvcElement.mount('#cvc-element');
 
         const form = document.getElementById('payment-form');
         const submitButton = document.getElementById('submit-button');
         const paymentMessage = document.getElementById('payment-message');
         const buttonText = document.getElementById('button-text');
-
-
 
         form.addEventListener('submit', async (event) => {
             event.preventDefault();
@@ -106,7 +203,7 @@
                     "X-CSRF-TOKEN": "{{ csrf_token() }}"
                 },
                 body: JSON.stringify({
-                    order_id: "{{ $order->id }}" // Pass the order ID here
+                    order_id: "{{ $order->id }}"
                 })
             }).then(response => response.json());
 
@@ -115,7 +212,7 @@
                 error
             } = await stripe.confirmCardPayment(clientSecret, {
                 payment_method: {
-                    card: cardElement
+                    card: cardNumberElement,
                 }
             });
 
@@ -123,8 +220,6 @@
                 paymentMessage.textContent = error.message;
             } else {
                 if (paymentIntent.status === 'succeeded') {
-
-                    // Send payment success data to your server if needed
                     await fetch("{{ route('handle-payment-success') }}", {
                         method: "POST",
                         headers: {
