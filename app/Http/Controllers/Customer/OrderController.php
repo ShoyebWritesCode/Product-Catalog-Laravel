@@ -56,8 +56,12 @@ class OrderController extends Controller
     public function index()
     {
         $data = $this->getOrderData();
-        $data['order']->total = 0;
-        $data['order']->save();
+        if ($data['order'] && $data['order']->total != null) {
+            $data['order']->total = 0;
+            $data['order']->save();
+        }
+
+
 
         $allParentCategories = [];
 
