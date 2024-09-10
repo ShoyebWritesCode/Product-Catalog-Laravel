@@ -19,5 +19,5 @@ yarn-error.log
 /.vscode
 NUL
 
-./firebase_credentials.json
+firebase_credentials.json
 
