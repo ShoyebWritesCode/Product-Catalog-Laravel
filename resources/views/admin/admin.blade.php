@@ -199,107 +199,52 @@
         // Initialize Firebase Messaging
         const messaging = getMessaging(app);
 
-        let pollingCount = 1;
-        setInterval(function() {
-            console.log(`Polling attempt: ${pollingCount}`); // Log the polling attempt
 
-            fetch('admin/check-new-order', {
-                    method: 'GET',
-                    headers: {
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute(
-                            'content')
+        Notification.requestPermission().then(permission => {
+            if (permission === 'granted') {
+                // Get FCM token
+                getToken(messaging, {
+                    vapidKey: 'BGJnmNq3LW7qTyD498Avn3l93tGvG3V3fT9gvzWR475SwhdqkZCrGRLmFoJPzd9xC469IQ4W-Sf0GUmm9oOvkUQ'
+                }).then(currentToken => {
+                    if (currentToken) {
+                        console.log('FCM Token:', currentToken);
+
+                        fetch('admin/store-token', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'X-CSRF-TOKEN': document.querySelector(
+                                            'meta[name="csrf-token"]')
+                                        .getAttribute('content')
+                                },
+                                body: JSON.stringify({
+                                    token: currentToken
+                                })
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                console.log('Token stored successfully:',
+                                    data);
+                            })
+
+                            .catch(error => {
+                                console.log(
+                                    'An error occurred while storing the token:',
+                                    error);
+                            });
+                    } else {
+                        console.log(
+                            'No registration token available. Request permission to generate one.'
+                        );
                     }
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.new_order) {
-                        Notification.requestPermission().then(permission => {
-                            if (permission === 'granted') {
-                                // Get FCM token
-                                getToken(messaging, {
-                                    vapidKey: 'BGJnmNq3LW7qTyD498Avn3l93tGvG3V3fT9gvzWR475SwhdqkZCrGRLmFoJPzd9xC469IQ4W-Sf0GUmm9oOvkUQ'
-                                }).then(currentToken => {
-                                    if (currentToken) {
-                                        console.log('FCM Token:', currentToken);
-
-                                        fetch('admin/store-token', {
-                                                method: 'POST',
-                                                headers: {
-                                                    'Content-Type': 'application/json',
-                                                    'X-CSRF-TOKEN': document.querySelector(
-                                                            'meta[name="csrf-token"]')
-                                                        .getAttribute('content')
-                                                },
-                                                body: JSON.stringify({
-                                                    token: currentToken
-                                                })
-                                            })
-                                            .then(response => response.json())
-                                            .then(data => {
-                                                console.log('Token stored successfully:',
-                                                    data);
-                                                console.log(
-                                                    'Sending notification request...');
-                                                fetch('admin/send-notification', {
-                                                        method: 'GET',
-                                                    })
-                                                    .then(response => response.json())
-                                                    .then(data => {
-                                                        console.log(
-                                                            'Notification request sent successfully:',
-                                                            data);
-                                                    })
-                                                    .catch(error => {
-                                                        console.log(
-                                                            'An error occurred while sending the notification:',
-                                                            error);
-                                                    });
-
-                                                // Handle incoming messages when the app is in the foreground
-                                                onMessage(messaging, (payload) => {
-                                                    console.log(
-                                                        'Message received. ',
-                                                        payload);
-
-                                                    const notificationTitle =
-                                                        payload.notification.title;
-                                                    const notificationOptions = {
-                                                        body: payload
-                                                            .notification.body,
-                                                        url: payload
-                                                            .notification.url
-                                                    };
-
-                                                    new Notification(
-                                                        notificationTitle,
-                                                        notificationOptions);
-                                                });
-                                            })
-                                            .catch(error => {
-                                                console.log(
-                                                    'An error occurred while storing the token:',
-                                                    error);
-                                            });
-                                    } else {
-                                        console.log(
-                                            'No registration token available. Request permission to generate one.'
-                                        );
-                                    }
-                                }).catch(err => {
-                                    console.log('An error occurred while retrieving token. ',
-                                        err);
-                                });
-                            } else {
-                                console.log('Unable to get permission to notify.');
-                            }
-                        });
-                    }
-                })
-                .catch(error => {
-                    console.error('Error checking for new order:', error);
+                }).catch(err => {
+                    console.log(
+                        'An error occurred while retrieving token. ',
+                        err);
                 });
-
-            pollingCount++; // Increment the polling counter
-        }, 10000); // Polling interval set to 10 seconds
+            } else {
+                console.log('Unable to get permission to notify.');
+            }
+        });
     </script>
 @stop

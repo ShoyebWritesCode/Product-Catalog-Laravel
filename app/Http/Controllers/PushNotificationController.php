@@ -16,8 +16,8 @@ class PushNotificationController extends Controller
 
     public function storeToken(Request $request)
     {
-        $admin = Auth::user();
-        $user_id  = $admin->id;
+        // $admin = Auth::user();
+        $user_id  = 1;
         Log::info($user_id);
         $user = Admin::find($user_id);
 
@@ -30,8 +30,8 @@ class PushNotificationController extends Controller
 
     public function sendPushNotification()
     {
-        $admin = Auth::user();
-        $user_id  = $admin->id;
+        // $admin = Auth::user();
+        $user_id  = 1;
         $user = Admin::find($user_id);
         $fcmToken = $user->fcm_token;
         $firebase = (new Factory)
@@ -53,7 +53,8 @@ class PushNotificationController extends Controller
         $message = CloudMessage::fromArray([
             'notification' => [
                 'title' => 'New Order',
-                'body' => 'You have received a new order.Order ID is ' . $latestOrder->id
+                'body' => 'You have received a new order.Order ID is ' . $latestOrder->id,
+                'click_action' => 'www.google.com'
             ],
             'data' => [
                 'url' => $signedUrl

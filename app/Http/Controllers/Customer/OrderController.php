@@ -24,6 +24,9 @@ use App\Models\Inventory;
 use App\Models\PaymentHistory;
 use Stripe\Stripe;
 use Stripe\PaymentIntent;
+use Kreait\Firebase\Factory;
+use Kreait\Firebase\Messaging\CloudMessage;
+use Illuminate\Support\Facades\URL;
 
 class OrderController extends Controller
 {
@@ -264,6 +267,7 @@ class OrderController extends Controller
 
         $admins = Admin::all();
         Notification::send($admins, new OrderPlaced($order));
+        $this->sendPushNotification();
 
         session()->flash('success', 'Order placed successfully. Check your email for confirmation');
         return redirect()->route('customer.product.home')->with('success', 'Order placed successfully. Check your email for confirmation');
@@ -536,5 +540,47 @@ class OrderController extends Controller
         $paymentHistory->save();
 
         return redirect()->route('customer.order.home')->with('success', 'Online payment done successfully. Check your email for confirmation');
+    }
+
+    public function sendPushNotification()
+    {
+        // $admin = Auth::user();
+        $user_id  = 1;
+        $user = Admin::find($user_id);
+        $fcmToken = $user->fcm_token;
+        $firebase = (new Factory)
+            ->withServiceAccount('C:/xampp/htdocs/auth_app/config/firebase_credentials.json');
+
+        $latestOrder = Order::latest()->first();
+        $latestOrder->update([
+            'is_pushed' => 0
+        ]);
+        $latestOrder->save();
+
+        $signedUrl = URL::temporarySignedRoute(
+            'admin.order.show',
+            now()->addMinutes(30),
+            ['order' => $latestOrder->id]
+        );
+        $messaging = $firebase->createMessaging();
+
+        $message = CloudMessage::fromArray([
+            'notification' => [
+                'title' => 'New Order',
+                'body' => 'You have received a new order.Order ID is ' . $latestOrder->id,
+                'click_action' => 'www.google.com'
+            ],
+            'data' => [
+                'url' => $signedUrl
+            ],
+            'token' => $fcmToken
+        ]);
+
+        $messaging->send($message);
+
+        return response()->json([
+            'message' => 'Push notification sent successfully,',
+            'token' => $fcmToken
+        ]);
     }
 }
