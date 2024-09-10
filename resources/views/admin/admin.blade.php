@@ -1,5 +1,8 @@
 @extends('adminlte::page')
 
+@section('head')
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+@endsection
 @section('title', 'Dashboard')
 
 @section('content_header')
@@ -164,7 +167,7 @@
 
 @section('js')
 
-    <script>
+    <script type="module">
         import {
             initializeApp
         } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-app.js";
@@ -176,6 +179,7 @@
             getToken,
             onMessage
         } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-messaging.js";
+
 
         // Your web app's Firebase configuration
         const firebaseConfig = {
@@ -205,10 +209,51 @@
                     if (currentToken) {
                         console.log('FCM Token:', currentToken);
 
-                        // Send token to your backend to save it
-                        axios.post('/store-token', {
-                            token: currentToken
-                        });
+                        fetch('admin/store-token', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')
+                                        .getAttribute('content')
+                                },
+                                body: JSON.stringify({
+                                    token: currentToken
+                                })
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                console.log('Token stored successfully:', data);
+                                console.log('Sending notification request...');
+                                fetch('admin/send-notification', {
+                                        method: 'GET',
+                                    })
+                                    .then(response => response.json())
+                                    .then(data => {
+                                        console.log('Notification request sent successfully:',
+                                            data);
+                                    })
+                                    .catch(error => {
+                                        console.log(
+                                            'An error occurred while sending the notification:',
+                                            error);
+                                    });
+
+                                // Handle incoming messages when the app is in the foreground
+                                onMessage(messaging, (payload) => {
+                                    console.log('Message received. ', payload);
+
+                                    const notificationTitle = payload.notification.title;
+                                    const notificationOptions = {
+                                        body: payload.notification.body,
+                                        icon: payload.notification.icon
+                                    };
+
+                                    new Notification(notificationTitle, notificationOptions);
+                                });
+                            })
+                            .catch(error => {
+                                console.log('An error occurred while storing the token:', error);
+                            });
                     } else {
                         console.log('No registration token available. Request permission to generate one.');
                     }
@@ -219,47 +264,5 @@
                 console.log('Unable to get permission to notify.');
             }
         });
-
-        // Handle incoming messages when the app is in the foreground
-        onMessage(messaging, (payload) => {
-            console.log('Message received. ', payload);
-
-            // Show notification
-            const notificationTitle = payload.notification.title;
-            const notificationOptions = {
-                body: payload.notification.body,
-                icon: payload.notification.icon
-            };
-
-            new Notification(notificationTitle, notificationOptions);
-        });
-
-        //   $(document).ready(function(){
-        //     $('.notification-item').on('click', function(event) {
-        //         event.preventDefault(); // Prevent default link behavior
-
-        //         var notificationId = $(this).data('id');
-        //         var notificationItem = $(this);
-
-        //         $.ajax({
-        //             url: "{{ route('admin.notifications.markAsRead', ':id') }}".replace(':id', notificationId),
-        //             method: 'POST',
-        //             data: {
-        //                 _token: "{{ csrf_token() }}"
-        //             },
-        //             success: function(response) {
-        //                 if (response.success) {
-        //                     notificationItem.remove();
-        //                     // Optionally show a success message or handle further actions
-        //                 } else {
-        //                     console.error('Error marking notification as read:', response.message);
-        //                 }
-        //             },
-        //             error: function(xhr, status, error) {
-        //                 console.error('Error marking notification as read:', error);
-        //             }
-        //         });
-        //     });
-        // });
     </script>
 @stop
