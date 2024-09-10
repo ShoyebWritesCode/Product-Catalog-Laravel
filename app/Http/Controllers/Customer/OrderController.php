@@ -224,6 +224,7 @@ class OrderController extends Controller
         $user = auth()->user();
         $order = Order::where('user_id', $user->id)->where('status', 0)->first();
         $order->status = 1;
+        $order->is_pushed = 1;
         $order->save();
         $orderItems = OrderItems::where('order_id', $order->id)->get();
 

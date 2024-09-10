@@ -6,8 +6,10 @@ use Kreait\Firebase\Factory;
 use Kreait\Firebase\Messaging\CloudMessage;
 use Illuminate\Http\Request;
 use App\Models\Admin;
+use App\Models\Order;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\URL;
 
 class PushNotificationController extends Controller
 {
@@ -35,13 +37,26 @@ class PushNotificationController extends Controller
         $firebase = (new Factory)
             ->withServiceAccount('C:/xampp/htdocs/auth_app/config/firebase_credentials.json');
 
+        $latestOrder = Order::latest()->first();
+        $latestOrder->update([
+            'is_pushed' => 0
+        ]);
+        $latestOrder->save();
 
+        $signedUrl = URL::temporarySignedRoute(
+            'admin.order.show',
+            now()->addMinutes(30),
+            ['order' => $latestOrder->id]
+        );
         $messaging = $firebase->createMessaging();
 
         $message = CloudMessage::fromArray([
             'notification' => [
-                'title' => 'Hello from Firebase!',
-                'body' => 'This is a test notification.'
+                'title' => 'New Order',
+                'body' => 'You have received a new order.Order ID is ' . $latestOrder->id
+            ],
+            'data' => [
+                'url' => $signedUrl
             ],
             'token' => $fcmToken
         ]);
@@ -51,6 +66,22 @@ class PushNotificationController extends Controller
         return response()->json([
             'message' => 'Push notification sent successfully,',
             'token' => $fcmToken
+        ]);
+    }
+
+    public function checkNewOrder()
+    {
+        $latestOrder = Order::where('is_pushed', 1)->latest()->first();
+
+        if ($latestOrder) {
+            return response()->json([
+                'new_order' => true,
+                'order_id' => $latestOrder->id
+            ]);
+        }
+
+        return response()->json([
+            'new_order' => false
         ]);
     }
 }

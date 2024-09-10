@@ -146,6 +146,7 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::post('admin/admin/sizes/create', [InventoryController::class, 'sizeCreate'])->name('admin.size.create');
     Route::get('admin/admin/send-notification', [PushNotificationController::class, 'sendPushNotification']);
     Route::post('admin/admin/store-token', [PushNotificationController::class, 'storeToken']);
+    Route::get('admin/admin/check-new-order', [PushNotificationController::class, 'checkNewOrder']);
 });
 
 
