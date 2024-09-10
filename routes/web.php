@@ -23,6 +23,8 @@ use App\Http\Controllers\AddressController;
 use App\Http\Controllers\InventoryController;
 use App\Http\Controllers\PaymentHistoryController;
 use App\Models\Inventory;
+use App\Http\Controllers\PushNotificationController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -143,6 +145,10 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::get('admin/admin/sizes', [InventoryController::class, 'sizesIndex'])->name('admin.sizes');
     Route::post('admin/admin/sizes/create', [InventoryController::class, 'sizeCreate'])->name('admin.size.create');
 });
+
+Route::get('/send-notification', [PushNotificationController::class, 'sendPushNotification']);
+Route::post('/store-token', [PushNotificationController::class, 'storeToken']);
+
 
 require __DIR__ . '/auth.php';
 
