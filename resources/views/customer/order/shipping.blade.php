@@ -25,7 +25,7 @@
                     value="{{ old('phone', $address['phone'] ?? '') }}" required>
             </div>
             <div class="mb-2">
-                <input type="checkbox" id="sameAsShipping" class="mr-2" checked>
+                <input type="checkbox" id="sameAsShipping" class="mr-2">
                 <label for="sameAsShipping" class="text-sm font-medium text-gray-700">Same address</label>
             </div>
             <div id="billingFormContainer" class="w-full bg-white">

@@ -227,7 +227,6 @@ class OrderController extends Controller
         $user = auth()->user();
         $order = Order::where('user_id', $user->id)->where('status', 0)->first();
         $order->status = 1;
-        $order->is_pushed = 1;
         $order->save();
         $orderItems = OrderItems::where('order_id', $order->id)->get();
 
@@ -267,7 +266,7 @@ class OrderController extends Controller
 
         $admins = Admin::all();
         Notification::send($admins, new OrderPlaced($order));
-        $this->sendPushNotification();
+        $this->sendPushNotification($order);
 
         session()->flash('success', 'Order placed successfully. Check your email for confirmation');
         return redirect()->route('customer.product.home')->with('success', 'Order placed successfully. Check your email for confirmation');
@@ -514,7 +513,6 @@ class OrderController extends Controller
 
         $paymentIntent = PaymentIntent::retrieve($request->payment_intent);
         $orderId = $paymentIntent->metadata->order_id;
-        Log::info('Order ID', ['orderId' => $orderId]);
 
 
 
@@ -524,9 +522,9 @@ class OrderController extends Controller
         $order = Order::find($orderId);
         $order->payment_method = "online";
         $order->save();
-        Log::info('HELLIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII');
+
         $this->checkout();
-        Log::info('HELLOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO');
+
 
         $paymentHistory = new PaymentHistory();
         $paymentHistory->order_id = $orderId;
@@ -542,20 +540,13 @@ class OrderController extends Controller
         return redirect()->route('customer.order.home')->with('success', 'Online payment done successfully. Check your email for confirmation');
     }
 
-    public function sendPushNotification()
+    public function sendPushNotification($latestOrder)
     {
         // $admin = Auth::user();
-        $user_id  = 1;
-        $user = Admin::find($user_id);
-        $fcmToken = $user->fcm_token;
+        $admins = Admin::whereNotNull('fcm_token')->get();
         $firebase = (new Factory)
             ->withServiceAccount('C:/xampp/htdocs/auth_app/config/firebase_credentials.json');
 
-        $latestOrder = Order::latest()->first();
-        $latestOrder->update([
-            'is_pushed' => 0
-        ]);
-        $latestOrder->save();
 
         $signedUrl = URL::temporarySignedRoute(
             'admin.order.show',
@@ -564,23 +555,28 @@ class OrderController extends Controller
         );
         $messaging = $firebase->createMessaging();
 
-        $message = CloudMessage::fromArray([
-            'notification' => [
-                'title' => 'New Order',
-                'body' => 'You have received a new order.Order ID is ' . $latestOrder->id,
-                'click_action' => 'www.google.com'
-            ],
-            'data' => [
-                'url' => $signedUrl
-            ],
-            'token' => $fcmToken
-        ]);
+        foreach ($admins as $admin) {
+            if ($admin->fcm_token) {
+                $fcmToken = $admin->fcm_token;
 
-        $messaging->send($message);
+                $message = CloudMessage::fromArray([
+                    'notification' => [
+                        'title' => 'New Order',
+                        'body' => 'You have received a new order. Order ID is ' . $latestOrder->id,
+                        'click_action' => 'www.google.com'
+                    ],
+                    'data' => [
+                        'url' => $signedUrl
+                    ],
+                    'token' => $fcmToken
+                ]);
+
+                $messaging->send($message);
+            }
+        }
 
         return response()->json([
-            'message' => 'Push notification sent successfully,',
-            'token' => $fcmToken
+            'message' => 'Push notification sent successfully,'
         ]);
     }
 }

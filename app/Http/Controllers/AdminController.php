@@ -192,7 +192,7 @@ class AdminController extends Controller
             Notification::send($user, new OrderConfirmed($order));
         }
 
-        Log::info('Update method called for order: ' . $order->id);
+
 
         $previousRoute = $request->headers->get('referer');
 
