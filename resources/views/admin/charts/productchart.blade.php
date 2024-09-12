@@ -37,7 +37,7 @@
             e.preventDefault();
             var filter = $(this).val();
             $.ajax({
-                url: "{{ url('/admin/admin/charts') }}",
+                url: "{{ url('/admin/charts') }}",
                 method: 'GET',
                 data: {
                     filter: filter,
