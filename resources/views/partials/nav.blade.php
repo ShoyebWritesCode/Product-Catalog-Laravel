@@ -4,7 +4,7 @@
             {{-- <h1 class="font-semibold text-xl text-white leading-tight">
                 {{ __('Product Catalogue') }}
             </h1> --}}
-            <img src="{{ asset('storage/images/logo.png') }}" alt="logo" class="w-64 h-12">
+            <img src="{{ asset('images/logo.png') }}" alt="logo" class="w-64 h-12">
         </a>
         <nav class="flex space-x-12 mt-2 ml-16">
             @foreach ($allParentCategories as $category)
