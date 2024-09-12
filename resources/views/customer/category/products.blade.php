@@ -7,7 +7,7 @@
         @include('partials.nav')
     </x-slot>
     <div class="py-4">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+        <div class="mx-auto sm:px-6 lg:px-8">
             <div class="flex">
                 <div class="w-1/5 pr-4 mt-1">
                     <div class="shadow-sm p-4 mb-4 bg-white">
@@ -62,7 +62,7 @@
                                 <div id="price-slider" class="w-3/4"></div>
                             </div>
 
-                            <div class="mb-4">
+                            {{-- <div class="mb-4">
                                 <h3 class="text-lg font-semibold mb-2 text-gray-400">Color</h3>
                                 <div class="flex">
                                     <div class="flex flex-col">
@@ -83,7 +83,7 @@
                                         </ul>
                                     </div>
                                 </div>
-                            </div>
+                            </div> --}}
 
                             <button type="submit" class="bg-blue-500 text-white py-1 px-4 rounded mt-2">Apply
                                 Filters</button>

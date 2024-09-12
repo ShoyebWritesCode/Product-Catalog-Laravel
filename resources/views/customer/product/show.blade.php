@@ -8,7 +8,7 @@
     <div id="successMessage" class="alert alert-success mb-4" role="alert" style="display: none;"></div>
 
     <div class="py-0">
-        <div class="max-w-7xl ">
+        <div class=" ">
             <div class="bg-gray-100 overflow-hidden ">
                 <div class="p-4 text-gray-900">
                     <div class="bg-gray-100 border border-orange-300 p-4 flex shadow-md flex-col">
