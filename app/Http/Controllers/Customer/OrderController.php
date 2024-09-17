@@ -24,6 +24,9 @@ use App\Models\Inventory;
 use App\Models\PaymentHistory;
 use Stripe\Stripe;
 use Stripe\PaymentIntent;
+use Kreait\Firebase\Factory;
+use Kreait\Firebase\Messaging\CloudMessage;
+use Illuminate\Support\Facades\URL;
 
 class OrderController extends Controller
 {
@@ -263,6 +266,7 @@ class OrderController extends Controller
 
         $admins = Admin::all();
         Notification::send($admins, new OrderPlaced($order));
+        $this->sendPushNotification($order);
 
         session()->flash('success', 'Order placed successfully. Check your email for confirmation');
         return redirect()->route('customer.product.home')->with('success', 'Order placed successfully. Check your email for confirmation');
@@ -509,7 +513,6 @@ class OrderController extends Controller
 
         $paymentIntent = PaymentIntent::retrieve($request->payment_intent);
         $orderId = $paymentIntent->metadata->order_id;
-        Log::info('Order ID', ['orderId' => $orderId]);
 
 
 
@@ -519,9 +522,9 @@ class OrderController extends Controller
         $order = Order::find($orderId);
         $order->payment_method = "online";
         $order->save();
-        Log::info('HELLIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII');
+
         $this->checkout();
-        Log::info('HELLOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO');
+
 
         $paymentHistory = new PaymentHistory();
         $paymentHistory->order_id = $orderId;
@@ -535,5 +538,45 @@ class OrderController extends Controller
         $paymentHistory->save();
 
         return redirect()->route('customer.order.home')->with('success', 'Online payment done successfully. Check your email for confirmation');
+    }
+
+    public function sendPushNotification($latestOrder)
+    {
+        // $admin = Auth::user();
+        $admins = Admin::whereNotNull('fcm_token')->get();
+        $firebase = (new Factory)
+            ->withServiceAccount('C:/xampp/htdocs/auth_app/config/firebase_credentials.json');
+
+
+        $signedUrl = URL::temporarySignedRoute(
+            'admin.order.show',
+            now()->addMinutes(30),
+            ['order' => $latestOrder->id]
+        );
+        $messaging = $firebase->createMessaging();
+
+        foreach ($admins as $admin) {
+            if ($admin->fcm_token) {
+                $fcmToken = $admin->fcm_token;
+
+                $message = CloudMessage::fromArray([
+                    'notification' => [
+                        'title' => 'New Order',
+                        'body' => 'You have received a new order. Order ID is ' . $latestOrder->id,
+                        'click_action' => 'www.google.com'
+                    ],
+                    'data' => [
+                        'url' => $signedUrl
+                    ],
+                    'token' => $fcmToken
+                ]);
+
+                $messaging->send($message);
+            }
+        }
+
+        return response()->json([
+            'message' => 'Push notification sent successfully,'
+        ]);
     }
 }

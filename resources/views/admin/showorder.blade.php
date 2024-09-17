@@ -30,7 +30,8 @@
                                     @foreach ($orderItems as $item)
                                         <tr>
                                             <td class="text-center">
-                                                <img src="{{ asset('storage/images/' . $item->product->image) }}"
+
+                                                <img src="{{ asset('storage/images/' . $item->product->images->first()->path) }}"
                                                     alt="{{ $item->product_name }}" class="img-thumbnail"
                                                     style="width: 75px; height: 75px;">
                                             </td>

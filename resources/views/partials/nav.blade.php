@@ -35,7 +35,7 @@
     <div class="flex items-center space-x-4">
         <a href="#" id="cartLink" class="text-gray-800 hover:text-gray-600 relative">
             <i class="fas fa-shopping-cart text-2xl"></i>
-            <span
+            <span id="cartCount"
                 class="bg-white text-gray-800 rounded-full min-w-4 h-4 flex items-center justify-center absolute top-0 right-0 -mt-1 -mr-1 text-xs px-1 py-1">
                 {{ $numberOfItems }}
             </span>
@@ -162,6 +162,32 @@
 </div>
 
 <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('DOM loaded with JavaScript');
+
+        function fetchCartCount() {
+            $.ajax({
+                url: '{{ route('cart.count') }}',
+                type: 'GET',
+                success: function(data) {
+                    // Update the cart count in the UI
+                    $('#cartCount').text(data.numberOfItems);
+                    console.log(data.numberOfItems);
+                },
+                error: function(error) {
+                    console.error('Error fetching cart count:', error);
+                }
+            });
+
+            console.log('Fetching cart count...');
+        }
+
+        // Call the fetchCartCount function every 5 seconds
+        setInterval(fetchCartCount, 3000);
+
+        // Also fetch the cart count when the page loads
+        fetchCartCount();
+    });
     document.getElementById('closePopup1').addEventListener('click', function() {
         document.getElementById('orderPopup').classList.add('hidden');
     });

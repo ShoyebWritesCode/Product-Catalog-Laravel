@@ -21,9 +21,11 @@
     <!-- Swiper JS -->
     <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"
+    {{-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"
         integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous">
     </script>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js" integrity="sha256-oP5PT1QvAtDRF/MB1ZPZzt1FCnwlz/2V3zpX6E5b1s="
+        crossorigin="anonymous"></script> --}}
 </head>
 
 <body class="font-sans antialiased">

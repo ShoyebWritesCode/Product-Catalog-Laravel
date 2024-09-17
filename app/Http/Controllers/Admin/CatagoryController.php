@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Admin;
+
 use App\Http\Controllers\Controller;
 use App\Models\Catagory;
 
@@ -13,13 +14,13 @@ class CatagoryController extends Controller
     {
         $categories = Catagory::whereNull('parent_id')->get();
         $subcategories = Catagory::whereNotNull('parent_id')->get();
-        return view('admin.catagory.home',compact('categories','subcategories'));
+        return view('admin.catagory.home', compact('categories', 'subcategories'));
     }
 
     public function create()
     {
         $categories = Catagory::whereNull('parent_id')->get();
-        return view('admin.catagory.create',compact('categories'));
+        return view('admin.catagory.create', compact('categories'));
     }
 
     public function save(Request $request)
@@ -28,7 +29,6 @@ class CatagoryController extends Controller
             'name' => 'required|string|max:255',
             // 'subcategory_of' => 'nullable|string|exists:catagories,name',
         ]);
-        Log::info($request->all());
 
         $catagory = new Catagory();
         $catagory->name = $request->name;
@@ -39,7 +39,5 @@ class CatagoryController extends Controller
         $catagory->save();
         session()->flash('success', 'Catagory created successfully');
         return redirect()->route('admin.catagory.home')->with('success', 'Catagory created successfully');
-    } 
-
-
+    }
 }

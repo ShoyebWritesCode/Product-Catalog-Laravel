@@ -20,11 +20,13 @@ use App\Models\Images;
 use Illuminate\Support\Facades\Notification;
 use App\Notifications\OrderConfirmed;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
 
 class AdminController extends Controller
 {
     public function index()
     {
+
         $totalUsers = User::count();
         $totalCategories = Catagory::count();
         $totalReviews = Review::count();
@@ -190,7 +192,7 @@ class AdminController extends Controller
             Notification::send($user, new OrderConfirmed($order));
         }
 
-        Log::info('Update method called for order: ' . $order->id);
+
 
         $previousRoute = $request->headers->get('referer');
 

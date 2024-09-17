@@ -23,6 +23,8 @@ use App\Http\Controllers\AddressController;
 use App\Http\Controllers\InventoryController;
 use App\Http\Controllers\PaymentHistoryController;
 use App\Models\Inventory;
+use App\Http\Controllers\PushNotificationController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -62,6 +64,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/products/{product}/{slug?}', [CustomerProductController::class, 'show'])->name('customer.product.show');
     Route::post('/products/{product}/reviews', [ReviewController::class, 'store'])->name('customer.product.reviews');
     Route::get('/orders', [OrderController::class, 'index'])->name('customer.order.home');
+    Route::get('/cart/count', [OrderController::class, 'itemCount'])->name('cart.count');
     Route::get('/orders/shipping', [OrderController::class, 'shipping'])->name('customer.order.shipping');
     Route::post('/orders/shipping/{order}', [OrderController::class, 'shippingSave'])->name('customer.order.shipping.save');
     Route::get('/orders/billing', [OrderController::class, 'billing'])->name('customer.order.billing');
@@ -142,7 +145,13 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::post('admin/admin/colors/create', [InventoryController::class, 'colorCreate'])->name('admin.color.create');
     Route::get('admin/admin/sizes', [InventoryController::class, 'sizesIndex'])->name('admin.sizes');
     Route::post('admin/admin/sizes/create', [InventoryController::class, 'sizeCreate'])->name('admin.size.create');
+    // Route::get('admin/admin/send-notification', [PushNotificationController::class, 'sendPushNotification']);
+    Route::post('admin/admin/store-token', [PushNotificationController::class, 'storeToken']);
+    // Route::get('admin/admin/check-new-order', [PushNotificationController::class, 'checkNewOrder']);
 });
+
+
+
 
 require __DIR__ . '/auth.php';
 
