@@ -95,58 +95,58 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::middleware(['auth:admin'])->group(function () {
-    Route::get('/admin/dashboard', [HomeController::class, 'index'])->name('admin.dashboard');
+    // Route::get('/admin/dashboard', [HomeController::class, 'index'])->name('admin.dashboard');
     Route::get('/admin/users', [HomeController::class, 'users'])->name('admin.users');
 
 
-    Route::get('/admin/catagories', [CatagoryController::class, 'index'])->name('admin.catagory.home');
+    // Route::get('/admin/catagories', [CatagoryController::class, 'index'])->name('admin.catagory.home');
     Route::get('/admin/catagories/create', [CatagoryController::class, 'create'])->name('admin.catagory.create');
     Route::post('/admin/catagories/save', [CatagoryController::class, 'save'])->name('admin.catagory.save');
 
-    Route::get('/admin/products', [ProductController::class, 'index'])->name('admin.product.home');
+    // Route::get('/admin/products', [ProductController::class, 'index'])->name('admin.product.home');
     Route::get('/admin/products/create', [ProductController::class, 'create'])->name('admin.product.create');
     Route::post('/admin/products/save', [ProductController::class, 'save'])->name('admin.product.save');
     Route::get('/admin/products/{product}', [ProductController::class, 'show'])->name('admin.product.show');
-    Route::get('admin/admin', [AdminController::class, 'index'])->name('admin.admin');
-    Route::get('admin/admin/products', [AdminController::class, 'products'])->name('admin.products');
-    Route::get('/admin/admin/product/edit/{id}', [AdminController::class, 'edit'])->name('admin.product.edit');
-    Route::put('/admin/admin/product/update/{id}', [ProductController::class, 'updateProduct'])->name('admin.product.update');
-    Route::delete('/admin/admin/product/update/{id}', [AdminController::class, 'deleteProduct'])->name('admin.product.delete');
-    Route::get('admin/admin/users', [AdminController::class, 'users'])->name('admin.users');
-    Route::get('admin/admin/categories', [AdminController::class, 'categories'])->name('admin.categories');
-    Route::get('admin/admin/categories/edit/{id}', [AdminController::class, 'categoryEdit'])->name('admin.category.edit');
-    Route::put('/admin/admin/categories/update/{id}', [AdminController::class, 'updateCategory'])->name('admin.category.update');
-    Route::get('/admin/admin/attributes', [AdminController::class, 'attributes'])->name('admin.attributes');
-    Route::post('/admin/admin/attributes/save', [AdminController::class, 'attributesStore'])->name('admin.attributes.store');
-    Route::get('admin/admin/reviews', [AdminController::class, 'reviews'])->name('admin.reviews');
-    Route::get('admin/admin/pendingorders', [AdminController::class, 'pendingorders'])->name('admin.pendingorders');
-    Route::post('admin/admin/pendingorders/{order}', [AdminController::class, 'update'])->name('admin.pendingorders.update');
-    Route::get('admin/admin/completedorders', [AdminController::class, 'completedorders'])->name('admin.completedorders');
-    Route::get('admin/admin/refundrequests', [AdminController::class, 'refundorders'])->name('admin.refundrequests');
-    Route::get('admin/admin/refundrequests/accept/{order}', [AdminController::class, 'acceptrefund'])->name('admin.refund.accept');
-    Route::get('admin/admin/refundrequests/reject/{order}', [AdminController::class, 'rejectrefund'])->name('admin.refund.reject');
-    Route::post('/admin/admin/notifications/mark-as-read/{id}', [NotificationController::class, 'markAsReadCus'])->name('admin.notifications.markAsRead');
-    Route::get('/admin/admin/notifications/mark-as-read', [NotificationController::class, 'markAsRead'])->name('admin.notifications.markAllAsRead');
-    Route::delete('/admin/admin/notifications/{notification}', [NotificationController::class, 'delete'])->name('admin.notifications.delete');
-    Route::get('/admin/admin/notifications/delete', [NotificationController::class, 'deleteAll'])->name('admin.notifications.deleteAll');
-    Route::get('admin/admin/notifications', [NotificationController::class, 'index'])->name('admin.notifications.index');
+    Route::get('admin', [AdminController::class, 'index'])->name('admin.admin');
+    Route::get('admin/products', [AdminController::class, 'products'])->name('admin.products');
+    Route::get('/admin/product/edit/{id}', [AdminController::class, 'edit'])->name('admin.product.edit');
+    Route::put('/admin/product/update/{id}', [ProductController::class, 'updateProduct'])->name('admin.product.update');
+    Route::delete('/admin/product/update/{id}', [AdminController::class, 'deleteProduct'])->name('admin.product.delete');
+    Route::get('admin/users', [AdminController::class, 'users'])->name('admin.users');
+    Route::get('admin/categories', [AdminController::class, 'categories'])->name('admin.categories');
+    Route::get('admin/categories/edit/{id}', [AdminController::class, 'categoryEdit'])->name('admin.category.edit');
+    Route::put('/admin/categories/update/{id}', [AdminController::class, 'updateCategory'])->name('admin.category.update');
+    Route::get('/admin/attributes', [AdminController::class, 'attributes'])->name('admin.attributes');
+    Route::post('/admin/attributes/save', [AdminController::class, 'attributesStore'])->name('admin.attributes.store');
+    Route::get('admin/reviews', [AdminController::class, 'reviews'])->name('admin.reviews');
+    Route::get('admin/pendingorders', [AdminController::class, 'pendingorders'])->name('admin.pendingorders');
+    Route::post('admin/pendingorders/{order}', [AdminController::class, 'update'])->name('admin.pendingorders.update');
+    Route::get('admin/completedorders', [AdminController::class, 'completedorders'])->name('admin.completedorders');
+    Route::get('admin/refundrequests', [AdminController::class, 'refundorders'])->name('admin.refundrequests');
+    Route::get('admin/refundrequests/accept/{order}', [AdminController::class, 'acceptrefund'])->name('admin.refund.accept');
+    Route::get('admin/refundrequests/reject/{order}', [AdminController::class, 'rejectrefund'])->name('admin.refund.reject');
+    Route::post('/admin/notifications/mark-as-read/{id}', [NotificationController::class, 'markAsReadCus'])->name('admin.notifications.markAsRead');
+    Route::get('/admin/notifications/mark-as-read', [NotificationController::class, 'markAsRead'])->name('admin.notifications.markAllAsRead');
+    Route::delete('/admin/notifications/{notification}', [NotificationController::class, 'delete'])->name('admin.notifications.delete');
+    Route::get('/admin/notifications/delete', [NotificationController::class, 'deleteAll'])->name('admin.notifications.deleteAll');
+    Route::get('admin/notifications', [NotificationController::class, 'index'])->name('admin.notifications.index');
 
-    Route::get('/admin/admin/order/{order}', [AdminController::class, 'orderdetail'])->name('admin.order.show');
+    Route::get('/admin/order/{order}', [AdminController::class, 'orderdetail'])->name('admin.order.show');
     // Route::get('admin/admin/templates/create', [TemplateController::class, 'create'])->name('admin.templates.create');
-    Route::get('admin/admin/templates', [EmailTemplateController::class, 'index'])->name('admin.templates.index');
+    Route::get('admin/templates', [EmailTemplateController::class, 'index'])->name('admin.templates.index');
     Route::get('/templates/{template}/edit', [EmailTemplateController::class, 'edit'])->name('admin.templates.create');
     Route::put('/templates/{template}', [EmailTemplateController::class, 'update'])->name('admin.templates.update');
-    Route::post('admin/admin/templates/store', [EmailTemplateController::class, 'store'])->name('admin.templates.store');
-    Route::post('admin/admin/templates/placeholders', [EmailTemplateController::class, 'addPlaceholder'])->name('admin.placeholders.add');
-    Route::get('admin/admin/payment-history', [PaymentHistoryController::class, 'index'])->name('admin.payment-history');
-    Route::get('admin/admin/charts', [ChartController::class, 'index'])->name('admin.charts.index');
+    Route::post('admin/templates/store', [EmailTemplateController::class, 'store'])->name('admin.templates.store');
+    Route::post('admin/templates/placeholders', [EmailTemplateController::class, 'addPlaceholder'])->name('admin.placeholders.add');
+    Route::get('admin/payment-history', [PaymentHistoryController::class, 'index'])->name('admin.payment-history');
+    Route::get('admin/charts', [ChartController::class, 'index'])->name('admin.charts.index');
 
-    Route::get('admin/admin/colors', [InventoryController::class, 'colorsIndex'])->name('admin.colors');
-    Route::post('admin/admin/colors/create', [InventoryController::class, 'colorCreate'])->name('admin.color.create');
-    Route::get('admin/admin/sizes', [InventoryController::class, 'sizesIndex'])->name('admin.sizes');
-    Route::post('admin/admin/sizes/create', [InventoryController::class, 'sizeCreate'])->name('admin.size.create');
+    Route::get('admin/colors', [InventoryController::class, 'colorsIndex'])->name('admin.colors');
+    Route::post('admin/colors/create', [InventoryController::class, 'colorCreate'])->name('admin.color.create');
+    Route::get('admin/sizes', [InventoryController::class, 'sizesIndex'])->name('admin.sizes');
+    Route::post('admin/sizes/create', [InventoryController::class, 'sizeCreate'])->name('admin.size.create');
     // Route::get('admin/admin/send-notification', [PushNotificationController::class, 'sendPushNotification']);
-    Route::post('admin/admin/store-token', [PushNotificationController::class, 'storeToken']);
+    Route::post('admin/store-token', [PushNotificationController::class, 'storeToken']);
     // Route::get('admin/admin/check-new-order', [PushNotificationController::class, 'checkNewOrder']);
 });
 
