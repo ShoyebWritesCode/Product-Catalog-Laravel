@@ -32,12 +32,12 @@
     "src": "node_modules/@fortawesome/fontawesome-free/webfonts/fa-v4compatibility.woff2"
   },
   "resources/css/app.css": {
-    "file": "assets/app-D2MZE400.css",
+    "file": "assets/app-BkRyyj-Y.css",
     "src": "resources/css/app.css",
     "isEntry": true
   },
   "resources/js/app.js": {
-    "file": "assets/app-Bg1aHGgo.js",
+    "file": "assets/app-CN2glabW.js",
     "name": "app",
     "src": "resources/js/app.js",
     "isEntry": true
@@ -46,6 +46,18 @@
     "file": "assets/catagory-DWU34Ujk.js",
     "name": "catagory",
     "src": "resources/js/custom/catagory.js",
+    "isEntry": true
+  },
+  "resources/js/custom/firebase-messaging.js": {
+    "file": "assets/firebase-messaging-6GXIRqR3.js",
+    "name": "firebase-messaging",
+    "src": "resources/js/custom/firebase-messaging.js",
+    "isEntry": true
+  },
+  "resources/js/custom/order.js": {
+    "file": "assets/order-l0sNRNKZ.js",
+    "name": "order",
+    "src": "resources/js/custom/order.js",
     "isEntry": true
   },
   "resources/js/custom/orderupdate.js": {
@@ -67,18 +79,23 @@
     "isEntry": true
   },
   "resources/js/custom/show.js": {
-    "file": "assets/show-ChipAI0d.js",
+    "file": "assets/show-w5E_hq9J.js",
     "name": "show",
     "src": "resources/js/custom/show.js",
     "isEntry": true
   },
+  "resources/scss/address.scss": {
+    "file": "assets/address-CeVYJV4i.css",
+    "src": "resources/scss/address.scss",
+    "isEntry": true
+  },
   "resources/scss/product.scss": {
-    "file": "assets/product-DCmhbVS9.css",
+    "file": "assets/product-BMyb03CV.css",
     "src": "resources/scss/product.scss",
     "isEntry": true
   },
   "resources/scss/show.scss": {
-    "file": "assets/show-DGDWOUB1.css",
+    "file": "assets/show-CAQWmhIb.css",
     "src": "resources/scss/show.scss",
     "isEntry": true
   },
